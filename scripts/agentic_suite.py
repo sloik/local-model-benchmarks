@@ -765,9 +765,12 @@ def model_artifact_identity(model: str, metadata: dict[str, Any]) -> dict[str, A
     }
 
 
-def start_keep_awake() -> subprocess.Popen:
+def start_keep_awake() -> subprocess.Popen | None:
+    executable = shutil.which("caffeinate")
+    if executable is None:
+        return None
     return subprocess.Popen(
-        ["caffeinate", "-ims", "-w", str(os.getpid())],
+        [executable, "-ims", "-w", str(os.getpid())],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -960,7 +963,8 @@ def run_models(
                         f"{result.get('invalid_context_reason')}"
                     )
     finally:
-        keep_awake.terminate()
+        if keep_awake is not None:
+            keep_awake.terminate()
         if hasattr(keep_awake, "wait"):
             try:
                 keep_awake.wait(timeout=5)

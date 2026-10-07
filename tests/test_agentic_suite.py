@@ -429,6 +429,9 @@ def test_observed_mismatch_aborts_before_hermes_or_result_write(monkeypatch, tmp
     class FakeExecutor:
         hermes_called = False
 
+        def run(self, argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 0, "", "")
+
         def load_model(self, model, context, parallel_predictions):
             return parallel_predictions
 
@@ -865,3 +868,21 @@ def test_every_same_model_case_gets_fresh_load_and_exact_verification_before_run
     ]
     assert events[7] == ("run_case", "model-a", "EVAL-002")
     assert inference_started == []
+
+
+def test_keep_awake_is_optional_without_caffeinate(monkeypatch):
+    monkeypatch.setattr(sut.shutil, "which", lambda name: None)
+    monkeypatch.setattr(sut.subprocess, "Popen", lambda *a, **k: pytest.fail("unexpected spawn"))
+    assert sut.start_keep_awake() is None
+
+
+def test_keep_awake_uses_discovered_executable(monkeypatch):
+    captured = {}
+    sentinel = object()
+    monkeypatch.setattr(sut.shutil, "which", lambda name: "/usr/bin/caffeinate")
+    def fake_popen(argv, **kwargs):
+        captured["argv"] = argv
+        return sentinel
+    monkeypatch.setattr(sut.subprocess, "Popen", fake_popen)
+    assert sut.start_keep_awake() is sentinel
+    assert captured["argv"] == ["/usr/bin/caffeinate", "-ims", "-w", str(sut.os.getpid())]
