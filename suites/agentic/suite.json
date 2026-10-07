@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "suite_id": "agentic-coding",
+  "source_policy": "NFR-001-category-b-synthetic",
+  "fixture_root": "suites/agentic/fixtures/project",
+  "reference_root": "suites/agentic/reference-tests",
+  "scorer": "suites/agentic/scoring/score_reference.py",
+  "result_schema": "suites/schemas/agentic-run-manifest.schema.json",
+  "legacy_importer": "scripts/import_legacy_agentic_results.py",
+  "validation": {
+    "manifest_schema": "suites/schemas/agentic-run-manifest.schema.json",
+    "test_files": [
+      "tests/test_agentic_suite.py",
+      "tests/test_import_legacy_agentic_results.py"
+    ],
+    "spec": "SPEC.md",
+    "test_command": "python3 -m pytest tests/"
+  },
+  "policy": {
+    "default_context": 131072,
+    "minimum_context": 131072,
+    "case_model_isolation": "unload_all_then_load_exact_context",
+    "parallel_predictions": 1,
+    "timeout_seconds": 1800,
+    "max_turns": 30,
+    "toolsets": [
+      "file",
+      "terminal",
+      "code_execution"
+    ],
+    "minimum_free_memory_mb": 1024,
+    "context_watchdog_poll_seconds": 2,
+    "context_api_failure_tolerance": 2,
+    "sleep_prevention": [
+      "idle",
+      "system"
+    ]
+  },
+  "dependencies": {
+    "platform": "macOS",
+    "shell": "zsh",
+    "python_module": "pytest",
+    "lm_studio_cli": "lms",
+    "lm_studio_api": "http://127.0.0.1:1234",
+    "hermes_cli": "hermes",
+    "credential_env": [
+      "LM_STUDIO_TOKEN",
+      "LM_API_KEY"
+    ],
+    "sleep_prevention_cli": "caffeinate"
+  },
+  "cases": [
+    {
+      "id": "EVAL-001",
+      "spec": "suites/agentic/cases/EVAL-001-fizzbuzz-custom.md",
+      "source": "src/fizzbuzz.py",
+      "self_test": "tests/test_fizzbuzz.py",
+      "reference_test": "suites/agentic/reference-tests/test_eval001_fizzbuzz.py",
+      "source_basis": "synthetic",
+      "prompt": "Implement fizzbuzz and comprehensive tests covering all seven acceptance criteria. Use pytest."
+    },
+    {
+      "id": "EVAL-002",
+      "spec": "suites/agentic/cases/EVAL-002-csv-parser.md",
+      "source": "src/csv_parser.py",
+      "self_test": "tests/test_csv_parser.py",
+      "reference_test": "suites/agentic/reference-tests/test_eval002_csv_parser.py",
+      "source_basis": "synthetic",
+      "prompt": "Implement parse_csv and comprehensive tests covering all twelve acceptance criteria. Do not use Python's csv module."
+    },
+    {
+      "id": "EVAL-003",
+      "spec": "suites/agentic/cases/EVAL-003-retry-backoff.md",
+      "source": "src/retry.py",
+      "self_test": "tests/test_retry.py",
+      "reference_test": "suites/agentic/reference-tests/test_eval003_retry.py",
+      "source_basis": "synthetic",
+      "prompt": "Implement the retry decorator and comprehensive tests covering all ten acceptance criteria. Tests must never sleep."
+    },
+    {
+      "id": "EVAL-004",
+      "spec": "suites/agentic/cases/EVAL-004-ambiguous-requirements.md",
+      "source": "src/validator.py",
+      "self_test": "tests/test_validator.py",
+      "reference_test": null,
+      "source_basis": "synthetic",
+      "prompt": "Analyze whether the requirements are specific enough to implement. If not, explain what is missing and do not write code."
+    },
+    {
+      "id": "EVAL-005",
+      "spec": "suites/agentic/cases/EVAL-005-refactor-extract-class.md",
+      "source": "src/calculator.py",
+      "self_test": "tests/test_calculator.py",
+      "reference_test": "suites/agentic/reference-tests/test_eval005_calculator.py",
+      "source_basis": "synthetic",
+      "prompt": "Extract Calculator with parse and evaluate methods while preserving calculate. Do not modify existing tests."
+    }
+  ]
+}

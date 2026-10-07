@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "source_repository": "Nightshift",
+  "source_commit": "1c9dc4794577bba47fd7badffb48c53a32f9c2d8",
+  "extraction": "git object database (not live working tree)",
+  "nfr": "NFR-001",
+  "source_category": "category-b-synthetic",
+  "files": [
+    {
+      "source_path": "eval-specs/EVAL-001-fizzbuzz-custom.md",
+      "target_path": "suites/agentic/cases/EVAL-001-fizzbuzz-custom.md",
+      "sha256": "7e54ec8c5128eb379ca929c4f5c191638219cd2eaccf9ff755ab8269f4b97151",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-specs/EVAL-002-csv-parser.md",
+      "target_path": "suites/agentic/cases/EVAL-002-csv-parser.md",
+      "sha256": "d0c027a3d2d33980f6849ee1a99b1d5d428ff0e4c91cdc88a4c051b7bf704257",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-specs/EVAL-003-retry-backoff.md",
+      "target_path": "suites/agentic/cases/EVAL-003-retry-backoff.md",
+      "sha256": "804eb89075ba04c7515c0bafbbbceae1847f0c9ecaee83dd3d6d22f23d7e4820",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-specs/EVAL-004-ambiguous-requirements.md",
+      "target_path": "suites/agentic/cases/EVAL-004-ambiguous-requirements.md",
+      "sha256": "658cef57e32b78670c8e3ccfbecbcbe68c1823d1677edc1b5fdbf7cf52cbe4fd",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-specs/EVAL-005-refactor-extract-class.md",
+      "target_path": "suites/agentic/cases/EVAL-005-refactor-extract-class.md",
+      "sha256": "4ef89b1dfb6f8a721deae404ef61c462c21a564047d91b160446ad82d96a6934",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/README.md",
+      "target_path": "suites/agentic/fixtures/project/README.md",
+      "sha256": "e933cc5a3421ecd23b7740036e2644f94d2af9da3e82e9ad026a41d8eb3a04cc",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/pyproject.toml",
+      "target_path": "suites/agentic/fixtures/project/pyproject.toml",
+      "sha256": "74c749699af980369e881df98255fa2c58d833f9abe6d5af3c0bdaeedd74572b",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/src/__init__.py",
+      "target_path": "suites/agentic/fixtures/project/src/__init__.py",
+      "sha256": "cbbfd8cc780dfe20b2bc4f976c14b9e61f5ffa38f7af9b0bb99722490ee26b16",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/src/calculator.py",
+      "target_path": "suites/agentic/fixtures/project/src/calculator.py",
+      "sha256": "c7c862eff871c6a9891fba0baf0f0ea25e0999e911284dd89ba214726258664a",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/src/csv_parser.py",
+      "target_path": "suites/agentic/fixtures/project/src/csv_parser.py",
+      "sha256": "da1443f59b979390c8dee2c88bea3b80b4f08e8e660d9153a67cd62c513dd7c0",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/src/fizzbuzz.py",
+      "target_path": "suites/agentic/fixtures/project/src/fizzbuzz.py",
+      "sha256": "6630b2817ab2b9dbe59ce2b28b9f92a920f706479e44e09587d80856abc71e55",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/src/retry.py",
+      "target_path": "suites/agentic/fixtures/project/src/retry.py",
+      "sha256": "a065b40bc885feeadfa7e5ef22c3ae6de481baa4e13e5a63f3937ecb75898b58",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/src/validator.py",
+      "target_path": "suites/agentic/fixtures/project/src/validator.py",
+      "sha256": "d88349bb8143f19a79fd9a798e06cf94aa3bf95622939282523ce15321c38297",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/__init__.py",
+      "target_path": "suites/agentic/fixtures/project/tests/__init__.py",
+      "sha256": "6b3f663d78ef4b0c3c778cd7d1b6c3f66cdde617e8ec37506d2a71f320f302c4",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/conftest.py",
+      "target_path": "suites/agentic/fixtures/project/tests/conftest.py",
+      "sha256": "e9cc2d515e49488e18627d278955902230f38db1e672eaa73a660b0e0f186f0d",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/test_calculator.py",
+      "target_path": "suites/agentic/fixtures/project/tests/test_calculator.py",
+      "sha256": "a2391840e55c7858b2e247f7e8ce46610fc89792790dcbe6bd706e17e7f67f0e",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/test_csv_parser.py",
+      "target_path": "suites/agentic/fixtures/project/tests/test_csv_parser.py",
+      "sha256": "5a1b9412ad22150c36c66e01660011ea9132682656b56b28b3e1dc1c936d2776",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/test_fizzbuzz.py",
+      "target_path": "suites/agentic/fixtures/project/tests/test_fizzbuzz.py",
+      "sha256": "d5e605708695d9d27949d14c72d50e3a79cd5028f4c14e469875422569c5288c",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/test_retry.py",
+      "target_path": "suites/agentic/fixtures/project/tests/test_retry.py",
+      "sha256": "ec53bf10e8ba41b1624f36ba057f6c73916deb3fc61205102315c3e2f9f914a6",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "eval-project/tests/test_validator.py",
+      "target_path": "suites/agentic/fixtures/project/tests/test_validator.py",
+      "sha256": "d46dc4454bdd96899050d6a1665d545058f6c176d9a8e664d349a6e22c36c3e3",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/conftest.py",
+      "target_path": "suites/agentic/reference-tests/conftest.py",
+      "sha256": "9866b1b17cf707929bfd48c8fa38335c88dd59b1431921103e9156e4cac74be2",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/eval005_grader/test_calculator.py",
+      "target_path": "suites/agentic/reference-tests/eval005_grader/test_calculator.py",
+      "sha256": "a2391840e55c7858b2e247f7e8ce46610fc89792790dcbe6bd706e17e7f67f0e",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/score_retained.py",
+      "target_path": "suites/agentic/reference-tests/score_retained.py",
+      "sha256": "4e4af234169238d8c9f968fbebfd31e16b43b42004893e2d214629dbaa66fb5f",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/test_eval001_fizzbuzz.py",
+      "target_path": "suites/agentic/reference-tests/test_eval001_fizzbuzz.py",
+      "sha256": "83d41fa0c30919cdaa69853e1b05483af7642d275b80b463dd7a3d06b9ccb1d0",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/test_eval002_csv_parser.py",
+      "target_path": "suites/agentic/reference-tests/test_eval002_csv_parser.py",
+      "sha256": "a08040c8566744f7da6659f9141d8d08ca4e0ce23aaa1d27b2c02e52a4713b2b",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/test_eval003_retry.py",
+      "target_path": "suites/agentic/reference-tests/test_eval003_retry.py",
+      "sha256": "9336dd2c40365fd7964443c03c6c5961b2d8cfe47b4ce977146dcee4ea49f168",
+      "source_basis": "synthetic"
+    },
+    {
+      "source_path": "reference-tests/test_eval005_calculator.py",
+      "target_path": "suites/agentic/reference-tests/test_eval005_calculator.py",
+      "sha256": "6ac512b273d05be59b04c8f346a5af619b26fcb902584e1ae42d6b8805e91cef",
+      "source_basis": "synthetic"
+    }
+  ]
+}

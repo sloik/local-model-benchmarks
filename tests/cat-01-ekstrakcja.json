@@ -1,0 +1,770 @@
+{
+  "category": "CAT-01",
+  "version": "public-1.0",
+  "created": "2026-03-07",
+  "updated": "2026-10-07",
+  "tests": [
+    {
+      "id": "CAT-01-001",
+      "name": "Extraction of basic financial data from multi-period table",
+      "difficulty": "basic",
+      "tags": [
+        "extraction",
+        "quarterly-report",
+        "table",
+        "multi-period",
+        "polish"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Fictional company Metaltech S.A. (manufacturer of pipes and steel profiles, GPW). p1 = simple table with one period. p2 = same table with seven periods — model must select Q3 2025.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all 4 required values present (revenue, EBIT, net debt, EPS), correct numbers with ±1% tolerance, units present (mln PLN or tys. PLN).\n4 — Good: 3 of 4 values correct, max 1 unit error (e.g., missing 'mln') or minor formatting error.\n3 — Acceptable: 2-3 values correct, useful answer but requires verification.\n2 — Weak: <2 correct values or numerical error >5%.\n1 — Fail: no data, hallucination (numbers outside fragment or from different period than requested), refusal.\n\nNote for p2: providing data from a period other than Q3 2025 as 'Q3 2025 result' = automatically 1 (hallucination). Accept formats: 1234 = 1 234 = 1.234.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Simple table with one period (Q3 2025) — four metrics to extract",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract data precisely — no interpretation, comments, or calculations. Only provide numbers that are explicitly in the text."
+            },
+            {
+              "role": "user",
+              "content": "From the report fragment below, extract four values for Q3 2025: revenue, EBIT, net debt, EPS. Provide each value with its unit.\n\n---\nMetaltech S.A. — Wybrane dane finansowe Q3 2025 (skonsolidowane)\n\n| Wskaźnik                    | Q3 2025     |\n|-----------------------------|------------:|\n| Przychody ze sprzedaży      | 1 234 mln PLN |\n| EBIT                        |   178 mln PLN |\n| EBITDA                      |   234 mln PLN |\n| Zysk netto                  |   134 mln PLN |\n| Dług netto                  |   456 mln PLN |\n| Kapitał własny              | 1 890 mln PLN |\n| EPS (zysk na akcję)         |     2,34 PLN |\n| Liczba akcji (mln szt.)     |    57,3 mln  |\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue: 1 234 mln PLN",
+              "EBIT: 178 mln PLN",
+              "Net debt: 456 mln PLN",
+              "EPS: 2,34 PLN"
+            ],
+            "forbidden": [
+              "EBITDA confused with EBIT",
+              "Net income confused with EBIT",
+              "Data not present in the table"
+            ],
+            "sample_answer": "Revenue: 1 234 mln PLN\nEBIT: 178 mln PLN\nNet debt: 456 mln PLN\nEPS: 2,34 PLN"
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Table with seven periods (Q1 2024–Q3 2025) — model must select Q3 2025 column without confusing it with Q3 2024",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract data precisely — no interpretation, comments, or calculations. Only provide numbers that are explicitly in the text."
+            },
+            {
+              "role": "user",
+              "content": "From the table below, extract data ONLY for Q3 2025: revenue, EBIT, net debt, EPS. Provide each value with its unit.\n\n---\nMetaltech S.A. — Kwartalne dane finansowe (skonsolidowane, mln PLN)\n\n| Wskaźnik           | Q1 2024 | Q2 2024 | Q3 2024 | Q4 2024 | Q1 2025 | Q2 2025 | Q3 2025 |\n|--------------------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|\n| Przychody          |   978   |  1 045  |  1 156  |  1 287  |  1 023  |  1 189  |  1 234  |\n| EBIT               |   134   |    152  |    162  |    189  |    145  |    167  |    178  |\n| EBITDA             |   178   |    201  |    214  |    249  |    191  |    221  |    234  |\n| Zysk netto         |   101   |    114  |    121  |    143  |    109  |    126  |    134  |\n| Dług netto         |   521   |    498  |    473  |    412  |    489  |    467  |    456  |\n| EPS (PLN)          |  1,76   |   1,99  |   2,11  |   2,49  |   1,90  |   2,20  |   2,34  |\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue: 1 234 mln PLN",
+              "EBIT: 178 mln PLN",
+              "Net debt: 456 mln PLN",
+              "EPS: 2,34 PLN"
+            ],
+            "forbidden": [
+              "Data from Q3 2024 (Revenue 1 156, EBIT 162, Net debt 473, EPS 2,11) provided as Q3 2025",
+              "Data from periods other than Q3 2025"
+            ],
+            "sample_answer": "Revenue (Q3 2025): 1 234 mln PLN\nEBIT (Q3 2025): 178 mln PLN\nNet debt (Q3 2025): 456 mln PLN\nEPS (Q3 2025): 2,34 PLN"
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-01-011"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-01-002",
+      "name": "Extraction of financial data — non-standard formats",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "half-year-report",
+        "tys-pln",
+        "negative-parentheses",
+        "polish"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Fictional company Budnex S.A. (real estate developer, GPW). p1 = data in tys. PLN (not mln) in narrative sentences. p2 = income statement with parentheses as negative values (Polish convention). Both test the model's ability to correctly handle non-standard formats.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all required values present with correct numbers, units, and — for p2 — correct signs (parentheses = negative values).\n4 — Good: ≥90% of values correct, max 1 unit error or missing negative sign on one item.\n3 — Acceptable: ≥70% of values correct, useful answer but requires verification. Model that does not translate parentheses to negative values = max 3.\n2 — Weak: <70% of values correct or substantive error (mixing items, wrong number).\n1 — Fail: no data, hallucination, refusal.\n\nNote for p1: values given in mln PLN instead of tys. PLN are acceptable IF correctly converted (892 344 tys. = 892.3 mln). Missing unit = deduction of 1 point.\nNote for p2: parenthesis = negative value in Polish accounting. Model returning financial costs as +31 250 instead of -31 250 = maximum 3.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Narrative note with data in tys. PLN — model must extract values from continuous text, not from table",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract data precisely — no interpretation. Preserve the original units from the document."
+            },
+            {
+              "role": "user",
+              "content": "From the note fragment below, extract three values: revenue, EBIT, net debt. Provide each value with its unit exactly as in the text.\n\n---\nNota 4. Omówienie wyników za H1 2025\n\nPrzychody z tytułu sprzedaży lokali mieszkalnych oraz usług deweloperskich za pierwsze półrocze 2025 roku wyniosły 892 344 tys. PLN i były wyższe o 14,2% w porównaniu z analogicznym okresem roku poprzedniego (781 421 tys. PLN). Tak dynamiczny wzrost wynika przede wszystkim z rozliczenia dwóch dużych projektów — Osiedla Słoneczna Wola w Warszawie (faza II) oraz Rezydencji Leśna w Krakowie.\n\nWynik operacyjny (EBIT) osiągnął poziom 134 567 tys. PLN, co odpowiada marży EBIT na poziomie 15,1% (wobec 14,2% w H1 2024). Poprawa marży wynika z korzystniejszego miksu projektów — udział lokali premium wzrósł z 31% do 38% sprzedaży.\n\nZadłużenie netto na dzień 30 czerwca 2025 r. wynosiło 1 234 890 tys. PLN i pozostaje na poziomie uznawanym przez Zarząd za bezpieczny w kontekście aktualnego portfela projektów oraz dostępnych limitów kredytowych.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue: 892 344 tys. PLN",
+              "EBIT: 134 567 tys. PLN",
+              "Net debt: 1 234 890 tys. PLN"
+            ],
+            "forbidden": [
+              "Revenue for H1 2024 (781 421) provided as current revenue",
+              "EBIT margin (15.1%) provided as EBIT in PLN",
+              "Values without units"
+            ],
+            "sample_answer": "Revenue: 892 344 tys. PLN\nEBIT: 134 567 tys. PLN\nNet debt: 1 234 890 tys. PLN"
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Income statement with parentheses as negative values (Polish accounting convention) — model must correctly translate the sign",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract data precisely. In Polish financial statements, parentheses denote negative values — apply this convention."
+            },
+            {
+              "role": "user",
+              "content": "From the income statement below, extract three items: EBIT, financial costs net, net income. Provide values with unit and sign (+ or -).\n\n---\nBudnex S.A.\nSkonsolidowany rachunek zysków i strat — H1 2025 (tys. PLN)\n\nPrzychody ze sprzedaży                               892 344\nKoszty wytworzenia sprzedanych produktów i usług     (648 210)\n                                                    ----------\nZysk brutto na sprzedaży                             244 134\n\nKoszty sprzedaży                                      (67 445)\nKoszty ogólne i administracyjne                       (42 122)\n                                                    ----------\nEBIT (wynik operacyjny)                               134 567\n\nPrzychody finansowe                                     3 890\nKoszty finansowe                                      (31 250)\n                                                    ----------\nWynik finansowy netto                                 (27 360)\n\nZysk przed opodatkowaniem                             107 207\nPodatek dochodowy                                     (20 369)\n                                                    ----------\nZysk netto                                             86 838\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "EBIT: +134 567 tys. PLN (or 134 567 tys. PLN without sign)",
+              "Financial costs: -31 250 tys. PLN (negative value)",
+              "Net income: +86 838 tys. PLN (or 86 838 tys. PLN)"
+            ],
+            "forbidden": [
+              "Financial costs as +31 250 (missing negative sign for costs in parentheses)",
+              "Financial result net (-27 360) confused with net income",
+              "Income before tax (107 207) confused with net income"
+            ],
+            "sample_answer": "EBIT: +134 567 tys. PLN\nFinancial costs: -31 250 tys. PLN\nNet income: +86 838 tys. PLN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-003",
+      "name": "Extraction from multi-currency report — conversion EUR→PLN using rate from note",
+      "difficulty": "advanced",
+      "tags": [
+        "extraction",
+        "multi-currency",
+        "eur-pln",
+        "conversion",
+        "note"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Test of extraction when some data is provided in EUR (subsidiary in Germany) and the conversion rate is given in a note — not in the main table. Failure mode: model uses approximate rate from memory instead of rate from note, or confuses original values with converted ones, or does not convert at all.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all values converted correctly using the rate from the note (4.2231 PLN/EUR), result in PLN rounded to 1 decimal place or tys. PLN as in original, clear indication that values are post-conversion.\n4 — Good: conversion correct but minor rounding error (±1%) or missing explicit currency designation in result.\n3 — Acceptable: conversion attempted with rate in range 4.1–4.4 (clearly based on remembered market rate), but result approximately correct (±3%).\n2 — Weak: model ignores rate from note and uses different rate without justification, or omits conversion and provides values in EUR.\n1 — Fail: hallucination of absurd rate (e.g., 1 EUR = 1 PLN), no extraction, refusal, mixing EUR and PLN without conversion.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extraction of revenue and EBIT from group report with EUR segment — conversion rate in note below table",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst assistant. You extract numerical data from financial documents. Always use currency rates provided in the document — never your own approximations. Provide results in PLN."
+            },
+            {
+              "role": "user",
+              "content": "Extract the following values for Q3 2025 from the report fragment below in PLN:\n1. Group revenue total (PLN)\n2. Poland Segment EBIT (PLN)\n3. Germany Segment EBIT (PLN, convert from EUR)\n4. Group EBIT total (PLN)\n\n---\nMechpol Group S.A. — Skonsolidowany raport kwartalny Q3 2025\nWybrane dane finansowe (w tys. PLN, jeśli nie zaznaczono inaczej)\n\n| Segment             | Przychody Q3 2025 | EBIT Q3 2025 |\n|---------------------|:-----------------:|:------------:|\n| Polska              | 412 340 tys. PLN  | 58 120 tys. PLN |\n| Niemcy (w tys. EUR) | 18 450 tys. EUR   | 2 310 tys. EUR  |\n| Eliminacje          | -12 780 tys. PLN  | —            |\n| Grupa łącznie       | —                 | —            |\n\nNota do tabeli: Dane Segmentu Niemcy prezentowane są w tysiącach EUR. Do przeliczenia na PLN zastosowano średni kurs NBP z ostatniego dnia okresu sprawozdawczego: 1 EUR = 4,2231 PLN.\n\nPrzychody Grupy łącznie (po eliminacjach): patrz suma segmentów minus eliminacje.\n---\n\nShow calculations for values requiring conversion."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Use of rate 4.2231 PLN/EUR (from note, not approximated)",
+              "Germany Revenue in PLN: 18 450 × 4.2231 = 77 915.8 tys. PLN (±1%)",
+              "Germany EBIT in PLN: 2 310 × 4.2231 = 9 755.4 tys. PLN (±1%)",
+              "Group Revenue: 412 340 + 77 915.8 - 12 780 = 477 475.8 tys. PLN (±1%)",
+              "Group EBIT: 58 120 + 9 755.4 = 67 875.4 tys. PLN (±1%)"
+            ],
+            "forbidden": [
+              "Use of EUR/PLN rate other than 4.2231 without explicit justification",
+              "Germany Segment values provided in EUR without conversion",
+              "Ignoring eliminations when summing Group revenue",
+              "Group EBIT result below 65 000 or above 71 000 tys. PLN"
+            ],
+            "expected_values": {
+              "revenue_germany_pln_tys": 77915.8,
+              "ebit_germany_pln_tys": 9755.4,
+              "revenue_group_pln_tys": 477475.8,
+              "ebit_group_pln_tys": 67875.4,
+              "rate_eur_pln": 4.2231
+            },
+            "sample_answer": "Rate from note: 1 EUR = 4.2231 PLN\n\n1. Germany Revenue in PLN: 18 450 × 4.2231 = 77 915.8 tys. PLN\n   Group Revenue: 412 340 + 77 915.8 − 12 780 = 477 475.8 tys. PLN\n2. Poland EBIT: 58 120 tys. PLN\n3. Germany EBIT in PLN: 2 310 × 4.2231 = 9 755.4 tys. PLN\n4. Group EBIT: 58 120 + 9 755.4 = 67 875.4 tys. PLN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-004",
+      "name": "Balance sheet extraction — comparative periods, specific line items",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "balance-sheet",
+        "comparative",
+        "assets",
+        "liabilities"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Handlowiec S.A. (retail chain, GPW). Balance sheet with two comparative periods (30.09.2025 vs 31.12.2024). Model must extract 5 specific items from correct period — trap: prior year column is right-aligned and close to current. Failure mode: model picks prior year figures or confuses total assets with selected sub-items.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — All 5 values from 30.09.2025 column correct (±1%), units present, no confusion with 31.12.2024 column.\n4 — 4 of 5 correct, max 1 period mix-up or minor rounding.\n3 — 3 of 5 correct or all correct but wrong period (31.12.2024 instead of 30.09.2025).\n2 — <3 correct or systematic period confusion.\n1 — Hallucination, refusal, no meaningful data.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Balance sheet with two period columns — extract 5 items from current period (30.09.2025)",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract balance sheet data precisely. Only report values from the period explicitly requested."
+            },
+            {
+              "role": "user",
+              "content": "From the balance sheet below, extract these 5 items as of 30.09.2025 only:\n1. Total assets\n2. Inventory\n3. Trade receivables\n4. Short-term borrowings\n5. Equity\n\nProvide values with units (mln PLN).\n\n---\nHandlowiec S.A. — Skonsolidowany bilans (mln PLN)\n\n| Pozycja                              | 30.09.2025 | 31.12.2024 |\n|--------------------------------------|-----------:|-----------:|\n| AKTYWA                               |            |            |\n| Aktywa trwałe                        |    1 234,5 |    1 189,3 |\n|   Rzeczowe aktywa trwałe             |      876,2 |      851,4 |\n|   Wartości niematerialne i prawne    |      198,7 |      201,9 |\n|   Pozostałe aktywa trwałe            |      159,6 |      136,0 |\n| Aktywa obrotowe                      |      678,3 |      591,7 |\n|   Zapasy                             |      312,4 |      287,6 |\n|   Należności handlowe                |      198,6 |      167,3 |\n|   Środki pieniężne                   |       87,1 |       78,9 |\n|   Pozostałe aktywa obrotowe          |       80,2 |       57,9 |\n| AKTYWA RAZEM                         |    1 912,8 |    1 781,0 |\n|                                      |            |            |\n| PASYWA                               |            |            |\n| Kapitał własny                       |      934,5 |      878,2 |\n| Zobowiązania długoterminowe          |      489,7 |      467,3 |\n|   Kredyty i pożyczki długoterminowe  |      345,6 |      334,2 |\n|   Pozostałe zobowiązania             |      144,1 |      133,1 |\n| Zobowiązania krótkoterminowe         |      488,6 |      435,5 |\n|   Kredyty i pożyczki krótkoterminowe |      156,3 |      134,8 |\n|   Zobowiązania handlowe              |      245,7 |      218,9 |\n|   Pozostałe zobowiązania             |       86,6 |       81,8 |\n| PASYWA RAZEM                         |    1 912,8 |    1 781,0 |\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Total assets: 1 912,8 mln PLN",
+              "Inventory: 312,4 mln PLN",
+              "Trade receivables: 198,6 mln PLN",
+              "Short-term borrowings: 156,3 mln PLN",
+              "Equity: 934,5 mln PLN"
+            ],
+            "forbidden": [
+              "Values from 31.12.2024 column (1 781,0 total assets; 287,6 inventory; 167,3 receivables; 134,8 borrowings; 878,2 equity)",
+              "Long-term borrowings (345,6) confused with short-term (156,3)",
+              "Total liabilities confused with equity"
+            ],
+            "sample_answer": "As of 30.09.2025:\n1. Total assets: 1 912,8 mln PLN\n2. Inventory: 312,4 mln PLN\n3. Trade receivables: 198,6 mln PLN\n4. Short-term borrowings: 156,3 mln PLN\n5. Equity: 934,5 mln PLN"
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-01-013"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-01-005",
+      "name": "Cash flow statement extraction — key line items and FCF",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "cash-flow",
+        "fcf",
+        "indirect-method",
+        "capex"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "EnergiaPlus S.A. (energy producer, GPW). Indirect method cash flow statement for 9M 2025. Two prompts: p1 = extract three cash flow totals (operating, investing, financing), p2 = extract components for FCF calculation (operating CF and capex). Failure mode: model confuses net income with operating CF, or confuses purchase of PP&E with net investing CF.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — All requested values correct (±1%), correct line items identified, units present.\n4 — Correct values, minor label mismatch or rounding.\n3 — 2 of 3 values correct or values correct but from wrong section.\n2 — Major confusion (e.g., net income as operating CF, or investing CF sign wrong).\n1 — Hallucination, no data, completely wrong values.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract three cash flow totals: operating, investing, financing for 9M 2025",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract cash flow data precisely. Report only values explicitly stated in the document."
+            },
+            {
+              "role": "user",
+              "content": "From the cash flow statement below, extract three values for 9M 2025:\n1. Net cash from operating activities\n2. Net cash from investing activities\n3. Net cash from financing activities\n\n---\nEnergiaPlus S.A. — Skonsolidowane sprawozdanie z przepływów pieniężnych\n9 miesięcy zakończonych 30.09.2025 (tys. PLN)\n\nA. PRZEPŁYWY ŚRODKÓW PIENIĘŻNYCH Z DZIAŁALNOŚCI OPERACYJNEJ\n  Zysk netto                                            87 340\n  Korekty:\n    Amortyzacja                                         45 210\n    Zmiana stanu zapasów                               (12 450)\n    Zmiana stanu należności                            (23 780)\n    Zmiana stanu zobowiązań                             18 920\n    Pozostałe korekty                                    3 560\n  Środki pieniężne netto z działalności operacyjnej   118 800\n\nB. PRZEPŁYWY ŚRODKÓW PIENIĘŻNYCH Z DZIAŁALNOŚCI INWESTYCYJNEJ\n  Nabycie rzeczowych aktywów trwałych                (134 560)\n  Wpływy ze sprzedaży aktywów                          8 340\n  Udzielone pożyczki                                   (5 000)\n  Środki pieniężne netto z działalności inwestycyjnej (131 220)\n\nC. PRZEPŁYWY ŚRODKÓW PIENIĘŻNYCH Z DZIAŁALNOŚCI FINANSOWEJ\n  Zaciągnięcie kredytów                                50 000\n  Spłata kredytów                                     (28 500)\n  Wypłata dywidendy                                   (15 000)\n  Środki pieniężne netto z działalności finansowej      6 500\n\nZmiana netto środków pieniężnych (A+B+C)              (5 920)\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Operating activities: 118 800 tys. PLN",
+              "Investing activities: -131 220 tys. PLN (negative)",
+              "Financing activities: 6 500 tys. PLN"
+            ],
+            "forbidden": [
+              "Net income (87 340) provided as operating cash flow",
+              "Capex (-134 560) provided as total investing cash flow",
+              "Net change (-5 920) provided as one of the three sections"
+            ],
+            "sample_answer": "9M 2025:\n1. Operating activities: +118 800 tys. PLN\n2. Investing activities: -131 220 tys. PLN\n3. Financing activities: +6 500 tys. PLN"
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Extract FCF components: operating CF and capex separately",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract data precisely. Free Cash Flow = Operating CF minus Capital Expenditures (Capex = purchase of PP&E)."
+            },
+            {
+              "role": "user",
+              "content": "From the same EnergiaPlus S.A. cash flow statement, extract:\n1. Net operating cash flow (9M 2025)\n2. Capital expenditures / Capex (purchase of PP&E only, 9M 2025)\n\nDo not calculate FCF — just extract these two values as stated in the document.\n\n[Same document as above — EnergiaPlus S.A. 9M 2025 cash flow statement]"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Operating CF: 118 800 tys. PLN",
+              "Capex: 134 560 tys. PLN (absolute value) or -134 560 tys. PLN"
+            ],
+            "forbidden": [
+              "Total investing CF (-131 220) provided as capex",
+              "Net income (87 340) as operating CF"
+            ],
+            "sample_answer": "1. Net operating cash flow: 118 800 tys. PLN\n2. Capex (nabycie rzeczowych aktywów trwałych): 134 560 tys. PLN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-006",
+      "name": "Segment revenue matrix — two-dimensional breakdown (product × geography)",
+      "difficulty": "advanced",
+      "tags": [
+        "extraction",
+        "segment",
+        "matrix-table",
+        "geography",
+        "product-mix"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Medipol S.A. (pharmaceutical group, GPW). Revenue matrix: 3 product segments × 3 geographic regions, plus totals. Model must extract specific cell values and totals correctly — trap: row totals ≠ column headers, and one cell contains a footnote marker. Failure mode: model sums wrong axis or misreads footnoted value.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — All 4 requested cell values correct (±1%), correct identification of segment and geography intersection.\n4 — 3 of 4 correct, minor confusion between row/column totals.\n3 — 2 of 4 correct or correct cells but wrong axis (extracts row total instead of cell).\n2 — Major matrix misread (sums wrong direction, random values).\n1 — Hallucination, refusal, completely wrong values.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract 4 specific cells from revenue matrix table: product-region intersections",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract values from matrix tables precisely. Identify the correct row AND column intersection."
+            },
+            {
+              "role": "user",
+              "content": "From the segment revenue matrix below for Medipol S.A. (Q3 2025, mln PLN), extract:\n1. Prescription drugs revenue in Poland\n2. OTC products revenue in EU (excl. Poland)\n3. Medical devices revenue in Other markets\n4. Total revenue in EU (excl. Poland)\n\n---\nMedipol S.A. — Przychody według segmentów produktowych i geograficznych, Q3 2025 (mln PLN)\n\n|                          | Polska | UE (bez PL) | Pozostałe rynki | Razem |\n|--------------------------|-------:|------------:|----------------:|------:|\n| Leki na receptę (Rx)     |  134,2 |       78,4  |           23,1  | 235,7 |\n| Leki OTC                 |   89,5 |       56,3* |           12,8  | 158,6 |\n| Wyroby medyczne          |   45,8 |       34,7  |           18,9  |  99,4 |\n| Razem                    |  269,5 |      169,4  |           54,8  | 493,7 |\n\n* Nota: wartość 56,3 mln PLN uwzględnia korektę w wysokości 2,1 mln PLN wynikającą z reklasyfikacji sprzedaży do dystrybutorów.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Prescription drugs (Rx) - Poland: 134,2 mln PLN",
+              "OTC - EU (excl. Poland): 56,3 mln PLN",
+              "Medical devices - Other markets: 18,9 mln PLN",
+              "Total EU (excl. Poland): 169,4 mln PLN"
+            ],
+            "forbidden": [
+              "OTC Poland (89,5) confused with OTC EU (56,3)",
+              "OTC total (158,6) instead of OTC EU cell (56,3)",
+              "Ignoring footnote on 56,3 (the footnoted value is the correct one to report)"
+            ],
+            "sample_answer": "1. Prescription drugs (Rx) - Poland: 134,2 mln PLN\n2. OTC - EU (excl. Poland): 56,3 mln PLN*\n3. Medical devices - Other markets: 18,9 mln PLN\n4. Total EU (excl. Poland): 169,4 mln PLN\n\n*Note: includes 2,1 mln PLN reclassification adjustment (as stated in footnote)"
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-01-012"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-01-007",
+      "name": "Provisions and contingent liabilities extraction from narrative notes",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "provisions",
+        "contingent-liabilities",
+        "notes",
+        "narrative"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Telekomunix S.A. (telecom operator, GPW). Annual report note on provisions and contingent liabilities — dense narrative with multiple amounts embedded in text. Model must extract specific provision amounts and distinguish: (a) recognized provisions vs (b) contingent liabilities not on balance sheet. Failure mode: model mixes up provisions (recognized) with contingent liabilities (disclosed only).",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Correct amounts for both recognized provisions and contingent liabilities, correct distinction between them, units preserved.\n4 — Correct amounts but missing distinction or minor rounding error.\n3 — Amounts partially correct, distinction absent or unclear.\n2 — Major confusion: contingent liability reported as balance sheet provision or vice versa.\n1 — Hallucination, refusal, completely wrong values.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract provision amounts and contingent liabilities from note — distinguish balance sheet vs off-balance",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract values precisely from legal/financial notes. Distinguish between recognized provisions (on balance sheet) and contingent liabilities (disclosed, not recognized)."
+            },
+            {
+              "role": "user",
+              "content": "From the note below, extract:\n1. Total recognized provisions on balance sheet (31.12.2025)\n2. Provision for litigation — amount recognized\n3. Contingent liability for regulatory proceedings — estimated range (not on balance sheet)\n\n---\nNota 18. Rezerwy i zobowiązania warunkowe\n\nNa dzień 31 grudnia 2025 roku Spółka ujęła w bilansie następujące rezerwy:\n\n- Rezerwa na świadczenia pracownicze: 23 450 tys. PLN\n- Rezerwa na spory sądowe: 8 120 tys. PLN\n- Rezerwa na koszty restrukturyzacji: 5 300 tys. PLN\n- Pozostałe rezerwy: 2 890 tys. PLN\n\nRezerwy razem: 39 760 tys. PLN\n\nZobowiązania warunkowe (nieujęte w bilansie):\n\nToczące się postępowanie regulacyjne UKE: W grudniu 2024 r. Urząd Komunikacji Elektronicznej wszczął postępowanie dotyczące potencjalnego naruszenia warunków licencji przez Spółkę. Zarząd ocenia, że prawdopodobieństwo nałożenia kary jest możliwe (nie: prawdopodobne), a szacowany zakres ewentualnej kary wynosi od 15 000 tys. PLN do 45 000 tys. PLN w zależności od ustaleń postępowania. Z uwagi na niepewność co do wyniku, zobowiązanie to nie zostało ujęte w bilansie.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Total provisions on balance sheet: 39 760 tys. PLN",
+              "Litigation provision (spory sądowe): 8 120 tys. PLN",
+              "Contingent liability regulatory proceedings: range 15 000 – 45 000 tys. PLN (NOT on balance sheet)"
+            ],
+            "forbidden": [
+              "Contingent liability (15 000–45 000) reported as a balance sheet provision",
+              "Individual provision items summed incorrectly (correct total is 39 760)",
+              "Litigation provision confused with employee benefit provision (23 450)"
+            ],
+            "sample_answer": "1. Total recognized provisions (31.12.2025): 39 760 tys. PLN\n2. Litigation provision: 8 120 tys. PLN (on balance sheet)\n3. Regulatory proceedings: contingent liability of 15 000–45 000 tys. PLN — NOT recognized on balance sheet (probability assessed as 'possible', not 'probable')"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-008",
+      "name": "Like-for-like and organic growth extraction — distinguish from reported growth",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "like-for-like",
+        "organic-growth",
+        "retail",
+        "kpi"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Handlowiec S.A. (retail). Management discussion includes reported growth, LfL growth, and organic growth as distinct KPIs. Failure mode: model calculates LfL from reported numbers instead of extracting the stated figure, or confuses reported growth (+12,3%) with LfL growth (+4,1%). Test: model must extract stated LfL value, not derive it.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Correctly extracts all three distinct growth metrics (reported, LfL, organic) with correct values and clear labeling.\n4 — 2 of 3 correct, minor confusion between LfL and organic.\n3 — 1 of 3 correct or extracts correct values but wrong labels.\n2 — Calculates LfL instead of extracting stated figure, or confuses metrics fundamentally.\n1 — Hallucination, refusal, invents growth rates not in the text.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract three distinct growth metrics from management commentary",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Extract stated KPI values precisely. Do not calculate — only extract figures explicitly provided in the text."
+            },
+            {
+              "role": "user",
+              "content": "From the management commentary below, extract three revenue growth metrics for Q3 2025:\n1. Reported revenue growth (y/y)\n2. Like-for-like (LfL) revenue growth\n3. Organic revenue growth\n\n---\nOmówienie wyników Q3 2025 — Handlowiec S.A.\n\nPrzychody ze sprzedaży w Q3 2025 wyniosły 1 456 mln PLN wobec 1 296 mln PLN w Q3 2024, co oznacza wzrost raportowany o 12,3% rok do roku. Wzrost ten obejmuje efekt konsolidacji sieci Domino (przejętej w maju 2025 r., 34 sklepy) oraz efekt otwierania nowych sklepów.\n\nW ujęciu porównywalnym (like-for-like, LfL), tj. uwzględniając jedynie sklepy funkcjonujące przez pełne dwa porównywane okresy, przychody wzrosły o 4,1% r/r. Wzrost LfL wynikał głównie z wyższego koszyka zakupowego (+6,8%) przy jednoczesnym spadku liczby transakcji (-2,5%).\n\nWzrost organiczny (bez uwzględnienia akwizycji, ale włącznie z nowymi otwarciami) wyniósł 7,8% r/r, odzwierciedlając efekt nowych 18 sklepów otwartych w ostatnich 12 miesiącach (bez sieci Domino).\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Reported revenue growth: +12,3% y/y",
+              "LfL revenue growth: +4,1% y/y",
+              "Organic revenue growth: +7,8% y/y"
+            ],
+            "forbidden": [
+              "Calculating LfL from revenue figures (1 456/1 296 = 12,3% — this is reported, not LfL)",
+              "Providing basket growth (+6,8%) as LfL growth",
+              "Confusing organic (7,8%) with LfL (4,1%)"
+            ],
+            "sample_answer": "Q3 2025 revenue growth metrics:\n1. Reported growth: +12,3% y/y (includes Domino acquisition effect)\n2. Like-for-like (LfL): +4,1% y/y (comparable stores only)\n3. Organic growth: +7,8% y/y (excl. acquisition, incl. new openings)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-009",
+      "name": "Prior period restatement — extract both original and restated figures",
+      "difficulty": "advanced",
+      "tags": [
+        "extraction",
+        "restatement",
+        "prior-period",
+        "error-correction",
+        "comparative"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Budnex S.A. Comparative prior year figures were restated due to a classification error (revenue from land sales reclassified). Document shows: original H1 2024 figures, restated H1 2024 figures, and current H1 2025 figures. Failure mode: model provides restated 2024 as 'current 2025', or confuses original with restated, or ignores the restatement entirely.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Correctly identifies original, restated, and current figures for all 3 requested items with clear period labels.\n4 — All figures correct but labeling imprecise (e.g., 'adjusted' instead of 'restated').\n3 — Current period (H1 2025) correct, prior period confused (original vs restated).\n2 — Provides wrong period data or conflates restated with current.\n1 — Hallucination, ignores restatement entirely, or refuses.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract original, restated prior-year, and current-year revenue and EBIT from restatement note",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. When a document shows restated prior period figures, extract all versions and label them clearly: original, restated (prior period), and current period."
+            },
+            {
+              "role": "user",
+              "content": "From the restatement note below, extract for both H1 2025 and H1 2024:\n- Revenue (as originally reported, restated, and current)\n- EBIT\n\n---\nNota do sprawozdania — Korekta danych porównawczych (H1 2024)\n\nW związku z wykryciem błędu w klasyfikacji przychodów ze sprzedaży gruntów, Zarząd Budnex S.A. dokonał korekty danych porównawczych za H1 2024. Przychody ze sprzedaży gruntów w kwocie 34 500 tys. PLN zostały przekształcone z przychodów ze sprzedaży (pozycja operacyjna) do pozostałych przychodów operacyjnych.\n\n| Pozycja        | H1 2025     | H1 2024 (pierw.) | H1 2024 (po kor.) |\n|----------------|------------:|------------------:|-------------------:|\n| Przychody      | 892 344 tys. PLN | 781 421 tys. PLN | 746 921 tys. PLN |\n| EBIT           | 134 567 tys. PLN | 134 567 tys. PLN | 134 567 tys. PLN |\n| Zysk netto     |  86 838 tys. PLN |  79 234 tys. PLN |  79 234 tys. PLN |\n\nKorekta nie miała wpływu na EBIT ani zysk netto, ponieważ sprzedaż gruntów ujmowana była poniżej poziomu EBIT.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "H1 2025 Revenue: 892 344 tys. PLN (current, no restatement)",
+              "H1 2024 Revenue (original): 781 421 tys. PLN",
+              "H1 2024 Revenue (restated): 746 921 tys. PLN",
+              "EBIT: unchanged at 134 567 tys. PLN across all periods (restatement had no EBIT impact)"
+            ],
+            "forbidden": [
+              "Restated H1 2024 revenue (746 921) reported as H1 2025 revenue",
+              "Original H1 2024 (781 421) reported as restated",
+              "Claiming EBIT changed due to restatement"
+            ],
+            "sample_answer": "Revenue:\n- H1 2025: 892 344 tys. PLN\n- H1 2024 (originally reported): 781 421 tys. PLN\n- H1 2024 (after restatement): 746 921 tys. PLN (reclassified 34 500 tys. land sales to other operating income)\n\nEBIT: 134 567 tys. PLN in all periods — restatement had no EBIT impact (land sales were below EBIT line)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-010",
+      "name": "Unit inconsistency trap — mixed units within one table (mln and tys.)",
+      "difficulty": "advanced",
+      "tags": [
+        "extraction",
+        "unit-inconsistency",
+        "mln",
+        "tys",
+        "conversion",
+        "trap"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Mechpol Group S.A. A poorly formatted table mixes mln PLN and tys. PLN in different rows without warning — a common error in real GPW reports. Model must notice the unit header change mid-table and extract or convert correctly. Failure mode: model assumes all values are in the same unit as the table header (mln PLN) and reports tys. PLN values as if they were mln PLN (1000x error).",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Extracts all 4 values with correct units, explicitly flags the mixed-unit issue, converts to consistent unit if requested.\n4 — Extracts correctly but doesn't flag the inconsistency.\n3 — 2-3 of 4 correct, partial awareness of unit issue.\n2 — Treats all values as mln PLN (fails to notice tys. PLN rows).\n1 — Hallucination, no extraction, or random values.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Table with mixed units (mln PLN header, but two rows are in tys. PLN as noted in footnote column)",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial assistant. Always check units carefully — tables may mix mln PLN and tys. PLN. Flag any inconsistencies you find."
+            },
+            {
+              "role": "user",
+              "content": "From the table below, extract 4 values for Q3 2025 in a consistent unit (mln PLN). Flag any unit issues.\n\nExtract:\n1. Revenue\n2. EBIT\n3. R&D expenditure\n4. Export subsidy received\n\n---\nMechpol Group S.A. — Wybrane dane Q3 2025\n(w mln PLN, o ile nie zaznaczono inaczej)\n\n| Pozycja                         | Q3 2025     |\n|---------------------------------|------------:|\n| Przychody ze sprzedaży          | 412,3 mln   |\n| EBIT                            |  58,1 mln   |\n| EBITDA                          |  78,4 mln   |\n| Nakłady na B+R (tys. PLN)       | 8 450 tys.  |\n| Dotacja eksportowa (tys. PLN)   | 2 310 tys.  |\n| Dług netto                      | 234,7 mln   |\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue: 412,3 mln PLN",
+              "EBIT: 58,1 mln PLN",
+              "R&D expenditure: 8,450 mln PLN (= 8 450 tys. PLN converted) OR 8 450 tys. PLN with note",
+              "Export subsidy: 2,310 mln PLN (= 2 310 tys. PLN converted) OR 2 310 tys. PLN with note"
+            ],
+            "forbidden": [
+              "R&D reported as 8 450 mln PLN (treating tys. as mln — 1000x error)",
+              "Export subsidy as 2 310 mln PLN",
+              "No mention of unit inconsistency in the table"
+            ],
+            "sample_answer": "⚠️ Unit warning: Table header states mln PLN, but two rows have explicit 'tys. PLN' notation.\n\n1. Revenue: 412,3 mln PLN\n2. EBIT: 58,1 mln PLN\n3. R&D expenditure: 8 450 tys. PLN = 8,45 mln PLN\n4. Export subsidy: 2 310 tys. PLN = 2,31 mln PLN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-01-011",
+      "name": "Synthetic multi-year financial extraction",
+      "difficulty": "basic",
+      "tags": [
+        "extraction",
+        "multi-period",
+        "revenue",
+        "ebitda",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-01-001",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Select the requested year; do not confuse profit amount with margin.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Select the requested year; do not confuse profit amount with margin.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL: Example Receivables SA. All amounts are invented.\n| metric (PLN millions) | 2021 | 2024 | 2025 |\n| revenue | 600 | 1000 | 1200 |\n| EBITDA | 150 | 300 | 360 |\n| EBITDA margin | 25% | 30% | 30% |\n| net profit | 60 | 220 | 222 |\n| net margin | 10% | 22% | 18.5% |\nExtract 2024 revenue, EBITDA, EBITDA margin and net profit with units."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue 1000 mln PLN",
+              "EBITDA 300 mln PLN",
+              "EBITDA margin 30%",
+              "Net profit 220 mln PLN"
+            ],
+            "forbidden": [
+              "Using 2025 or 2021 values as 2024"
+            ],
+            "sample_answer": "Revenue 1000 mln PLN\nEBITDA 300 mln PLN\nEBITDA margin 30%\nNet profit 220 mln PLN"
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL: Example Receivables SA. All amounts are invented.\n| metric (PLN millions) | 2021 | 2024 | 2025 |\n| revenue | 600 | 1000 | 1200 |\n| EBITDA | 150 | 300 | 360 |\n| EBITDA margin | 25% | 30% | 30% |\n| net profit | 60 | 220 | 222 |\n| net margin | 10% | 22% | 18.5% |\nExtract 2021 revenue, EBITDA, EBITDA margin and net profit margin."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue 600 mln PLN",
+              "EBITDA 150 mln PLN",
+              "EBITDA margin 25%",
+              "Net profit margin 10%"
+            ],
+            "forbidden": [
+              "Using another period"
+            ],
+            "sample_answer": "Revenue 600 mln PLN\nEBITDA 150 mln PLN\nEBITDA margin 25%\nNet profit margin 10%"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    },
+    {
+      "id": "CAT-01-012",
+      "name": "Synthetic market collections matrix",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "matrix-table",
+        "geography",
+        "collections",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-01-006",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Keep metric identity across a matrix of similar figures.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Keep metric identity across a matrix of similar figures.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA, 2025, PLN millions.\n| market | collections 2024 | collections 2025 | investments 2025 |\n| North | 100 | 120 | 70 |\n| South | 80 | 100 | 90 |\n| East | 40 | 50 | 65 |\n| West | 30 | 30 | 20 |\n| Other | 10 | 20 | 5 |\nTotal collections 320; total investments 250. Unsecured portfolios generate 80% of collections, secured 20%.\nExtract total collections, South collections, East year-over-year change (amount and percent), unsecured share and Other collections."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Total collections 320 mln PLN",
+              "South collections 100 mln PLN",
+              "East change +10 mln PLN, +25%",
+              "Unsecured share 80%",
+              "Other collections 20 mln PLN"
+            ],
+            "forbidden": [
+              "Confusing investments with collections"
+            ],
+            "sample_answer": "Total collections 320 mln PLN\nSouth collections 100 mln PLN\nEast change +10 mln PLN, +25%\nUnsecured share 80%\nOther collections 20 mln PLN"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    },
+    {
+      "id": "CAT-01-013",
+      "name": "Synthetic asset versus debt extraction",
+      "difficulty": "intermediate",
+      "tags": [
+        "extraction",
+        "balance-sheet",
+        "unusual-structure",
+        "debt-portfolios",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-01-004",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Asset-versus-liability and gross-versus-net distinctions are mandatory.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Asset-versus-liability and gross-versus-net distinctions are mandatory.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA, end 2025 (PLN billions): total assets 8.0; purchased receivables portfolios (asset) 6.5; equity 3.0; gross borrowings 5.0; cash 0.2; net debt 4.8; annual cash EBITDA 1.2. A purchased receivables portfolio is a claim on customers, not a borrowing by the company.\nExtract assets, purchased portfolios, equity, net debt and net-debt/cash-EBITDA ratio. Classify the purchased portfolios."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Assets 8.0 bln PLN",
+              "Purchased portfolios 6.5 bln PLN, an asset",
+              "Equity 3.0 bln PLN",
+              "Net debt 4.8 bln PLN",
+              "Net debt / cash EBITDA 4.0x"
+            ],
+            "forbidden": [
+              "Classifying purchased portfolios as company borrowings",
+              "Using gross debt as net debt"
+            ],
+            "sample_answer": "Assets 8.0 bln PLN\nPurchased portfolios 6.5 bln PLN, an asset\nEquity 3.0 bln PLN\nNet debt 4.8 bln PLN\nNet debt / cash EBITDA 4.0x"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

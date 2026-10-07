@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-12_qwen36-27b-mlx-ctx32k_mlx5bit-native188k-mt1024-rnone-full",
+  "model_id": "qwen36-27b-mlx-ctx32k",
+  "eval_date": "2026-08-12",
+  "evaluator": "mistral-small-3.2-24b-instruct-2506-mlx",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 3.8,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.3,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 4.8,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 3.6,
+      "min": 2,
+      "max": 4,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 4.0,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "overall": {
+      "mean": 4.1,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

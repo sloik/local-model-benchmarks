@@ -1,0 +1,14 @@
+# Runtime secrets
+.env
+*.env
+!.env.example
+# Python/runtime artifacts
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Local agent state
+.serena/
+.agent-context/

@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-10_lfm2.5-2.6b-mlx_ctx128k",
+  "model_id": "lfm2.5-2.6b-mlx",
+  "eval_date": "2026-08-10",
+  "evaluator": "mistral-small-3.2-24b-instruct-2506-mlx",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 3.6,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.2,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 3.7,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 3.9,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 3.1,
+      "min": 2,
+      "max": 4,
+      "n": 10
+    },
+    "overall": {
+      "mean": 3.7,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

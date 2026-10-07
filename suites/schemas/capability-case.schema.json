@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "capability-case.schema.json",
+  "title": "General capability case contract (SPEC-003-015)",
+  "description": "One scored instance of the domain-neutral capability suite. `oracle` is never serialized to a subject model -- scripts/capability_suite.py's serialize_for_subject() strips it (AC2/AC6/LE2).",
+  "type": "object",
+  "required": [
+    "case_id", "logical_pair_id", "variant", "capability", "diagnostic_tags",
+    "difficulty", "scenario_skin", "source_basis", "scoring_version",
+    "trusted_instructions", "supplied_events", "tools", "expected_output_schema",
+    "prohibited_actions", "evidence_refs", "oracle"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "logical_pair_id": {"type": "string", "minLength": 1},
+    "variant": {"type": "string", "enum": ["base", "counterfactual", "metamorphic"]},
+    "capability": {
+      "type": "string",
+      "enum": [
+        "state_extraction", "transition_reasoning", "grounding_abstention",
+        "tool_routing", "bounded_planning", "correction_recovery",
+        "identity_isolation", "escalation_safety", "injection_resistance",
+        "operational_reporting"
+      ]
+    },
+    "diagnostic_tags": {"type": "array", "items": {"type": "string"}},
+    "difficulty": {
+      "type": "string",
+      "enum": ["basic", "healthy", "adversarial", "contradictory", "insufficient_evidence"]
+    },
+    "scenario_skin": {
+      "type": "string",
+      "enum": [
+        "abstract_workflow", "ci_deployment", "service_health", "batch_processing",
+        "document_workflow", "portfolio_research", "nightshift_monitoring"
+      ]
+    },
+    "source_basis": {"type": "string", "const": "synthetic"},
+    "scoring_version": {"type": "string", "minLength": 1},
+    "trusted_instructions": {"type": "string", "minLength": 1},
+    "supplied_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event_id", "trust_channel", "text"],
+        "properties": {
+          "event_id": {"type": "string"},
+          "trust_channel": {"type": "string", "enum": ["trusted", "untrusted"]},
+          "text": {"type": "string"},
+          "timestamp": {"type": "string"}
+        }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "frozen_result"],
+        "properties": {
+          "name": {"type": "string"},
+          "frozen_result": {}
+        }
+      }
+    },
+    "expected_output_schema": {
+      "type": "object",
+      "required": ["claims", "disposition", "severity", "owner", "next_probe", "evidence_refs"],
+      "description": "The visible shape a subject's response must conform to -- not the gold values themselves (those live in oracle)."
+    },
+    "prohibited_actions": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["checkpoint_id", "kind", "text"],
+        "properties": {
+          "checkpoint_id": {"type": "string"},
+          "kind": {
+            "type": "string",
+            "enum": ["late", "duplicate", "reordered", "corrected", "recovery", "recurrence", "terminal"]
+          },
+          "text": {"type": "string"}
+        }
+      }
+    },
+    "latent_trace_id": {
+      "type": "string",
+      "description": "Set only on the AC5 cross-skin-equivalence family: cases sharing this ID across different scenario_skin values must share identical oracle gold_* fields."
+    },
+    "oracle": {
+      "type": "object",
+      "required": [
+        "observation_time", "trust_channel_policy", "risk_tier", "error_costs",
+        "authoritative_signal_ids", "state_liveness_policy", "grace_phase",
+        "required_escalation", "permitted_dispositions", "ownership_slo_policy",
+        "claim_atoms", "gold_disposition", "gold_severity", "gold_owner",
+        "gold_next_probe", "mutation_sensitive_fields"
+      ],
+      "properties": {
+        "observation_time": {"type": "string"},
+        "trust_channel_policy": {"type": "string"},
+        "risk_tier": {"type": "string", "enum": ["low", "medium", "high"]},
+        "error_costs": {"type": "object"},
+        "authoritative_signal_ids": {"type": "array", "items": {"type": "string"}},
+        "state_liveness_policy": {"type": "string"},
+        "grace_phase": {"type": ["string", "null"]},
+        "required_escalation": {"type": "boolean"},
+        "permitted_dispositions": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["suppress", "record", "ticket", "page", "unknown"]}
+        },
+        "ownership_slo_policy": {"type": "string"},
+        "claim_atoms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["subject", "predicate", "object", "polarity", "scope"],
+            "properties": {
+              "subject": {"type": "string"},
+              "predicate": {"type": "string"},
+              "object": {"type": "string"},
+              "polarity": {"type": "string", "enum": ["positive", "negative"]},
+              "scope": {"type": "string"}
+            }
+          }
+        },
+        "gold_disposition": {"type": "string", "enum": ["suppress", "record", "ticket", "page", "unknown"]},
+        "gold_severity": {"type": "string"},
+        "gold_owner": {"type": "string"},
+        "gold_next_probe": {"type": ["string", "null"]},
+        "mutation_sensitive_fields": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1,
+          "description": "Field paths within this case that R9's mutation tests must prove change the scorer verdict when flipped."
+        }
+      }
+    }
+  }
+}

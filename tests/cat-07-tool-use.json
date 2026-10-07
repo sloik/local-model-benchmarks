@@ -1,0 +1,837 @@
+{
+  "category": "CAT-07",
+  "version": "1.0",
+  "created": "2026-08-20",
+  "tests": [
+    {
+      "id": "CAT-07-T-001",
+      "task_type": "transcript_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "transcript",
+        "content-comprehension"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration questions and mode=transcript for questions about what is said in the video."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, find out what claim the speaker makes in the opening seconds of the video at https://www.youtube.com/watch?v=8vUCjYsWeSU about how harnesses compare to models. Quote or closely paraphrase the claim."
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "8vUCjYsWeSU"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "transcript"
+          ]
+        }
+      },
+      "frozen_source_key": "8vUCjYsWeSU",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "more important than the models",
+          "harnesses are becoming more important"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-002",
+      "task_type": "transcript_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "transcript",
+        "content-comprehension"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration questions and mode=transcript for questions about what is said in the video."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, find out what the speaker in the video at https://www.youtube.com/watch?v=R1TNGOZAOZs says the agent is able to build based on memory, in the opening of the video."
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "R1TNGOZAOZs"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "transcript"
+          ]
+        }
+      },
+      "frozen_source_key": "R1TNGOZAOZs",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "graph based on",
+          "build this graph",
+          "a graph"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-003",
+      "task_type": "transcript_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration questions and mode=transcript for questions about what is said in the video."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, what is the exact title of the video at https://www.youtube.com/watch?v=dQw4w9WgXcQ, and how many seconds long is it?"
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "dQw4w9WgXcQ"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "dQw4w9WgXcQ",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "Never Gonna Give You Up"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-004",
+      "task_type": "transcript_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration questions and mode=transcript for questions about what is said in the video."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, who is the uploader/channel of the video at https://www.youtube.com/watch?v=9bZkp7q19f0, and what is its exact title?"
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "9bZkp7q19f0"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "9bZkp7q19f0",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "officialpsy",
+          "GANGNAM STYLE"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-005",
+      "task_type": "transcript_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata",
+        "hallucination-trap"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration questions and mode=transcript for questions about what is said in the video."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, how many seconds long is the video at https://www.youtube.com/watch?v=jNQXAC9IVRw? It is a very short, famous first video -- do not guess a typical video length, look it up exactly."
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "jNQXAC9IVRw"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "jNQXAC9IVRw",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "19 second",
+          "19s",
+          " 19 "
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-001",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool. Always call the tool with the exact company and report_date requested before answering -- never answer from memory or guess at figures."
+          },
+          {
+            "role": "user",
+            "content": "Using the get_financial_report_snapshot tool, fetch PolCorp SA's report dated exactly 2025-11-15 and report the revenue (mln PLN) and net income (mln PLN) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "PolCorp",
+            "PCO"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2025-11-15"
+          ]
+        }
+      },
+      "frozen_source_key": "polcorp-20251115",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "450"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-002",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval",
+        "stale-snapshot-trap"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool. Always call the tool with the exact company and report_date requested before answering -- never answer from memory or guess at figures."
+          },
+          {
+            "role": "user",
+            "content": "PolCorp SA has published more than one quarterly report. Using the get_financial_report_snapshot tool, fetch specifically the report dated 2025-08-14 (Q2 2025, NOT Q3) and report the exact EPS (PLN) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "PolCorp",
+            "PCO"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2025-08-14"
+          ]
+        }
+      },
+      "frozen_source_key": "polcorp-20250814",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "1.01",
+          "1,01"
+        ],
+        "final_answer_must_not_contain": [
+          "1.24",
+          "1,24"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-003",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval"
+      ],
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool. Always call the tool with the exact company and report_date requested before answering -- never answer from memory or guess at figures."
+          },
+          {
+            "role": "user",
+            "content": "Using the get_financial_report_snapshot tool, fetch NovaTech SA's report dated exactly 2026-02-20 and report the net margin (%) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "NovaTech",
+            "NVT"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2026-02-20"
+          ]
+        }
+      },
+      "frozen_source_key": "novatech-20260220",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "8.9",
+          "8,9"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-006",
+      "task_type": "transcript_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata",
+        "near-duplicate",
+        "ambiguous-resolution"
+      ],
+      "notes": "SPEC-003 R1: two real videos with near-identical titles (both 'Rick Astley - Never Gonna Give You Up') and near-identical durations (213s vs 214s) -- tests whether the model resolves to the SPECIFIC official upload named in the task rather than any plausible same-titled video.",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration questions and mode=transcript for questions about what is said in the video."
+          },
+          {
+            "role": "user",
+            "content": "There are two YouTube uploads of \"Rick Astley - Never Gonna Give You Up\": the official one at https://www.youtube.com/watch?v=dQw4w9WgXcQ (official channel, 4K remaster) and a separate plain lyrics reupload at https://www.youtube.com/watch?v=7FwDP17XPlk (different uploader, not the official channel). Using the yt_dlp tool, fetch metadata for the OFFICIAL one specifically -- not the lyrics reupload -- and report its exact duration in seconds."
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "dQw4w9WgXcQ"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "dQw4w9WgXcQ",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "213"
+        ],
+        "final_answer_must_not_contain": [
+          "214"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-004",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "advanced",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval",
+        "near-miss-date",
+        "stale-snapshot-trap"
+      ],
+      "notes": "SPEC-003 R2: PolCorp SA's third frozen quarter. report_date is deliberately NOT enum-restricted in expected_args_schema (unlike CAT-07-F-001/002/003) so a model's own wrong-date guess is not caught at the schema layer -- it must reach the harness's real corpus resolution, which is what actually exercises stale_snapshot_mismatch live (SPEC-001's fleet run only ever hit this path in offline hand-crafted unit tests, per SPEC-003 Problem statement).",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool. Always call the tool with the exact company and report_date requested before answering -- never answer from memory or guess at figures."
+          },
+          {
+            "role": "user",
+            "content": "PolCorp SA published a Q4 2025 report on 2026-02-13 (this is a different filing from its Q2 2025 report dated 2025-08-14 and its Q3 2025 report dated 2025-11-15). Using the get_financial_report_snapshot tool, fetch specifically the Q4 2025 report dated 2026-02-13 and report the exact EPS (PLN) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "PolCorp",
+            "PCO"
+          ]
+        },
+        "report_date": {
+          "type": "string"
+        }
+      },
+      "frozen_source_key": "polcorp-20260213",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "1.46",
+          "1,46"
+        ],
+        "final_answer_must_not_contain": [
+          "1.01",
+          "1,01",
+          "1.24",
+          "1,24"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-007",
+      "task_type": "transcript_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata",
+        "distractor-tool"
+      ],
+      "notes": "SPEC-003 R3: a second, thematically-tempting tool (`search_youtube`) is available but wrong for this task -- the url is already known, so the correct move is a direct yt_dlp call, not a keyword search. Tests wrong_tool detection under a real, same-domain choice (not a no-tool-available baseline).",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool (exact metadata/transcript for a KNOWN url) and a `search_youtube` tool (approximate keyword search when you do NOT have a url). Always prefer yt_dlp when you already have the exact url -- never answer from memory or guess."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, what is the exact uploader/channel name of the video at https://www.youtube.com/watch?v=8vUCjYsWeSU?"
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "8vUCjYsWeSU"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "8vUCjYsWeSU",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "Prompt Engineering"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-005",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "advanced",
+      "tags": [
+        "tool-use",
+        "financial",
+        "multi-hop"
+      ],
+      "notes": "SPEC-003 R4: two sequential tool calls -- resolve_report_id(company) to learn the report_date, then get_financial_report_snapshot(company, report_date) to fetch the actual snapshot. expected_tool is the decisive second hop; the scorer's existing verdict logic (unchanged) naturally attributes failure to whichever hop actually produced the wrong content/args, since it only credits a pass when the DECISIVE tool was both called and resolved correctly. max_turns is raised from the harness default (3) to 5 to give a clean 2-hop conversation room to reach a final answer.",
+      "max_turns": 5,
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `resolve_report_id` tool (looks up a company's most recent report identifier/date on file -- returns NO figures) and a `get_financial_report_snapshot` tool (fetches a specific dated report's content). For a company whose exact report date you do not already know, first call resolve_report_id, then call get_financial_report_snapshot with the resolved report_date. Never guess a date."
+          },
+          {
+            "role": "user",
+            "content": "NovaTech SA has published a quarterly report, but you do not know the exact report date. First resolve the report identifier using the resolve_report_id tool, then fetch the snapshot using get_financial_report_snapshot with the resolved date, and report the net margin (%) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "NovaTech",
+            "NVT"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2026-02-20"
+          ]
+        }
+      },
+      "frozen_source_key": "novatech-20260220",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "8.9",
+          "8,9"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-008",
+      "task_type": "transcript_retrieval",
+      "difficulty": "advanced",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata",
+        "implicit-disambiguation",
+        "world-knowledge"
+      ],
+      "notes": "SPEC-003-001 R1/R2: reuses the CAT-07-T-006 near-duplicate video pair (dQw4w9WgXcQ / 7FwDP17XPlk), but unlike T-006 the prompt never names a URL, never says 'official', and never says 'reupload' -- it gives no tool-call target at all, only a real-world cultural description ('the classic Rickroll video'). The model must either (a) call search_youtube('Never Gonna Give You Up') to get both {video_id, title} candidates and use world knowledge to pick dQw4w9WgXcQ, or (b) recall the famous video_id directly from training data and verify it with a single decisive yt_dlp call. Either path is scoreable identically -- the scorer only checks the eventual yt_dlp call's args and the final answer's content, not which tools preceded it. Deliberately designed so the GOLD path makes exactly one call to the expected_tool (yt_dlp): scripts/score_cat07.py's _find_call() returns the FIRST call matching expected_tool by name, not the best-matching one, so a design that required two yt_dlp calls on different candidates (e.g. checking both candidates' upload_date to disambiguate) would mis-score a model that explored the wrong candidate first as bad_args even if it self-corrected -- see tests/test_score_cat07.py's paired pass/wrong-order-explored tests for both branches of this. report requires exact_match=True on the correct resource (per SPEC-003 precedent) and max_turns=5 (search hop + decisive yt_dlp hop + final answer turn, matching CAT-07-F-005's 2-hop precedent). CORRECTION (2026-08-21, from the independent Nightshift verifier's evidence gate): this max_turns=5 budget does NOT guarantee every fleet model avoids UNSCORE from turn exhaustion -- muse-glimmer-30b's live fleet run reached the correct resource by turn 2 but then looped on redundant re-verification and exhausted the budget without a final answer (UNSCORED, max_turns_exhausted_without_final_answer). A verifier probe at max_turns=10 confirmed it resolves correctly by turn 7, so the failure is a turn-budget/commitment-discipline effect, not a resource-identification failure -- see LEADERBOARD.md SS7d.",
+      "source_basis": "NFR-001 category (a): both frozen resources are freely public YouTube metadata (no payment/login) already reviewed compliant in NFR-001's Known Violations section for test_data/cat07/ (2026-08-21). No new corpus file added by this case -- it reuses dQw4w9WgXcQ.json (SPEC-001 original) and 7FwDP17XPlk.json (SPEC-003 R1, source_note already present in that file).",
+      "max_turns": 5,
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool (exact metadata/transcript for a KNOWN url) and a `search_youtube` tool (approximate keyword search when you do NOT have a url). Always call a tool to get real data before answering -- never answer purely from memory without verifying it against real tool data."
+          },
+          {
+            "role": "user",
+            "content": "There's more than one YouTube upload of the song \"Never Gonna Give You Up\". I specifically want the metadata for the one that's known worldwide as the original \"Rickroll\" video -- the one used for the classic internet prank -- not any other upload of the same song. Using the available tools, find that specific upload and report its exact uploader/channel name."
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "dQw4w9WgXcQ"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "dQw4w9WgXcQ",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "Rick Astley"
+        ],
+        "final_answer_must_not_contain": [
+          "Amazing Lyrics"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-009",
+      "task_type": "transcript_retrieval",
+      "difficulty": "advanced",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata",
+        "implicit-disambiguation",
+        "near-duplicate",
+        "obscure"
+      ],
+      "notes": "SPEC-003-005 R1/R2: a NEW near-duplicate video pair, deliberately chosen to be genuinely obscure -- unlike CAT-07-T-008's world-famous Rickroll pair, which every fleet model resolved via memorized world knowledge (SPEC-003-001's own finding). Both videos are real and were verified live via yt-dlp on 2026-08-21 (network access confirmed available in this worktree's sandbox -- see run report). aqz-KE-bpKQ is the real Blender Foundation YouTube channel's ('Blender', handle @BlenderOfficial) own upload of its CC-BY-licensed open movie 'Big Buck Bunny' -- yt-dlp reports the upload's license as 'Creative Commons Attribution license (reuse allowed)'. f7NwyBnIRTE is a real, unrelated channel's ('AnimalsReview') reupload of the identical film -- same 635s duration as aqz-KE-bpKQ (same underlying encode), uploaded roughly 5.5 months later. AC1 (obscurity, not just asserted): the FILM 'Big Buck Bunny' is well-known among developers as a CC test video (comparable to 'Never Gonna Give You Up' being a well-known song for T-008), but neither specific video ID here is documented/memorized training data anywhere near the density of dQw4w9WgXcQ, which recurs in essentially every internet rickroll reference -- there is no equivalent single canonical-ID fact pattern for Big Buck Bunny's many reuploads, so a model must actually retrieve and read tool output (title text) to tell the two apart, rather than recall an ID. AC5 (query-specificity/threshold-pruning, the SPEC-003-004 finding this spec's Problem addendum required addressing) -- CORRECTED (2026-08-21) after the live fleet run below: the two titles ('Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film' vs 'Animated Short Film \"Big Buck Bunny\", 4K, Full Length') share a token core (big/buck/bunny/short/film/4k), so a query built from those shared, generic descriptor words (e.g. 'Big Buck Bunny', 'Big Buck Bunny short film 4k', 'Big Buck Bunny official studio') surfaces BOTH candidates under search_youtube's 0.6 query-token-recall threshold -- verified both by a standalone probe (cat07_harness.execute_search_youtube) and empirically, live, in 2 of 5 fleet transcripts (qwen/qwen3.6-27b: query 'Big Buck Bunny'; gemma-4-31b-it: query 'Big Buck Bunny official studio'), both of which then read the two returned titles and correctly picked aqz-KE-bpKQ by its 'Official Blender Foundation' text -- genuine search-and-compare disambiguation (AC2 evidence, not pure recall). HOWEVER a query that leans on the DISAMBIGUATING words themselves ('Blender', 'Foundation', 'official') without also repeating a shared descriptor word DOES prune to the single correct candidate (e.g. 'Big Buck Bunny Blender Foundation official' -> only aqz-KE-bpKQ, 6/6 query tokens but only 3/6 overlap with the OTHER title's tokens, just under 0.6) -- observed live in 2 of 5 fleet transcripts (ornith-1.0-35b's first search; muse-glimmer-30b's 2nd/3rd searches, after it had already seen both candidates and yt_dlp'd both). This is a real instance of the Problem addendum's accepted branch (\"accept as realistic tool behavior -- a real search index would do the same\"): a more specific query narrowing to the one correct result is not case-design failure, and in the live run it never determined a model's outcome by itself (ornith and muse-glimmer's failures were unrelated turn-budget/looping issues after they had already resolved the correct video_id -- see run report). The original written claim here (a design guarantee that pruning was \"structurally unlikely regardless of phrasing\") did not survive contact with live model queries and has been corrected to the evidence above rather than left standing -- see tests/test_score_cat07.py for both the both-candidates-surfaced and prunes-to-one-candidate regressions, pinned to the real queries observed. Deliberately, as with T-008, the gold path makes exactly ONE decisive yt_dlp call (on aqz-KE-bpKQ): scripts/score_cat07.py's _find_call() first-match semantics mean a model that probes f7NwyBnIRTE first and only later self-corrects would still score bad_args on that first call -- see tests/test_score_cat07.py's paired pass/wrong-order-explored tests for both branches of this, mirroring CAT-07-T-008's precedent exactly. max_turns=5 matches CAT-07-T-008's precedent (search hop + decisive yt_dlp hop + final answer turn, with slack for one extra exploratory call).",
+      "source_basis": "NFR-001 category (a) for both frozen resources (freely public YouTube metadata, no payment/login), with aqz-KE-bpKQ additionally category (c)-adjacent (yt-dlp reports its license as Creative Commons Attribution, reuse allowed -- Big Buck Bunny is the Blender Foundation's own CC-BY-licensed open movie). Two NEW corpus files added by this case: test_data/cat07/transcripts/aqz-KE-bpKQ.json and test_data/cat07/transcripts/f7NwyBnIRTE.json, each carrying its own source_note per NFR-001 V1. Both videos were confirmed live and public via yt-dlp --dump-single-json --skip-download on 2026-08-21 (see run report); no video content, transcript, or audio was downloaded or committed -- only public metadata fields (title, uploader, duration, upload date), matching the existing corpus's established pattern.",
+      "max_turns": 5,
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool (exact metadata/transcript for a KNOWN url) and a `search_youtube` tool (approximate keyword search when you do NOT have a url). Always call a tool to get real data before answering -- never answer purely from memory without verifying it against real tool data."
+          },
+          {
+            "role": "user",
+            "content": "There's more than one YouTube upload of the short animated film \"Big Buck Bunny\". I specifically want metadata for the upload published directly by the studio that produced the film for its original release -- not any of the various other channels that have re-uploaded the same film since. Using the available tools, find that specific upload and report its exact uploader/channel name."
+          }
+        ]
+      },
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "aqz-KE-bpKQ"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "aqz-KE-bpKQ",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "Blender"
+        ],
+        "final_answer_must_not_contain": [
+          "AnimalsReview"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-006",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval",
+        "distractor-tool"
+      ],
+      "notes": "SPEC-003-002 R1/R2: a second, thematically-tempting tool (`get_stock_quote`) is available but wrong for this task -- the prompt mentions the ticker prominently (today's live PCO price is 'moving'), but the task explicitly asks for a specific dated report's figures, which only get_financial_report_snapshot can supply. Mirrors CAT-07-T-007's pattern (distractor tool available, wrong for a task where the correct tool is unambiguous) for the financial-report-retrieval side, per SPEC-003's Problem statement (the financial side had no real-distractor wrong_tool case, only a no-tool-available baseline).",
+      "source_basis": "NFR-001 category (b): reuses the existing frozen entry test_data/cat07/financial/polcorp-20251115.json (SPEC-001, already NFR-001-compliant, synthetic/fictional PolCorp SA data). No new frozen corpus file added by this case (AC2) -- get_stock_quote's synthetic quote table lives in cat07_harness.py itself, not test_data/cat07/, and is likewise synthetic/fictional harness-local data, not attributable to any real market-data source.",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool (fetches a specific dated report's content -- revenue, net income, EPS, margins) and a `get_stock_quote` tool (returns a live-style current price quote for a ticker -- NOT report figures). Always call the tool that actually returns the requested report data -- a price quote is not a substitute for report figures."
+          },
+          {
+            "role": "user",
+            "content": "I keep hearing PolCorp SA's ticker PCO is moving today, but I don't need the current price -- I need historical report data. Using the get_financial_report_snapshot tool, fetch PolCorp SA's (ticker: PCO) report dated exactly 2025-11-15 and report the net income (mln PLN) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "PolCorp",
+            "PCO"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2025-11-15"
+          ]
+        }
+      },
+      "frozen_source_key": "polcorp-20251115",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "38"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-007",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval",
+        "distractor-tool",
+        "implicit-tool-choice"
+      ],
+      "notes": "SPEC-003-007: unlike CAT-07-F-006 (which literally says \"Using the get_financial_report_snapshot tool\"), this case's user prompt names neither tool -- only the system message's tool descriptions distinguish get_financial_report_snapshot (dated report content) from get_stock_quote (live price, not report figures). The correct tool is still unambiguous from the information need: the prompt explicitly disclaims wanting the live price and asks for a specific dated report's net income, which only get_financial_report_snapshot can supply. Mirrors CAT-07-T-008/T-009's generic \"using the available tools\" phrasing (the only two existing cases that actually omit a tool name from their user prompt), not CAT-07-T-007 (which, despite being cited as a precedent for this in earlier drafts, literally names yt_dlp in its own user prompt -- verified against the live corpus while drafting this case).",
+      "source_basis": "NFR-001 category (b): reuses the existing frozen entry test_data/cat07/financial/novatech-20260220.json (already used by CAT-07-F-003/F-005, SPEC-001-era synthetic/fictional NovaTech SA data). No new frozen corpus file added (AC2/R3).",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool (fetches a specific dated report's content -- revenue, net income, EPS, margins) and a `get_stock_quote` tool (returns a live-style current price quote for a ticker -- NOT report figures). Always call the tool that actually returns the requested report data -- a price quote is not a substitute for report figures."
+          },
+          {
+            "role": "user",
+            "content": "NovaTech SA (ticker: NVT) is all over the financial news today after announcing a German market expansion plan, and I know the stock has been active -- but I don't care about today's live share price. What I need is the net income figure NovaTech SA's report dated exactly 2026-02-20 stated. What was it?"
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "NovaTech",
+            "NVT"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2026-02-20"
+          ]
+        }
+      },
+      "frozen_source_key": "novatech-20260220",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "19"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-F-008",
+      "task_type": "financial_report_retrieval",
+      "difficulty": "intermediate",
+      "tags": [
+        "tool-use",
+        "financial",
+        "dated-retrieval",
+        "verbatim-formatting-probe"
+      ],
+      "notes": "SPEC-003-008: turns the incidental qwen3.8-27b finding from SPEC-003-002's CAT-07-F-006 run (it embedded the prompt's parenthetical \"(ticker: PCO)\" verbatim into the company argument as \"PolCorp SA (PCO)\", which -- had this case's stricter must_contain_any been \"PolCorp\"/\"PCO\" alone -- still passes schema validation, but fails corpus resolution) into a repeatable, scored probe. This case wraps the ticker in square brackets inline in prose (\"...listed as [PCO] in today's...\") to bait the same verbatim-copy failure mode more directly: a model that extracts the clean value \"PCO\" passes; a model that copies \"[PCO]\" literally into the company argument passes the schema check (must_contain_any still matches the substring \"PCO\") but fails at corpus resolution -- a distinctly different bad_args reason (\"tool call resolved to no corpus entry\") than a schema-level bad_args failure, per score_cat07.py's existing two-stage bad_args logic (R2 needs no new verdict or scorer change, per Out of Scope -- the existing schema-vs-resolution split already distinguishes the two failure classes).",
+      "source_basis": "NFR-001 category (b): reuses the existing frozen entry test_data/cat07/financial/polcorp-20251115.json (already used by CAT-07-F-006). No new frozen corpus file added (AC2/R3).",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial research assistant with access to a `get_financial_report_snapshot` tool (fetches a specific dated report's content -- revenue, net income, EPS, margins) and a `get_stock_quote` tool (returns a live-style current price quote for a ticker -- NOT report figures)."
+          },
+          {
+            "role": "user",
+            "content": "PolCorp SA's ticker is listed as [PCO] in today's market summary, though I need historical report data, not a live quote. Using the correct tool, fetch the report dated exactly 2025-11-15 and report the net income (mln PLN) it states."
+          }
+        ]
+      },
+      "expected_tool": "get_financial_report_snapshot",
+      "expected_args_schema": {
+        "company": {
+          "type": "string",
+          "must_contain_any": [
+            "PolCorp",
+            "PCO"
+          ]
+        },
+        "report_date": {
+          "type": "string",
+          "enum": [
+            "2025-11-15"
+          ]
+        }
+      },
+      "frozen_source_key": "polcorp-20251115",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "38"
+        ]
+      }
+    },
+    {
+      "id": "CAT-07-T-010",
+      "task_type": "transcript_retrieval",
+      "difficulty": "basic",
+      "tags": [
+        "tool-use",
+        "youtube",
+        "metadata",
+        "commitment-discipline"
+      ],
+      "notes": "SPEC-003-012/SPEC-003-011 Decision: isolates commitment discipline as the sole variable, unlike CAT-07-T-008/CAT-07-F-006/CAT-07-T-009 (SPEC-003-011's analysis), where the pattern recurred only incidentally under tight-to-moderate turn budgets (3-5). This case reuses the existing frozen dQw4w9WgXcQ resource (already used by CAT-07-T-002/003/006/008 -- R3-style reuse, no new corpus content) with the most direct possible prompt (explicit url + mode, matching CAT-07-T-001's style) and asks for a single fact (upload_date) not asked by any existing case, so resolution requires exactly one decisive yt_dlp call with nothing left to disambiguate. max_turns=10 (double CAT-07-T-008/T-009's 5-turn precedent) deliberately makes turn budget NOT the bottleneck: a model that resolves quickly and answers should do so in 1-2 turns regardless, and a model that would exhibit the resolved_but_uncommitted pattern has 8+ spare turns to either self-correct into an answer or keep looping -- this case can therefore distinguish 'the pattern only shows up when turns are tight' from 'the pattern recurs regardless of how much room is available', which the 3 incidental source cases could not answer on their own.",
+      "prompt": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a research assistant with access to a `yt_dlp` tool for acquiring YouTube video data. Always call the tool to get real data before answering a question about a specific video -- never answer from memory or guess. Use mode=metadata for title/uploader/duration/date questions."
+          },
+          {
+            "role": "user",
+            "content": "Using the yt_dlp tool, what is the exact upload date of the video at https://www.youtube.com/watch?v=dQw4w9WgXcQ?"
+          }
+        ]
+      },
+      "max_turns": 10,
+      "expected_tool": "yt_dlp",
+      "expected_args_schema": {
+        "url": {
+          "type": "string",
+          "must_contain": "dQw4w9WgXcQ"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "metadata"
+          ]
+        }
+      },
+      "frozen_source_key": "dQw4w9WgXcQ",
+      "checks": {
+        "final_answer_must_contain_any": [
+          "2009-10-25",
+          "October 25, 2009",
+          "25 October 2009"
+        ]
+      }
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

@@ -1,0 +1,118 @@
+{
+  "_meta": {
+    "generated_by": "scripts/model_identity.py build-registry",
+    "installed_source": "lms ls --json",
+    "note": "Installed entries are refreshed live from `lms ls --json`; deleted entries are curated manually since they are no longer queryable. Never edit `aliases` to merge two artifacts with different verdicts (see qwen3.8-27b vs qwen3.8-27b-mlx)."
+  },
+  "qwen3.8-27b": {
+    "modelKey": "qwen3.8-27b",
+    "artifact": "mlx-community/Qwen3.8-27B-4bit",
+    "quantization": "4bit",
+    "lifecycle_state": "installed",
+    "aliases": ["qwen3.8-27b"]
+  },
+  "qwen3.8-27b-mlx": {
+    "modelKey": null,
+    "artifact": "community 2-bit quant (unofficial), ctx246784-gated run",
+    "quantization": "2bit",
+    "lifecycle_state": "deleted-rejected",
+    "aliases": ["qwen3.8-27b-mlx"],
+    "notes": "NOT an alias of qwen3.8-27b. Overall 1.14, 25/61 empty finals; rejected and deleted. Must never resolve to the retained 4-bit model's runs (SPEC-003-018 AC1)."
+  },
+  "mtplx-qwen38-27b-optimized-speed-fp16": {
+    "modelKey": null,
+    "artifact": "qwen3.8-27b served via mtplx runtime, fp16, speed-optimized smoke test",
+    "quantization": "fp16",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["mtplx-qwen38-27b-optimized-speed-fp16"],
+    "notes": "Distinct runtime/quant from the canonical qwen3.8-27b LM Studio seat; kept separate rather than merged."
+  },
+  "muse-glimmer-30b": {
+    "modelKey": "muse-glimmer-30b",
+    "artifact": "lmstudio-community/Muse-Glimmer-30B-GGUF",
+    "quantization": "kquant",
+    "lifecycle_state": "installed",
+    "aliases": ["muse-glimmer-30b", "lmstudio-community/muse-glimmer-30b", "argo/muse-glimmer-30b"]
+  },
+  "qwen/qwen3.6-27b": {
+    "modelKey": "qwen/qwen3.6-27b",
+    "artifact": "qwen/qwen3.6-27b",
+    "quantization": "5bit",
+    "lifecycle_state": "installed",
+    "aliases": ["qwen/qwen3.6-27b", "qwen36-27b-5bit", "qwen36-27b-mlx-ctx32k"]
+  },
+  "gemma-4-31b-it": {
+    "modelKey": "gemma-4-31b-it",
+    "artifact": "mlx-community/gemma-4-31B-it-4bit",
+    "quantization": "4bit",
+    "lifecycle_state": "installed",
+    "aliases": ["gemma-4-31b-it"]
+  },
+  "ornith-1.5-35b-a3b-mlx": {
+    "modelKey": "ornith-1.5-35b-a3b-mlx",
+    "artifact": "ornith-ai/Ornith-1.5-35B-A3B-MLX-4bit",
+    "quantization": "4bit",
+    "lifecycle_state": "installed",
+    "aliases": ["ornith-1.5-35b-a3b-mlx"]
+  },
+  "ornith-1.5-35b-a3b-oq4e-mtp": {
+    "modelKey": null,
+    "artifact": "Ornith 1.5 35B-A3B, oq4e-mtp quant variant (mtp-smoke run)",
+    "quantization": "oq4e-mtp",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["ornith-1.5-35b-a3b-oq4e-mtp"],
+    "notes": "Distinct quant variant of the 35B-A3B model; not merged with ornith-1.5-35b-a3b-mlx."
+  },
+  "ornith-1.5-9b-mlx": {
+    "modelKey": null,
+    "artifact": "Ornith 1.5 9B MLX (not currently installed)",
+    "quantization": "4bit",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["ornith-1.5-9b-mlx"],
+    "notes": "Distinct model size from ornith-1.5-35b-a3b-mlx; never merged."
+  },
+  "ornith-1.0-35b": {
+    "modelKey": null,
+    "artifact": "Ornith 1.0 35B (superseded by Ornith 1.5, deleted)",
+    "quantization": "6bit",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["ornith-1.0-35b"]
+  },
+  "ornith-1.0-9b": {
+    "modelKey": null,
+    "artifact": "Ornith 1.0 9B (superseded by Ornith 1.5, deleted)",
+    "quantization": "unknown",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["ornith-1.0-9b"]
+  },
+  "ornith-1.0-9b@q8_0": {
+    "modelKey": null,
+    "artifact": "Ornith 1.0 9B, q8_0 GGUF quant (deleted)",
+    "quantization": "q8_0",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["ornith-1.0-9b@q8_0"],
+    "notes": "Distinct quant from ornith-1.0-9b; not merged."
+  },
+  "mistral-small-3.2-24b-instruct-2506-mlx": {
+    "modelKey": null,
+    "artifact": "mistralai/Mistral-Small-3.2-24B-Instruct-2506 (MLX), deleted 2026-08-14",
+    "quantization": "unknown",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["mistral-small-3.2-24b-instruct-2506-mlx"]
+  },
+  "lfm2.5-2.6b-mlx": {
+    "modelKey": null,
+    "artifact": "LFM2.5 2.6B MLX (evaluation seat, not retained in current fleet)",
+    "quantization": "unknown",
+    "lifecycle_state": "deleted-retained-evidence",
+    "aliases": ["lfm2.5-2.6b-mlx"]
+  },
+  "system": {
+    "modelKey": null,
+    "artifact": "Apple Foundation Models (on-device), non-LM-Studio probe served on localhost:1976",
+    "quantization": "n/a",
+    "lifecycle_state": "external-non-lmstudio",
+    "aliases": ["system"],
+    "notes": "Not an LM Studio model; kept in the registry so its one run stays attributed rather than falling into the unattributable bucket. lifecycle_state deliberately outside the three LM-Studio states (installed / deleted-retained-evidence / deleted-rejected) because it was never an LM Studio artifact."
+  }
+}

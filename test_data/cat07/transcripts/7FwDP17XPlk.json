@@ -1,0 +1,12 @@
+{
+  "video_id": "7FwDP17XPlk",
+  "url": "https://www.youtube.com/watch?v=7FwDP17XPlk",
+  "title": "Rick Astley - Never Gonna Give You Up",
+  "uploader": "Amazing Lyrics",
+  "duration_s": 214,
+  "upload_date": "2025-05-27",
+  "captured": "2026-08-21 via yt-dlp --dump-single-json --skip-download (mirrors mcp__shipyard__lmac-run__yt_dlp mode=metadata)",
+  "transcript_excerpt": null,
+  "metadata_fingerprint_sha256": "f2a2a3680b586b23b19ed0517b14edd0ae329d39e34f47f31759074dc5d9e8c5",
+  "source_note": "Public YouTube video metadata (category a per NFR-001) -- freely accessible without payment/login. SPEC-003 R1: a near-duplicate/ambiguous-title pair with dQw4w9WgXcQ (same song/artist name in title, near-identical duration 214s vs 213s, different uploader -- a lyrics reupload, not the official Rick Astley channel). Deliberately NOT the official video; used to test whether a model resolves to the specific URL the task names rather than any plausible same-titled video."
+}

@@ -1,0 +1,8 @@
+{
+  "run_id": "2026-08-21_ornith-1.5-9b-mlx_mlx4bit-ctx128k-gated",
+  "model_id": "ornith-1.5-9b-mlx",
+  "settings_gate": {
+    "actual_context_length": 131072
+  },
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

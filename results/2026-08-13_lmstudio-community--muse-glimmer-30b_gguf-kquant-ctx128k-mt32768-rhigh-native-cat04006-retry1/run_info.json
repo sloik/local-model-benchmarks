@@ -1,0 +1,5 @@
+{
+  "run_id": "2026-08-13_lmstudio-community--muse-glimmer-30b_gguf-kquant-ctx128k-mt32768-rhigh-native-cat04006-retry1",
+  "model_id": "lmstudio-community/muse-glimmer-30b",
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

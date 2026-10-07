@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-13_lmstudio-community--muse-glimmer-30b_gguf-kquant-ctx128k-mt32768-rhigh-native-full-recovered",
+  "model_id": "lmstudio-community/muse-glimmer-30b",
+  "eval_date": "2026-08-13",
+  "evaluator": "qwen/qwen3.6-27b",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 4.6,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.9,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 5.0,
+      "min": 5,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 4.9,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 4.2,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "overall": {
+      "mean": 4.72,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

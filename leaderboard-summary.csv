@@ -1,0 +1,2 @@
+status,note
+retired,"Retired 2026-09-16 (SPEC-003-021). Superseded by leaderboard.csv (SPEC-003-019's canonical multi-judge writer) and LEADERBOARD.md section 2. This file's Gemma-4-31b agentic_aider/agentic_hermes 5/5 figures were the retired inflated bar (see LEADERBOARD.md's opening banner); the current reference-scored figure is 3/3. Do not read status/quality/agentic values from this file."

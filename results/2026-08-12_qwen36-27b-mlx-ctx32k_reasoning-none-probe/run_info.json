@@ -1,0 +1,5 @@
+{
+  "run_id": "2026-08-12_qwen36-27b-mlx-ctx32k_reasoning-none-probe",
+  "model_id": "qwen36-27b-mlx-ctx32k",
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

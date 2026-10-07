@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-07-13_system_apple-fm",
+  "model_id": "system",
+  "eval_date": "2026-07-13",
+  "evaluator": "mistralai/mistral-small-3.2",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 3.7,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.2,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 3.9,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 3.3,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 2.9,
+      "min": 2,
+      "max": 4,
+      "n": 10
+    },
+    "overall": {
+      "mean": 3.6,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

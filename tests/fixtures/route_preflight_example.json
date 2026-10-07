@@ -1,0 +1,17 @@
+[
+  {
+    "question": "Czy wyniki Q1'26 tłumaczą spadek prognozy EPS?",
+    "field": null,
+    "_note": "Synthetic attribution question; causal support requires the stronger verifier."
+  },
+  {
+    "question": "Ile wyniosły przychody w Q1'26?",
+    "field": "przychody",
+    "_note": "clean atomic extraction against a labelled table -> V0/local"
+  },
+  {
+    "question": "Ile wyniósł zysk netto po wyłączeniu zdarzenia jednorazowego +4,3 mln zł?",
+    "field": "zysk_netto_akcjonariuszom",
+    "_note": "ex-item / one-off adjustment basis -> V2/frontier despite a whitelisted field"
+  }
+]

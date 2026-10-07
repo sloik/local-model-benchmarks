@@ -1,0 +1,781 @@
+{
+  "category": "CAT-05",
+  "version": "public-1.0",
+  "created": "2026-03-07",
+  "updated": "2026-10-07",
+  "created_by": "Argo",
+  "tests": [
+    {
+      "id": "CAT-05-001",
+      "name": "Financial document type classification",
+      "difficulty": "basic",
+      "tags": [
+        "classification",
+        "triage",
+        "polish",
+        "document-type"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Fictional documents concerning Polkomfort S.A. (home furnishings retail chain, Warsaw Stock Exchange). Tests distinction of 4 types: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Three prompts = three different document types.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correct label (one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne) + concise justification (1 sentence) referencing specific document features.\n4 — Good: correct label, but justification missing or generic ('because it looks like a report').\n3 — Acceptable: correct label but wrong format (e.g., 'raport' instead of 'raport_kwartalny'), or description without clear label.\n2 — Poor: label close to correct but wrong (e.g., 'analiza_analityczna' instead of 'raport_kwartalny').\n1 — Fail: no classification, refusal, completely wrong label, hallucination.\n\nNote: tolerate minor variations in format ('raport kwartalny' = 'raport_kwartalny'). Penalize choosing 'inne' when another label is clearly correct.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Quarterly report fragment — interim financial statement, IFRS, Q3/9M table, MAR obligation",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort S.A.\nSkrócone śródroczne skonsolidowane sprawozdanie finansowe za okres 9 miesięcy zakończony 30 września 2025 r.\n\nSporządzone zgodnie z Międzynarodowymi Standardami Sprawozdawczości Finansowej zatwierdzonymi przez Unię Europejską.\n\nZarząd Polkomfort S.A. z siedzibą w Warszawie (ul. Konstruktorska 12, 02-673 Warszawa) przedstawia niniejszy raport w ramach obowiązku informacyjnego wynikającego z Rozporządzenia MAR.\n\nWybrane skonsolidowane dane finansowe (tys. PLN):\n\n|                              | Q3 2025  | Q3 2024  | 9M 2025    | 9M 2024    |\n|------------------------------|:--------:|:--------:|:----------:|:----------:|\n| Przychody ze sprzedaży       |  847 231 |  792 450 |  2 341 887 |  2 198 654 |\n| EBITDA                       |  128 445 |  112 330 |    356 221 |    318 940 |\n| EBIT                         |   93 112 |   80 228 |    257 445 |    228 115 |\n| Zysk netto                   |   71 334 |   59 812 |    196 223 |    168 440 |\n| Dług netto                   |  234 567 |  289 334 |    234 567 |    289 334 |\n\nNiniejszy raport nie był poddany badaniu ani przeglądowi przez biegłego rewidenta.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "raport_kwartalny"
+            ],
+            "forbidden": [
+              "news_aktualizacja",
+              "analiza_analityczna",
+              "inne"
+            ],
+            "sample_answer": "raport_kwartalny\nThis is a condensed interim consolidated financial statement for 9M 2025, prepared by the company's management in accordance with IFRS as part of the MAR disclosure obligation."
+          }
+        },
+        {
+          "id": "p2",
+          "description": "News article from financial service — PAP dispatch, narrative, management comment, market reaction",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort bije konsensus — przychody Q3 lepsze od oczekiwań\n\nWarszawa, 14 listopada 2025 (PAP) — Polkomfort S.A. opublikował wyniki za trzeci kwartał 2025 roku, które zaskoczyły analityków in plus. Przychody ze sprzedaży wyniosły 847 mln PLN wobec mediany konsensusu na poziomie 821 mln PLN (+3,2% powyżej oczekiwań). Zysk netto osiągnął 71,3 mln PLN, przewyższając mediany prognoz o 8,2%.\n\nPrezes spółki, Marek Wiśniewski, skomentował wyniki: \"Wzrost przychodów wynika z dynamicznej ekspansji w kanale online, który odpowiadał za 23% sprzedaży w Q3, oraz otwarcia 12 nowych sklepów w sieci Polkomfort Home w okresie letnim.\"\n\nSpółka nie zaktualizowała przy okazji wyników prognozy rocznej. Kolejne wyniki — za Q4 i cały 2025 rok — spółka planuje opublikować 26 lutego 2026 r.\n\nAkcje Polkomfort zyskały 3,4% na otwarciu sesji na GPW, przy obrocie wyraźnie przekraczającym średnią z ostatnich 30 sesji.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "news_aktualizacja"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "analiza_analityczna",
+              "inne"
+            ],
+            "sample_answer": "news_aktualizacja\nThis is a news agency dispatch (PAP) reporting the publication of quarterly results with management comment and description of market reaction — no tabular financial data or independent investment recommendation."
+          }
+        },
+        {
+          "id": "p3",
+          "description": "Analyst note from brokerage firm — recommendation, target price, DCF, EPS forecast revision",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort S.A. | AKUMULUJ | Cena docelowa: 68,50 PLN (poprzednio: 61,00 PLN)\nDom Maklerski Alfa Sp. z o.o. | Analityk: Tomasz Kowalski | 18 listopada 2025\n\nWyniki Q3 2025: powyżej oczekiwań — podnosimy rekomendację i cenę docelową\n\nPo opublikowanych wynikach Q3 2025 podnosimy rekomendację z TRZYMAJ na AKUMULUJ i zwiększamy cenę docelową z 61,00 PLN do 68,50 PLN (+12,3%). Wyniki potwierdzają tezę o trwałości marż pomimo presji kosztowej.\n\nKluczowe wnioski:\n• Marża EBIT w Q3 2025: 11,0% vs. 10,1% rok wcześniej — poprawa dzięki dźwigni operacyjnej\n• Rewizja prognoz EPS FY2025E: z 3,12 PLN do 3,41 PLN (+9,3%); FY2026E: z 3,45 PLN do 3,78 PLN\n• Wycena DCF (WACC 9,8%, g=2,5%, horyzont 10 lat): wartość godziwa 66,80 PLN\n• Wycena porównawcza (EV/EBITDA 2026E x 7,2x peer group): 71,20 PLN\n• Wypadkowa cena docelowa (50% DCF / 50% porównawcza): 68,50 PLN\n\nRyzyko: spowolnienie konsumpcji prywatnej, wzrost kosztów najmu powierzchni handlowych.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "analiza_analityczna"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "news_aktualizacja",
+              "inne"
+            ],
+            "sample_answer": "analiza_analityczna\nThis is a brokerage research report containing an investment recommendation (AKUMULUJ), updated target price, and detailed DCF and comparable company valuations with EPS forecast revisions."
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-05-011"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-05-002",
+      "name": "Mixed document classification — quarterly report with embedded analyst note",
+      "difficulty": "advanced",
+      "tags": [
+        "classification",
+        "triage",
+        "mixed-document",
+        "embedded",
+        "quarterly-report"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "The Polkomfort S.A. document is an official quarterly report that contains an embedded section 'External Analyst Commentary' with a fragment from a brokerage note. The correct classification is raport_kwartalny (the document as a whole is an issuer report). Failure mode: the model sees words like 'target price', 'recommendation', 'analyst' in the middle and classifies the entire document as analiza_analityczna — this is wrong because it is a quoted section within the report, not a separate analytical document. Second prompt: classifying only the extracted analytical section (the correct answer here is analiza_analityczna).",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: p1 → raport_kwartalny with justification that the analyst section is part of the issuer report, not a separate document; p2 → analiza_analityczna for the isolated fragment. Both correct.\n4 — Good: both correct but p1 justification imprecise (e.g., 'because there is a table' instead of reference to issuer nature).\n3 — Acceptable: one of two correct — usually p2=analiza_analityczna OK, but p1 incorrectly classified as analiza_analityczna (typical failure mode).\n2 — Poor: both p1 and p2 → analiza_analityczna (model focuses on keywords, ignores context), or p1 → inne.\n1 — Fail: no classification, refusal, response inconsistent with the question.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Full quarterly report containing embedded section with analyst note quote — classify the entire document",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Classify based on the nature of the entire document — not just a selected section. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort S.A.\nSkrócone śródroczne skonsolidowane sprawozdanie finansowe za okres 9 miesięcy zakończony 30 września 2025 r.\nSporządzone zgodnie z MSSF | Obowiązek informacyjny MAR\n\nWybrane dane finansowe (tys. PLN):\n| | Q3 2025 | Q3 2024 |\n|--|:-------:|:-------:|\n| Przychody | 847 231 | 792 450 |\n| EBITDA | 128 445 | 112 330 |\n| EBIT | 93 112 | 80 228 |\n| Zysk netto | 71 334 | 59 812 |\n\nKomentarz Zarządu:\nW Q3 2025 kontynuowaliśmy dynamiczną ekspansję w kanale online, który odpowiadał za 23% sprzedaży. Wzrost marży EBIT wynika z dźwigni operacyjnej i poprawy miksu produktowego.\n\n---\n[SEKCJA DODATKOWA: Wybrane komentarze analityków zewnętrznych — cytowane za zgodą]\n\nDom Maklerski Alfa, 18 listopada 2025:\n\"Podnosimy rekomendację z TRZYMAJ na AKUMULUJ. Nowa cena docelowa: 68,50 PLN. Wyniki Q3 potwierdzają tezę o trwałości marż. Rewizja EPS FY2025E z 3,12 do 3,41 PLN (+9,3%).\"\n\n[KONIEC SEKCJI DODATKOWEJ]\n---\nNiniejszy raport nie był poddany badaniu ani przeglądowi przez biegłego rewidenta.\nWarszawa, 14 listopada 2025 | Podpisy Zarządu: Marek Wiśniewski (Prezes), Anna Kowalczyk (CFO)\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "raport_kwartalny"
+            ],
+            "forbidden": [
+              "analiza_analityczna",
+              "news_aktualizacja",
+              "inne"
+            ],
+            "explanation": "The entire document is a quarterly report from the issuer (Polkomfort S.A.) prepared by the Management Board in accordance with IFRS. The section with analyst note quotes is part of the report — it does not change the character of the document as a whole.",
+            "sample_answer": "raport_kwartalny\nThis is a condensed interim consolidated financial statement from Polkomfort S.A. Management prepared under the MAR disclosure obligation — the embedded section with analyst quotes is part of the issuer report, not a separate analytical document."
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Only the isolated analytical section extracted from context — the correct answer here is analiza_analityczna",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort S.A. | AKUMULUJ | Cena docelowa: 68,50 PLN (poprzednio: 61,00 PLN)\nDom Maklerski Alfa Sp. z o.o. | Analityk: Tomasz Kowalski | 18 listopada 2025\n\nPodnosimy rekomendację z TRZYMAJ na AKUMULUJ i zwiększamy cenę docelową z 61,00 PLN do 68,50 PLN (+12,3%). Wyniki Q3 2025 potwierdzają tezę o trwałości marż pomimo presji kosztowej.\n\nRewizja prognoz EPS:\n- FY2025E: z 3,12 PLN do 3,41 PLN (+9,3%)\n- FY2026E: z 3,45 PLN do 3,78 PLN (+9,6%)\n\nWycena DCF (WACC 9,8%, g=2,5%): wartość godziwa 66,80 PLN\nWycena porównawcza (EV/EBITDA 2026E x 7,2x): 71,20 PLN\nCena docelowa (50/50): 68,50 PLN\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "analiza_analityczna"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "news_aktualizacja",
+              "inne"
+            ],
+            "explanation": "This fragment is an isolated analyst note from a brokerage firm with recommendation, target price, and DCF valuation — without the context of the issuer report.",
+            "sample_answer": "analiza_analityczna\nThis is an analyst note from Dom Maklerski Alfa containing updated recommendation (AKUMULUJ), new target price of 68,50 PLN, and DCF and comparable company valuations with revised EPS forecasts."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-003",
+      "name": "ESPI current report — board member appointment notification",
+      "difficulty": "basic",
+      "tags": [
+        "classification",
+        "triage",
+        "espi",
+        "corporate-governance",
+        "inne"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "ESPI (Electronic System for Primary Information) current report about a board member appointment — a regulatory disclosure obligation in Poland. Correct answer is 'inne' in a 4-class taxonomy, as it is not quarterly report, news, or analyst note. Common failure mode: model classifies as news_aktualizacja (because it's 'new information') or raport_kwartalny (because it mentions the company formally). The document has a clear ESPI/RB identifier and obligatory formal language.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: inne + clear justification (ESPI/RB current report about corporate governance event, not financial results or analysis).\n4 — Good: inne with generic or incomplete justification.\n3 — Acceptable: news_aktualizacja (it is new information, but not a news report — partial credit for recognising non-financial content).\n2 — Poor: raport_kwartalny (clearly wrong — no financial data) or analiza_analityczna.\n1 — Fail: no classification, refusal, hallucination.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "ESPI RB (raport bieżący) about appointment of new Supervisory Board member",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nRANB NR 28/2025\nTemat: Powołanie Członka Rady Nadzorczej Logipol S.A.\n\nLogipol S.A. z siedzibą w Warszawie (\"Spółka\"), w nawiązaniu do raportu bieżącego nr 25/2025 dotyczącego rezygnacji Pana Andrzeja Nowaka z funkcji Członka Rady Nadzorczej, informuje, że w dniu 17 listopada 2025 r. Nadzwyczajne Walne Zgromadzenie Akcjonariuszy Spółki powołało Panią Katarzynę Wiśniewską na Członka Rady Nadzorczej Logipol S.A. z dniem 17 listopada 2025 r.\n\nInformacje o Pani Katarzynie Wiśniewskiej:\n- Wykształcenie wyższe ekonomiczne (SGH Warszawa), doktor nauk ekonomicznych\n- Doświadczenie zawodowe: CFO w Handlowiec S.A. (2019–2024), Dyrektor Finansowy w MedSupply Sp. z o.o. (2014–2019)\n- Nie prowadzi działalności konkurencyjnej wobec Logipol S.A.\n- Nie figuruje w Rejestrze Dłużników Niewypłacalnych\n\nPodstawa prawna: § 5 pkt 5 Rozporządzenia Ministra Finansów z dnia 29 marca 2018 r. w sprawie informacji bieżących i okresowych.\n\nOsoba odpowiedzialna za przekazanie raportu: Marek Wiśniewski, Prezes Zarządu Logipol S.A.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "inne"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "analiza_analityczna"
+            ],
+            "acceptable": [
+              "news_aktualizacja"
+            ],
+            "acceptable_note": "news_aktualizacja is an acceptable secondary answer (it IS new information), but inne is preferred as this is a formal regulatory disclosure, not a news article.",
+            "sample_answer": "inne\nThis is a Polish ESPI/RB current report (raport bieżący) disclosing a Supervisory Board appointment — a regulatory governance disclosure, not financial results, news commentary, or investment analysis."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-004",
+      "name": "Annual report classification — raport_roczny as an extended category",
+      "difficulty": "intermediate",
+      "tags": [
+        "classification",
+        "triage",
+        "annual-report",
+        "extended-taxonomy",
+        "raport_roczny"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Tests whether the model distinguishes an annual (full-year) report from a quarterly report when given an extended 5-class taxonomy that includes raport_roczny. Polkomfort S.A. full-year 2025 report fragment with auditor's signature. Failure mode: classifying as raport_kwartalny (because it has financial tables) instead of raport_roczny (it covers the full year and has auditor's report). Second prompt uses the original 4-class taxonomy where the correct answer reverts to raport_kwartalny (closest available class) or inne.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: p1 → raport_roczny (correctly uses extended taxonomy), p2 → raport_kwartalny or inne with explanation that 4-class taxonomy lacks a dedicated class.\n4 — Good: p1 correct, p2 classifies as raport_kwartalny (reasonable choice given constraints).\n3 — Acceptable: p1 → raport_kwartalny (misses annual vs quarterly distinction); or p1 correct but p2 wrong.\n2 — Poor: both prompts classified as inne, or p1 → analiza_analityczna.\n1 — Fail: no classification, hallucination.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Annual report with auditor signature — 5-class taxonomy including raport_roczny",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_roczny / raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort S.A.\nSkonsolidowane sprawozdanie finansowe za rok obrotowy zakończony 31 grudnia 2025 r.\nSporządzone zgodnie z MSSF zatwierdzonymi przez UE\n\nOPINIA NIEZALEŻNEGO BIEGŁEGO REWIDENTA\nDla Walnego Zgromadzenia Akcjonariuszy i Rady Nadzorczej Polkomfort S.A.\n\nOpinia\nPrzeprowadziliśmy badanie załączonego skonsolidowanego sprawozdania finansowego Polkomfort S.A. obejmującego: skonsolidowane sprawozdanie z sytuacji finansowej na dzień 31 grudnia 2025 r., skonsolidowany rachunek zysków i strat, skonsolidowane sprawozdanie z całkowitych dochodów, sprawozdanie ze zmian w kapitale własnym oraz sprawozdanie z przepływów pieniężnych za rok zakończony tego dnia, wraz z informacją dodatkową.\n\nNaszym zdaniem, załączone skonsolidowane sprawozdanie finansowe przedstawia rzetelnie, we wszystkich istotnych aspektach, sytuację finansową Polkomfort S.A. na dzień 31 grudnia 2025 r.\n\nWarszawa, 28 lutego 2026 r.\nBDO Polska Sp. z o.o. | Kluczowy biegły rewident: Jan Nowak, nr uprawnień 12345\n\nWybrane dane finansowe FY2025 (tys. PLN):\n| | FY 2025 | FY 2024 |\n|--|:-------:|:-------:|\n| Przychody | 3 189 118 | 2 990 654 |\n| EBIT | 350 557 | 296 115 |\n| Zysk netto | 267 993 | 221 640 |\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "raport_roczny"
+            ],
+            "forbidden": [
+              "news_aktualizacja",
+              "analiza_analityczna"
+            ],
+            "acceptable": [
+              "raport_kwartalny"
+            ],
+            "acceptable_note": "raport_kwartalny is acceptable secondary as annual reports share some structural features, but raport_roczny is clearly correct given full-year scope, auditor opinion, and Feb date.",
+            "sample_answer": "raport_roczny\nThis is a full-year consolidated financial statement for FY2025 with an independent auditor's opinion — the annual scope (31 December year-end) and statutory audit distinguish it from a quarterly report."
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Same annual report — constrained 4-class taxonomy without raport_roczny",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolkomfort S.A.\nSkonsolidowane sprawozdanie finansowe za rok obrotowy zakończony 31 grudnia 2025 r.\nSporządzone zgodnie z MSSF zatwierdzonymi przez UE\n\nOPINIA NIEZALEŻNEGO BIEGŁEGO REWIDENTA\nDla Walnego Zgromadzenia Akcjonariuszy i Rady Nadzorczej Polkomfort S.A.\n\nNaszym zdaniem, skonsolidowane sprawozdanie finansowe przedstawia rzetelnie sytuację finansową Polkomfort S.A. na dzień 31 grudnia 2025 r.\n\nWarszawa, 28 lutego 2026 r. | BDO Polska Sp. z o.o.\n\nWybrane dane FY2025 (tys. PLN): Przychody 3 189 118 | EBIT 350 557 | Zysk netto 267 993\n---"
+            }
+          ],
+          "gold": {
+            "required_one_of": [
+              "raport_kwartalny",
+              "inne"
+            ],
+            "forbidden": [
+              "news_aktualizacja",
+              "analiza_analityczna"
+            ],
+            "explanation": "With a 4-class taxonomy, neither choice is ideal: raport_kwartalny is the closest structural match (periodic issuer financial report), while inne acknowledges the annual/audited scope doesn't fit quarterly. Both are acceptable — model should explain the limitation.",
+            "sample_answer": "raport_kwartalny\nWithin the 4-class taxonomy, this annual report is most similar to raport_kwartalny (periodic issuer financial statement) — though ideally a separate raport_roczny category would be used, as the document covers a full fiscal year with an independent auditor's opinion."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-005",
+      "name": "English-language earnings release — correct classification despite foreign language",
+      "difficulty": "intermediate",
+      "tags": [
+        "classification",
+        "triage",
+        "english",
+        "language-invariance",
+        "news_aktualizacja"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "English-language press release about quarterly earnings for a GPW-listed company's international subsidiary. Correct answer is news_aktualizacja — the language is English but the document type (press release / news announcement) is the same as a Polish news_aktualizacja. Failure mode: model classifies as 'inne' because it is in English, missing that classification should be type-based not language-based. Second prompt tests whether model correctly does NOT classify an actual English analyst note (with recommendation and DCF) as news_aktualizacja.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: p1 → news_aktualizacja with note that language doesn't affect document type; p2 → analiza_analityczna (English analyst note is still analyst note).\n4 — Good: both correct labels, no language explanation.\n3 — Acceptable: p1 → inne (over-penalises English) but correct reasoning; or p1 correct, p2 → news_aktualizacja.\n2 — Poor: p1 → raport_kwartalny (news release misclassified as financial report), or both → inne.\n1 — Fail: no classification, hallucination, refusal.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "English-language earnings press release from GPW company's investor relations",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Classification should be based on the document TYPE, not the language it is written in. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nMedipol S.A. — Q3 2025 Results Press Release\nWarsaw, November 12, 2025 — For Immediate Release\n\nMedipol S.A. (Warsaw Stock Exchange: MDP), a leading Polish medical devices manufacturer, today announced its financial results for the third quarter ended September 30, 2025.\n\nHighlights:\n- Revenue: PLN 412.5 mln (+14.2% year-over-year)\n- EBIT: PLN 34.7 mln, EBIT margin: 8.4% (vs 7.1% in Q3 2024)\n- Net income: PLN 25.2 mln (+28.6% y/y)\n\n\"We are pleased with our Q3 performance, driven by strong growth in our diagnostic segment and continued margin expansion from operational efficiency initiatives,\" said CEO Janusz Kowalski.\n\nMedipol will host an earnings conference call on November 14, 2025 at 10:00 CET. Dial-in details available at ir.medipol.pl.\n\nThis press release is for informational purposes only and does not constitute investment advice.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "news_aktualizacja"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "analiza_analityczna"
+            ],
+            "acceptable": [
+              "inne"
+            ],
+            "acceptable_note": "inne is a weak secondary accept if model explains English language and lack of formal MSSF structure — but news_aktualizacja is clearly better as this is a press release format.",
+            "sample_answer": "news_aktualizacja\nThis is an investor relations press release announcing Q3 results with a CEO comment and conference call invitation — the English language does not change its document type as a news/update announcement."
+          }
+        },
+        {
+          "id": "p2",
+          "description": "English-language analyst research note — should be analiza_analityczna not news",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Classification should be based on the document TYPE, not the language. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nMedipol S.A. (MDP PW) | BUY | Target Price: PLN 87.00 (previously PLN 74.00)\nBeta Securities Research | Analyst: James O'Brien | November 18, 2025\n\nQ3 Results Beat — Upgrading to BUY, Raising TP to PLN 87\n\nFollowing better-than-expected Q3 2025 results, we upgrade Medipol from HOLD to BUY and raise our 12-month target price from PLN 74.00 to PLN 87.00 (+17.6%), implying 28% upside from current levels.\n\nKey investment thesis:\n- Diagnostic segment margin expansion sustainable: 8.4% EBIT margin vs our 7.8% estimate\n- EPS upgrade: FY2025E raised from PLN 4.12 to PLN 4.65; FY2026E from PLN 4.78 to PLN 5.30\n- DCF valuation (WACC 10.2%, terminal g=2.5%, 10-year horizon): PLN 84.20\n- EV/EBITDA 2026E: 9.2× vs peer median 8.5× — premium justified by growth\n- Blended TP: 50% DCF + 50% comps = PLN 87.00\n\nRisks: regulatory pricing pressure in Polish healthcare, supply chain disruptions.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "analiza_analityczna"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "news_aktualizacja",
+              "inne"
+            ],
+            "sample_answer": "analiza_analityczna\nThis is a brokerage research note from Beta Securities with an upgraded investment recommendation (BUY), revised target price, and DCF plus comparable company valuations — an analyst note regardless of its English language."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-006",
+      "name": "Investor day presentation transcript — classification as inne",
+      "difficulty": "intermediate",
+      "tags": [
+        "classification",
+        "triage",
+        "investor-day",
+        "presentation",
+        "inne"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Polkomfort S.A. investor day transcript. Not a quarterly report (no period financial data), not news (no breaking news format), not analyst note (written by company management, no third-party recommendation). Correct: inne. Failure mode: model classifies as raport_kwartalny (has some financial data), or news_aktualizacja (it IS new information presented publicly). Key discriminator: it is a forward-looking management presentation, not a backward-looking financial statement.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: inne + clear justification (investor day presentation with strategy/guidance, not quarterly financial statement nor third-party analysis).\n4 — Good: inne with generic justification.\n3 — Acceptable: news_aktualizacja (it is new info released publicly — partial credit). raport_kwartalny is too wrong for partial credit.\n2 — Poor: raport_kwartalny or analiza_analityczna.\n1 — Fail: no classification, hallucination.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Investor day transcript with 3-year strategy, store rollout plan, and margin guidance",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPOLKOMFORT S.A. — INVESTOR DAY 2025\nTranskrypt prezentacji Zarządu | Warszawa, 5 grudnia 2025 r.\n\nPrezes Zarządu — Marek Wiśniewski:\n\"Szanowni Inwestorzy, dziękujemy za przybycie na nasze Investor Day. Chciałbym przedstawić trzyletni plan strategiczny Polkomfort na lata 2026–2028.\n\nGłówne kierunki:\n1. Ekspansja sieciowa: otwarcie 45 nowych sklepów do 2028 r., docelowo 320 lokalizacji (vs 275 aktualnie)\n2. Digitalizacja: udział e-commerce wzrośnie z 23% do 35% przychodów w 2028 r.\n3. Marże: docelowa marża EBITDA 18% w 2028 r. (vs 15,1% w 2025E)\n\nCFO — Anna Kowalczyk:\nNasze założenia CAPEX na lata 2026–2028: łącznie 380–420 mln PLN. Planujemy utrzymanie wskaźnika dług netto/EBITDA poniżej 1,5×. Dywidenda: planujemy wypłacać 40–50% zysku netto rocznie.\n\nSesja Q&A dostępna pod adresem: ir.polkomfort.pl/investor-day-2025\n\nNiniejsza prezentacja zawiera stwierdzenia dotyczące przyszłości. Rzeczywiste wyniki mogą różnić się od założeń.\"\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "inne"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "analiza_analityczna"
+            ],
+            "acceptable": [
+              "news_aktualizacja"
+            ],
+            "acceptable_note": "news_aktualizacja is a weak secondary accept — it WAS released publicly. But inne is clearly better: this is a strategy presentation, not a news article.",
+            "sample_answer": "inne\nThis is an Investor Day presentation transcript in which management presents a 3-year strategic plan with CAPEX and margin targets — it is forward-looking strategic guidance, not a periodic financial report, news dispatch, or third-party analysis."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-007",
+      "name": "Extended taxonomy — 6-class classification with espi_biezacy",
+      "difficulty": "advanced",
+      "tags": [
+        "classification",
+        "triage",
+        "extended-taxonomy",
+        "espi",
+        "6-class",
+        "multi-prompt"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Tests the model's ability to use an extended 6-class taxonomy including espi_biezacy (ESPI current report). Three prompts: (1) ESPI about dividend record date → espi_biezacy, (2) analyst note about sector → analiza_analityczna, (3) quarterly report fragment → raport_kwartalny. The key test is prompt 1 — model must use the new espi_biezacy class rather than defaulting to inne. Failure mode: models that were only trained on 4-class examples default to inne for ESPI docs.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all 3 prompts correctly classified (espi_biezacy, analiza_analityczna, raport_kwartalny).\n4 — Good: 2 of 3 correct, typically p1 wrong (inne instead of espi_biezacy).\n3 — Acceptable: 2 of 3 correct including p1, or all 3 with minor label format variation.\n2 — Poor: 1 of 3 correct, typically only raport_kwartalny.\n1 — Fail: all wrong or no classification.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "ESPI current report about dividend record date — espi_biezacy",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / raport_roczny / news_aktualizacja / analiza_analityczna / espi_biezacy / inne. Respond ONLY with the label and one sentence of justification.\n\nespi_biezacy: regulatory current report (raport bieżący) from a GPW-listed company disclosing a material event under MAR obligations (e.g. board changes, dividend decisions, significant contracts, shareholder notifications)."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nRANB NR 45/2025\nTemat: Ustalenie dnia dywidendy i terminu wypłaty dywidendy za rok 2024\n\nZarząd Polkomfort S.A. informuje, że Zwyczajne Walne Zgromadzenie Akcjonariuszy w dniu 22 maja 2025 r. podjęło uchwałę o wypłacie dywidendy za rok obrotowy 2024:\n\n- Dywidenda na jedną akcję: 1,80 PLN\n- Łączna kwota dywidendy: 162 000 000 PLN (przy 90 mln akcji)\n- Dzień dywidendy (dzień ustalenia prawa do dywidendy): 10 czerwca 2025 r.\n- Termin wypłaty dywidendy: 24 czerwca 2025 r.\n\nPodstawa prawna: Art. 56 ust. 1 pkt 2 Ustawy o ofercie — informacje bieżące i okresowe.\n\nOsoba odpowiedzialna: Anna Kowalczyk, CFO\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "espi_biezacy"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "raport_roczny",
+              "analiza_analityczna"
+            ],
+            "acceptable": [
+              "inne"
+            ],
+            "acceptable_note": "inne is a fallback if model doesn't recognise espi_biezacy category despite system prompt definition.",
+            "sample_answer": "espi_biezacy\nThis is a Polish ESPI regulatory current report (RANB nr 45/2025) disclosing the dividend record date and payment date following the AGM resolution — a material event disclosure under the MAR/Offering Act."
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Sector analyst note covering Polish retail — analiza_analityczna",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / raport_roczny / news_aktualizacja / analiza_analityczna / espi_biezacy / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPolski Handel Detaliczny — Aktualizacja sektorowa\nDom Maklerski Beta | Analityk sektorowy: Michał Zając | 20 listopada 2025\n\nPodtrzymujemy pozytywny pogląd na sektor handlu detalicznego w Polsce na 2026 rok. Kluczowe argumenty:\n\n• Realny wzrost wynagrodzeń (+6% r/r w 2025) wspiera konsumpcję prywatną\n• Inflacja CPI spada do 3,2% — normalizacja kosztów pracowniczych i energetycznych\n• Polkomfort S.A. (MKT CAP: 5,0 mld PLN): AKUMULUJ, PT 68,50 PLN — najlepsza ekspozycja na trend online\n• Handlowiec S.A. (MKT CAP: 3,2 mld PLN): TRZYMAJ, PT 45,00 PLN — presja marż z ekspansją\n\nEV/EBITDA 2026E sektora: 7,1× (discount do Europy Zachodniej 12,5% — uzasadniony premium ryzykiem rynku EM).\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "analiza_analityczna"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "raport_roczny",
+              "news_aktualizacja",
+              "espi_biezacy",
+              "inne"
+            ],
+            "sample_answer": "analiza_analityczna\nThis is a sector research note from a brokerage house containing investment recommendations and target prices for two companies, EV/EBITDA sector multiples, and a macro investment thesis."
+          }
+        },
+        {
+          "id": "p3",
+          "description": "Standard Q3 quarterly report — raport_kwartalny in extended taxonomy",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / raport_roczny / news_aktualizacja / analiza_analityczna / espi_biezacy / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nHandlowiec S.A.\nSkrócone śródroczne sprawozdanie finansowe za III kwartał 2025 r. (okres 9 miesięcy)\nSporządzone zgodnie z MSR 34 Śródroczna sprawozdawczość finansowa\n\nWybrane dane skonsolidowane (mln PLN):\n| | Q3 2025 | Q3 2024 | 9M 2025 | 9M 2024 |\n|--|:-------:|:-------:|:-------:|:-------:|\n| Przychody | 840,0 | 792,0 | 2 420,0 | 2 280,0 |\n| EBITDA | 122,4 | 110,3 | 352,1 | 319,4 |\n| EBIT | 95,2 | 83,1 | 274,8 | 246,3 |\n| Zysk netto | 71,1 | 60,5 | 204,9 | 181,5 |\n\nWarszawa, 14 listopada 2025 r. | Zarząd Handlowiec S.A.\nRaport nie był poddany badaniu przez biegłego rewidenta.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "raport_kwartalny"
+            ],
+            "forbidden": [
+              "raport_roczny",
+              "news_aktualizacja",
+              "analiza_analityczna",
+              "espi_biezacy",
+              "inne"
+            ],
+            "sample_answer": "raport_kwartalny\nThis is a condensed interim financial statement for Q3/9M 2025 prepared by Handlowiec S.A. management under IAS 34 — a standard periodic issuer report, not an annual report or regulatory current disclosure."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-008",
+      "name": "Prospectus fragment — classification as inne",
+      "difficulty": "intermediate",
+      "tags": [
+        "classification",
+        "triage",
+        "prospectus",
+        "IPO",
+        "inne"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "A share offering prospectus (prospekt emisyjny) is a regulatory document but not a quarterly report, news article, or analyst note. Correct: inne. Failure mode 1: model classifies as raport_kwartalny (has financial data). Failure mode 2: model classifies as analiza_analityczna (has risk factors and valuation references). Key discriminators: IPO/offering language, FSA (KNF) approval reference, 'emitent' role.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: inne + clear justification (share offering prospectus — regulatory document for capital market transaction, not periodic financial report or investment analysis).\n4 — Good: inne with generic justification.\n3 — Acceptable: analiza_analityczna (has risk factors and financial data — partial credit for recognising it's not a quarterly report).\n2 — Poor: raport_kwartalny.\n1 — Fail: no classification, hallucination.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Prospectus fragment — share offering with KNF approval and risk factors section",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nPROSPEKT EMISYJNY\nMEDIPOL S.A.\nz siedzibą w Warszawie\n\nProspekt emisyjny sporządzony w związku z:\n— Ofertą publiczną 8 500 000 nowych akcji serii C o wartości nominalnej 1,00 PLN każda (\"Akcje Oferowane\")\n— Zamiarem ubiegania się o dopuszczenie i wprowadzenie Akcji do obrotu na rynku regulowanym prowadzonym przez GPW w Warszawie S.A.\n\nNiniejszy Prospekt Emisyjny został zatwierdzony przez Komisję Nadzoru Finansowego (KNF) w dniu 5 marca 2026 r. decyzją nr DPP.WEI.410.1.2026.\n\nCENA EMISYJNA: 52,00 PLN za jedną Akcję Oferowaną\nŁączna wartość Oferty: 442 mln PLN\n\nCZYNNIKI RYZYKA (wybór):\n- Ryzyko zmiany regulacji refundacyjnych w ochronie zdrowia\n- Ryzyko wzrostu kosztów surowców i komponentów\n- Ryzyko kursowe (ekspozycja EUR/PLN na poziomie ~30% przychodów)\n\nOSTRZEŻENIE: Inwestowanie wiąże się z ryzykiem. Przed podjęciem decyzji inwestycyjnej zapoznaj się z pełną treścią Prospektu.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "inne"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "news_aktualizacja"
+            ],
+            "acceptable": [
+              "analiza_analityczna"
+            ],
+            "acceptable_note": "analiza_analityczna is a weak secondary accept — prospectus has some analytical features (risk factors, valuation) but was not produced by an independent analyst.",
+            "sample_answer": "inne\nThis is a share offering prospectus (prospekt emisyjny) approved by KNF for a public offering of new shares — a capital market transaction document, not a periodic financial report, news release, or third-party investment analysis."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-009",
+      "name": "Macro commentary — non-company-specific content classified as inne",
+      "difficulty": "basic",
+      "tags": [
+        "classification",
+        "triage",
+        "macro",
+        "no-company",
+        "inne"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "An NBP (National Bank of Poland) Monetary Policy Committee decision press release — macroeconomic content with no specific company. Correct: inne. Tests whether model can correctly classify content that has financial relevance but doesn't fit any of the other three classes. Failure mode: model sees 'interest rate decision' + 'PLN' and classifies as news_aktualizacja. The key distinction: news_aktualizacja in this taxonomy refers to news about a specific company, not macro releases.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: inne + justification that this is a macroeconomic central bank release, not related to a specific listed company.\n4 — Good: inne with generic justification.\n3 — Acceptable: news_aktualizacja with explanation (recognises it's news, misses 'company-specific' scope requirement).\n2 — Poor: raport_kwartalny or analiza_analityczna.\n1 — Fail: no classification, hallucination.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "NBP Monetary Policy Council interest rate decision press release",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. Classify the document as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. Note: news_aktualizacja refers to news or updates about a specific listed company. Respond ONLY with the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "Classify the document below:\n\n---\nNARODOWY BANK POLSKI — Komunikat po posiedzeniu Rady Polityki Pieniężnej\nWarszawa, 6 listopada 2025 r.\n\nRada Polityki Pieniężnej na posiedzeniu w dniu 6 listopada 2025 r. postanowiła obniżyć stopy procentowe NBP o 25 punktów bazowych:\n\n- Stopa referencyjna: 5,25% → 5,00%\n- Stopa lombardowa: 5,75% → 5,50%\n- Stopa depozytowa: 4,75% → 4,50%\n\nDecyzja uzasadniona dalszym spadkiem inflacji CPI (3,2% w październiku 2025 r., wobec szczytu 18,4% w lutym 2023 r.) oraz stabilizacją oczekiwań inflacyjnych. Rada ocenia, że ryzyko dla stabilności cen pozostaje zrównoważone.\n\nKolejne posiedzenie RPP odbędzie się w dniach 3–4 grudnia 2025 r.\n\nWięcej informacji: nbp.pl/polityka-pieniezna\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "inne"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "analiza_analityczna"
+            ],
+            "acceptable": [
+              "news_aktualizacja"
+            ],
+            "acceptable_note": "news_aktualizacja is a secondary accept — model may not have received the clarification that this taxonomy's news_aktualizacja scope is company-specific.",
+            "sample_answer": "inne\nThis is an NBP Monetary Policy Council press release announcing an interest rate decision — macroeconomic central bank communication, not a financial report or update about a specific listed company."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-010",
+      "name": "Batch classification — three documents in one prompt with structured output",
+      "difficulty": "advanced",
+      "tags": [
+        "classification",
+        "triage",
+        "batch",
+        "multi-document",
+        "structured-output"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Model receives three document fragments in a single prompt and must classify each separately with a label and justification. Tests: (1) ability to classify multiple documents without cross-contaminating context, (2) structured output with document identifiers, (3) not averaging or merging classifications. Documents: Doc A = raport_kwartalny, Doc B = analiza_analityczna, Doc C = inne (profit warning ESPI). Failure mode 1: classifies all three as the same type. Failure mode 2: produces narrative about all three without individual labels. Failure mode 3: mixes up which document gets which label.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all 3 documents correctly labelled (raport_kwartalny, analiza_analityczna, inne), each with individual justification, structured by document identifier.\n4 — Good: 2 of 3 correct, clear structure.\n3 — Acceptable: 2 of 3 correct but no structure (unlabelled which doc is which), or all 3 same label (fails independence test).\n2 — Poor: 1 of 3 correct, or all three given same classification.\n1 — Fail: no structured output, refuses batch, hallucination.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Classify 3 documents: quarterly report, analyst note, profit warning ESPI",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document triage system. You will receive multiple document fragments. Classify EACH document separately as one of: raport_kwartalny / news_aktualizacja / analiza_analityczna / inne. For each document, output: [Document ID]: [label] — [one sentence justification]."
+            },
+            {
+              "role": "user",
+              "content": "Classify each of the following three documents separately:\n\n=== DOCUMENT A ===\nLogipol S.A. | Śródroczne skrócone sprawozdanie finansowe za Q3 2025\nSporządzone zgodnie z MSSF | Obowiązek MAR\n\n| | Q3 2025 | Q3 2024 |\n|--|:-------:|:-------:|\n| Przychody | 289,0 mln | 251,0 mln |\n| EBIT | 43,1 mln | 43,2 mln |\n| Zysk netto | 31,4 mln | 32,1 mln |\n\nWarszawa, 13 listopada 2025 r. | Zarząd Logipol S.A.\n\n=== DOCUMENT B ===\nLogipol S.A. | TRZYMAJ | Cena docelowa: 28,00 PLN\nDom Maklerski Gamma | Analityk: Piotr Nowak | 19 listopada 2025\n\nObniżamy rekomendację z AKUMULUJ do TRZYMAJ. Wyniki Q3 rozczarowują — marża EBIT 14,9% (poniżej naszej prognozy 16,5%). Obniżamy cenę docelową z 32 do 28 PLN. Wycena DCF (WACC 9,5%, g=2,5%): 27,30 PLN. EV/EBITDA 2026E: 8,2×.\n\n=== DOCUMENT C ===\nRANB NR 52/2025 — OSTRZEŻENIE O ZYSKU\n\nZarząd Logipol S.A. informuje, że w związku z wyższymi niż przewidywane kosztami osobowymi w Q4 2025 r., spółka oczekuje, że wynik EBIT za rok 2025 ukształtuje się na poziomie 155–165 mln PLN, wobec poprzedniej prognozy 175–185 mln PLN.\n\nPodstawa prawna: Art. 17 MAR — informacja poufna.\nOsoba odpowiedzialna: Marek Wiśniewski, Prezes."
+            }
+          ],
+          "gold": {
+            "required_per_document": {
+              "Doc A": [
+                "raport_kwartalny"
+              ],
+              "Doc B": [
+                "analiza_analityczna"
+              ],
+              "Doc C": [
+                "inne"
+              ]
+            },
+            "acceptable_per_document": {
+              "Doc C": [
+                "news_aktualizacja"
+              ]
+            },
+            "acceptable_note": "Doc C: inne preferred (ESPI profit warning is a regulatory disclosure), news_aktualizacja acceptable (it IS new information about the company).",
+            "forbidden": [
+              "All three documents receiving the same label",
+              "Response that doesn't distinguish which label applies to which document",
+              "Doc A classified as analiza_analityczna or inne",
+              "Doc B classified as raport_kwartalny or news_aktualizacja"
+            ],
+            "sample_answer": "[Document A]: raport_kwartalny — Condensed interim IFRS financial statement for Q3 2025 prepared by Logipol S.A. management under MAR obligations.\n\n[Document B]: analiza_analityczna — Brokerage research note from Dom Maklerski Gamma with a downgraded investment recommendation (TRZYMAJ), revised target price, and DCF valuation.\n\n[Document C]: inne — Polish ESPI/MAR profit warning disclosure (RANB nr 52/2025) in which management revises full-year EBIT guidance — a regulatory current report, not a periodic financial statement or third-party analysis."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-05-011",
+      "name": "Synthetic document-purpose classification",
+      "difficulty": "basic",
+      "tags": [
+        "classification",
+        "document-type",
+        "rating",
+        "strategy",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-05-001",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Distinguish issuer results, independent credit action and forward strategy; output the exact label.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Distinguish issuer results, independent credit action and forward strategy; output the exact label.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Classify this fictional document as one of: raport_kwartalny / raport_ratingowy / strategia_prezentacja / news_aktualizacja / analiza_analityczna / inne. Return only the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA, PLN millions.\n2024: revenue 1000; operating costs 700; EBITDA 300; finance costs 100; profit before tax 200; tax benefit +20; net profit 220.\n2025: revenue 1200; operating costs 840; EBITDA 360; finance costs 120; profit before tax 240; tax expense -18; net profit 222.\nCollections 2025 are 320, compared with 260 in 2024. Investments fell from 300 to 250 because the company paused West-market purchases. Management plans to resume them in 2026. Cash EBITDA is 1200 million; net debt is 4800 million. These are invented figures, not an issuer filing.\n"
+            }
+          ],
+          "gold": {
+            "required": [
+              "raport_kwartalny"
+            ],
+            "forbidden": [
+              "raport_ratingowy",
+              "strategia_prezentacja"
+            ],
+            "sample_answer": "raport_kwartalny"
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Classify this fictional document as one of: raport_kwartalny / raport_ratingowy / strategia_prezentacja / news_aktualizacja / analiza_analityczna / inne. Return only the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Credit Agency notice for Example Receivables SA. The corporate rating is affirmed at BB with a stable outlook. Senior unsecured debt remains BB-, one notch lower because senior claims rank ahead of it. The agency lowered its entire receivables-sector operating-environment score from BB to B; it did not downgrade this issuer's corporate rating. Strengths are positive cash collections and liquidity reserves. Risks are collection cyclicality and aggressive bidding for portfolios.\n"
+            }
+          ],
+          "gold": {
+            "required": [
+              "raport_ratingowy"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "strategia_prezentacja"
+            ],
+            "sample_answer": "raport_ratingowy"
+          }
+        },
+        {
+          "id": "p3",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Classify this fictional document as one of: raport_kwartalny / raport_ratingowy / strategia_prezentacja / news_aktualizacja / analiza_analityczna / inne. Return only the label and one sentence of justification."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA — management strategy for 2027–2030. Targets: open two processing centers, move all applications to a unified system and train 100 employees. These are future objectives; the document contains no quarterly results or credit-rating action."
+            }
+          ],
+          "gold": {
+            "required": [
+              "strategia_prezentacja"
+            ],
+            "forbidden": [
+              "raport_kwartalny",
+              "raport_ratingowy"
+            ],
+            "sample_answer": "strategia_prezentacja"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-12_lmstudio-community--muse-glimmer-30b_gguf-kquant-ctx32k-mt1024-rnone-full",
+  "model_id": "lmstudio-community/muse-glimmer-30b",
+  "eval_date": "2026-08-12",
+  "evaluator": "mistral-small-3.2-24b-instruct-2506-mlx",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 3.6,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 3.6,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 2.5,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 1.1,
+      "min": 1,
+      "max": 2,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 4.4,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "overall": {
+      "mean": 3.04,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "argo.agentic-run-manifest.v1",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "suite_id", "models", "harness", "requested_context",
+    "observed_contexts", "timeout_seconds", "minimum_free_memory_mb", "max_turns", "tools", "dependencies",
+    "fixture_identity", "scorer_identity", "cases", "started_at", "canonical_output_path",
+    "provenance", "suite_identity", "model_artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "suite_id": {"const": "agentic-coding"},
+    "requested_context": {"type": "integer", "minimum": 131072},
+    "requested_parallel_predictions": {"const": 1},
+    "observed_parallel_predictions": {"type": "object"},
+    "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+    "minimum_free_memory_mb": {"type": "integer", "minimum": 1, "maximum": 1048576},
+    "observed_contexts": {"type": "object"},
+    "provenance": {"enum": ["native-unified", "imported-legacy-layout"]},
+    "legacy_import": {
+      "type": "object",
+      "required": [
+        "source_absolute_path", "source_portable_path", "source_git_commit",
+        "source_summary_path", "source_summary_sha256", "source_aggregate_sha256",
+        "destination_aggregate_sha256", "imported_at", "files"
+      ]
+    },
+    "case_statuses": {"type": "object"}
+  },
+  "allOf": [{
+    "if": {"properties": {"provenance": {"const": "imported-legacy-layout"}}},
+    "then": {"required": ["legacy_import", "case_statuses"]}
+  }],
+  "additionalProperties": true
+}

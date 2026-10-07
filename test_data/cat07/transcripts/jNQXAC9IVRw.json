@@ -1,0 +1,12 @@
+{
+  "video_id": "jNQXAC9IVRw",
+  "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+  "title": "Me at the zoo",
+  "uploader": "jawed",
+  "duration_s": 19,
+  "upload_date": "2005-04-24",
+  "captured": "2026-08-20 via yt-dlp --dump-single-json --skip-download (mirrors mcp__shipyard__lmac-run__yt_dlp mode=metadata)",
+  "transcript_excerpt": null,
+  "metadata_fingerprint_sha256": "f28d4b7e60476f28c722437887926245fd8d770fa4c4e9ef4892fd4c54ee778f",
+  "source_note": "Public YouTube video metadata only (no transcript excerpt), captured from the public URL recorded in this fixture without payment/login (NFR-001 category a). Existing capture metadata and fingerprints are preserved. Third-party material retains its original rights; public availability is not a redistribution license."
+}

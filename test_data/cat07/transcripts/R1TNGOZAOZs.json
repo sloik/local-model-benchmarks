@@ -1,0 +1,13 @@
+{
+  "video_id": "R1TNGOZAOZs",
+  "url": "https://www.youtube.com/watch?v=R1TNGOZAOZs",
+  "title": "Improved AI Memory? 🧠 Full Hermes Tutorial (Mnemosyne & Hindsight)",
+  "uploader": "Wanderloots",
+  "duration_s": 1585,
+  "upload_date": "2026-08-07",
+  "captured": "Factual metadata retained; transcript stand-in authored for public-synthetic-v1.",
+  "transcript_excerpt": "Synthetic benchmark transcript. A fictional assistant stores a note, retrieves it in a later task, and labels uncertain claims before answering. This invented paragraph exercises frozen transcript retrieval and does not transcribe the linked video.",
+  "transcript_excerpt_fingerprint_sha256": "81839cbd1a3528e8d0881fa2d3b2691581a71a0c2e77dbc3b2af21601dd9484b",
+  "metadata_fingerprint_sha256": "be70184e4c5190cda0418ef157fdc4dd5cfbc262ef3f0be0369e68d97e3a38fb",
+  "source_note": "Video metadata consists of public factual identifiers. Transcript text is original synthetic MIT-licensed test material, not actual captions."
+}

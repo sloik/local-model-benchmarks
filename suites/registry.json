@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "canonical_result_root": "results",
+  "suites": [
+    {
+      "id": "canonical-cat",
+      "family": "canonical",
+      "purpose": "Local-model quality, fidelity, and tool-use battery",
+      "runner": "scripts/run_all.sh",
+      "scorer": "suites/canonical/scoring.json",
+      "case_registry": "tests",
+      "cases": [
+        "CAT-01", "CAT-02", "CAT-03", "CAT-04", "CAT-05", "CAT-06", "CAT-07"
+      ],
+      "prerequisites": ["python", "pytest", "lm_studio_cli", "lm_studio_api"],
+      "canonical_result_root": "results"
+    },
+    {
+      "id": "agentic-coding",
+      "family": "agentic",
+      "purpose": "Held-out evaluation of multi-turn coding and refusal behavior",
+      "runner": "scripts/run_agentic_benchmark.py",
+      "scorer": "suites/agentic/scoring/score_reference.py",
+      "case_registry": "suites/agentic/suite.json",
+      "cases": [
+        "EVAL-001", "EVAL-002", "EVAL-003", "EVAL-004", "EVAL-005"
+      ],
+      "prerequisites": [
+        "macos", "zsh", "python", "pytest", "lm_studio_cli", "lm_studio_api",
+        "hermes", "credentials", "caffeinate", "free_memory"
+      ],
+      "canonical_result_root": "results"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+suites/agentic/fixtures/project/** -whitespace
+/.serena export-ignore
+/.agent-context export-ignore

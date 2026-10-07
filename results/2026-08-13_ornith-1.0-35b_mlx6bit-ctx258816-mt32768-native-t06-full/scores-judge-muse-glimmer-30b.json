@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-13_ornith-1.0-35b_mlx6bit-ctx258816-mt32768-native-t06-full",
+  "model_id": "ornith-1.0-35b",
+  "eval_date": "2026-08-14",
+  "evaluator": "lmstudio-community/muse-glimmer-30b",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 4.3,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.4,
+      "min": 3,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 4.7,
+      "min": 3,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 4.3,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 4.0,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "overall": {
+      "mean": 4.34,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

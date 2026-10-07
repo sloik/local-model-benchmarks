@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-16_qwen3.8-27b_mlx4bit-ctx208384-mt32768-rhigh-native-full-recovered",
+  "model_id": "qwen3.8-27b",
+  "eval_date": "2026-08-16",
+  "evaluator": "Claude Opus 5 / Argo",
+  "evaluator_type": "argo-opus-5",
+  "summary": {
+    "CAT-01": {
+      "mean": 4.2,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.6,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 4.9,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 4.6,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 4.6,
+      "min": 3,
+      "max": 5,
+      "n": 10
+    },
+    "overall": {
+      "mean": 4.58,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

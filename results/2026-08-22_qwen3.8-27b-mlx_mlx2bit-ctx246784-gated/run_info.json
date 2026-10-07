@@ -1,0 +1,8 @@
+{
+  "run_id": "2026-08-22_qwen3.8-27b-mlx_mlx2bit-ctx246784-gated",
+  "model_id": "qwen3.8-27b-mlx",
+  "settings_gate": {
+    "actual_context_length": 246784
+  },
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

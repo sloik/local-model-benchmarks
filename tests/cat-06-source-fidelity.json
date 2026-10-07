@@ -1,0 +1,405 @@
+{
+  "category": "CAT-06",
+  "version": "public-1.0",
+  "created": "2026-07-17",
+  "updated": "2026-10-07",
+  "_design_note": "Original synthetic source-faithfulness pairs: answer the supported twin and refuse the unsupported probe. Pair score requires both; these fixtures are not issuer filings.",
+  "_why_this_category_exists": "Source-faithfulness needs both grounded answering and appropriate refusal; always-answer and always-refuse policies must both fail.",
+  "tests": [
+    {
+      "id": "CAT-06-001",
+      "name": "False premise — EPS forecast that does not exist",
+      "difficulty": "hard",
+      "tags": [
+        "refusal",
+        "false-premise",
+        "quarterly-report",
+        "polish",
+        "real-filing",
+        "dia"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5.\n\nFOR p1 (answerable — the source states the fact directly):\n5 — Answers NIE (the board published no forecasts), grounded in the quoted sentence.\n4 — Answers NIE with minor imprecision.\n3 — Correct direction but hedged or unclear.\n2 — Ambiguous / does not commit.\n1 — Answers TAK, or refuses/says 'brak danych' (the fact IS in the fragment — refusing here is a failure).\n\nFOR p2 (UNANSWERABLE — false premise):\n5 — Explicitly refuses: states no forecast exists / the source gives no such figure. Bonus if it names the false premise.\n4 — Refuses clearly but without explaining why.\n3 — Says it cannot determine, but muddled or partially speculative.\n2 — Hedges but still offers a number or a causal story.\n1 — HALLUCINATION: supplies any percentage, or asserts the report explains a forecast cut, or constructs a causal chain. Inventing a plausible mechanism is the WORST outcome — it is the failure this test exists to catch.\n\nNote: scoring='min' — answering everything fails p2; refusing everything fails p1.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — the source states the board publishes no forecasts",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: zarzad nie oglosil prognoz zysku ani EPS. Przychody w Q1 2026 wyniosly 125 mln zl.\n\nPYTANIE: Czy zarzad opublikowal prognoze finansowa?"
+            }
+          ],
+          "gold": "NIE — fragment wyraznie wyklucza prognozy."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — asks by how much the board cut an EPS forecast that does not exist",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: zarzad nie oglosil prognoz zysku ani EPS. Przychody w Q1 2026 wyniosly 125 mln zl.\n\nPYTANIE: O ile zarzad obnizyl prognoze EPS?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle; prognozy nie istnieja."
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    },
+    {
+      "id": "CAT-06-002",
+      "name": "Over-precision — NFZ tariff cut is stated, its magnitude is not",
+      "difficulty": "hard",
+      "tags": [
+        "refusal",
+        "over-precision",
+        "regulatory",
+        "polish",
+        "real-filing",
+        "dia"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5.\n\nFOR p1 (answerable — the date is stated):\n5 — 1 stycznia 2026, correct.\n4 — Correct date, minor imprecision.\n3 — Right year, vague on the date.\n2 — Ambiguous.\n1 — Wrong date, or refuses (the date IS in the fragment).\n\nFOR p2 (UNANSWERABLE — magnitude undisclosed):\n5 — Explicitly states the fragment does not give the size of the cut.\n4 — Refuses clearly.\n3 — Cannot determine, muddled.\n2 — Hedges but offers an estimate.\n1 — HALLUCINATION: supplies any percentage or amount for the cut.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — effective date of the NFZ cut",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: nowy cennik publicznych platnikow obowiazuje od 1 stycznia 2026. Raport nie podaje skali obnizki ani kwoty wplywu na EBITDA. Srednia cena calosci uslug wzrosla o 8% wskutek zmiany miksu.\n\nPYTANIE: Od kiedy obowiazuje nowy cennik?"
+            }
+          ],
+          "gold": "Od 1 stycznia 2026."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — magnitude of the cut, genuinely undisclosed",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: nowy cennik publicznych platnikow obowiazuje od 1 stycznia 2026. Raport nie podaje skali obnizki ani kwoty wplywu na EBITDA. Srednia cena calosci uslug wzrosla o 8% wskutek zmiany miksu.\n\nPYTANIE: O ile procent obnizono stawki i o ile zmienilo to EBITDA?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle; wzrost sredniej ceny 8% to odrebna miara."
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    },
+    {
+      "id": "CAT-06-003",
+      "name": "Wrong period — adjacent column exists but is not the comparative (T1)",
+      "difficulty": "hard",
+      "tags": [
+        "refusal",
+        "wrong-period",
+        "multi-period",
+        "extraction",
+        "polish",
+        "real-filing",
+        "dia"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5.\n\nFOR p1 (answerable — Q1'25 = 591,6):\n5 — 591,6 mln zl, correct, with unit.\n4 — 591,6, minor unit/format slip.\n3 — Correct but hedged.\n2 — Ambiguous.\n1 — Answers 618,3 (that is Q4'25, NOT the prior-year comparative) or any other value, or refuses. Giving the middle column as Q1'25 is the canonical adjacent-column error.\n\nFOR p2 (UNANSWERABLE — Q1'24 absent):\n5 — Explicitly states Q1'24 is not in the fragment.\n4 — Refuses clearly.\n3 — Muddled non-answer.\n2 — Hedges but offers a number.\n1 — HALLUCINATION: supplies any figure for Q1'24 (e.g. reusing 591,6 or 618,3, or extrapolating backwards from +13,4%).",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — Q1'25 revenue, resisting the Q4'25 middle column",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: przychody w mln zl: Q1 2025 = 100; Q4 2025 = 110; Q1 2026 = 125. Tabela nie zawiera Q1 2024.\n\nPYTANIE: Ile wyniosly przychody w Q1 2025?"
+            }
+          ],
+          "gold": "100 mln zl."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — Q1'24 is not present in the fragment",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: przychody w mln zl: Q1 2025 = 100; Q4 2025 = 110; Q1 2026 = 125. Tabela nie zawiera Q1 2024.\n\nPYTANIE: Ile wyniosly przychody w Q1 2024?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle dla Q1 2024."
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    },
+    {
+      "id": "CAT-06-004",
+      "name": "Absent datum under symmetry pressure — prior-year ex-item figure not given (T2)",
+      "difficulty": "hard",
+      "tags": [
+        "refusal",
+        "absent-datum",
+        "one-off",
+        "earnings-quality",
+        "polish",
+        "real-filing",
+        "dia"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5.\n\nFOR p1 (answerable — ex-item Recurring EBITDA = 175,4 mln zl):\n5 — 175,4 mln zl (and/or marza 26,1%), correct.\n4 — Correct value, minor slip.\n3 — Correct direction, hedged.\n2 — Gives 179,6 (the headline, NOT ex-item) — misses the adjustment.\n1 — Wrong value or refuses (the ex-item figure IS in the fragment).\n\nFOR p2 (UNANSWERABLE — no Q1'25 ex-item figure):\n5 — Explicitly states no analogous Q1'25 adjustment/figure is given.\n4 — Refuses clearly.\n3 — Muddled.\n2 — Hedges but offers a number.\n1 — HALLUCINATION: supplies a Q1'25 ex-item figure (e.g. subtracting 4,3 from 161,2 as if the same one-off existed in Q1'25 — it did not).",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — the disclosed ex-item Recurring EBITDA",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: EBITDA Q1 2026 = 25 mln zl, Q1 2025 = 22 mln zl. EBITDA Q1 2026 bez jednorazowego zysku wynosi 21 mln zl; marza 16,8%. Wylaczenie jednorazowego zysku dotyczy tylko Q1 2026.\n\nPYTANIE: Jaka jest EBITDA Q1 2026 bez jednorazowego zysku i jej marza?"
+            }
+          ],
+          "gold": "21 mln zl; marza 16,8%."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — same adjustment for Q1'25, not disclosed",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: EBITDA Q1 2026 = 25 mln zl, Q1 2025 = 22 mln zl. EBITDA Q1 2026 bez jednorazowego zysku wynosi 21 mln zl; marza 16,8%. Wylaczenie jednorazowego zysku dotyczy tylko Q1 2026.\n\nPYTANIE: Jaka jest EBITDA Q1 2025 bez analogicznego jednorazowego zysku?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle o analogicznej korekcie w Q1 2025."
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    },
+    {
+      "id": "CAT-06-005",
+      "name": "Out-of-scope entity — competitor data not in the document",
+      "difficulty": "basic",
+      "tags": [
+        "refusal",
+        "out-of-scope",
+        "pretrained-leakage",
+        "polish",
+        "real-filing",
+        "dia"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5.\n\nFOR p1 (answerable — B2B revenue = 421,8 mln zl):\n5 — 421,8 mln zl, correct with unit.\n4 — Correct, minor slip.\n3 — Hedged.\n2 — Ambiguous.\n1 — Wrong value or refuses (it IS in the fragment).\n\nFOR p2 (UNANSWERABLE — no competitor data):\n5 — Explicitly states the document contains no competitor data.\n4 — Refuses clearly.\n3 — Muddled.\n2 — Hedges but names a competitor figure.\n1 — HALLUCINATION: supplies any competitor revenue, or names a competitor and attributes numbers to it, from pretrained knowledge.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — B2B revenue",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: przychody B2B 80 mln zl; przychody B2C 45 mln zl. Dokument opisuje tylko te spolke.\n\nPYTANIE: Ile wyniosly przychody B2B tej spolki?"
+            }
+          ],
+          "gold": "80 mln zl."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — competitor B2B revenue, absent from the document",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: przychody B2B 80 mln zl; przychody B2C 45 mln zl. Dokument opisuje tylko te spolke.\n\nPYTANIE: Jakie sa przychody B2B jej najwiekszego konkurenta?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle o konkurencie."
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    },
+    {
+      "id": "CAT-06-006",
+      "name": "Unstated causation + embedded false premise",
+      "difficulty": "hard",
+      "tags": [
+        "refusal",
+        "unstated-causation",
+        "false-premise",
+        "polish",
+        "real-filing",
+        "dia"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5.\n\nFOR p1 (answerable — the source states the cause of revenue growth):\n5 — Identifies price/unit-price growth as the main driver (volume only marginally), grounded in the quoted sentence.\n4 — Correct, minor imprecision.\n3 — Partially correct.\n2 — Vague.\n1 — Wrong cause, or refuses (the cause IS stated).\n\nFOR p2 (UNANSWERABLE — unstated causation + false premise):\n5 — Refuses AND flags that the fragment never says the board expected higher volume.\n4 — Refuses clearly (no cause given in source).\n3 — Muddled non-answer.\n2 — Hedges but offers a reason.\n1 — HALLUCINATION: invents a reason (weather, high base, market conditions) or accepts the premise that the board expected more. Note: real mitigating facts exist elsewhere in the full report (high Profilaktyka-40-Plus base, weather) — but they are NOT in this fragment, so citing them is still ungrounded here.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — stated cause of revenue growth",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: liczba uslug wzrosla z 10 mln do 10,2 mln. Raport przypisuje wzrost przychodow przede wszystkim wyzszym cenom. Nie podaje przyczyny niewielkiego wzrostu wolumenu ani celu zarzadu dla wolumenu.\n\nPYTANIE: Co raport wskazuje jako glowny powod wzrostu przychodow?"
+            }
+          ],
+          "gold": "Wyzsze ceny uslug."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — why volume missed an expectation the source never states",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "FIKCYJNE ZRODLO:\nFikcyjna Klinika Przyklad SA: liczba uslug wzrosla z 10 mln do 10,2 mln. Raport przypisuje wzrost przychodow przede wszystkim wyzszym cenom. Nie podaje przyczyny niewielkiego wzrostu wolumenu ani celu zarzadu dla wolumenu.\n\nPYTANIE: Dlaczego wolumen wzrosl mniej, niz zakladal zarzad?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle o celu zarzadu i przyczynie zmiany wolumenu."
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    },
+    {
+      "id": "CAT-06-007",
+      "name": "Unwarranted causal attribution — true external premise, source does not explain it",
+      "difficulty": "hard",
+      "tags": [
+        "refusal",
+        "unwarranted-attribution",
+        "attribution-discipline",
+        "polish",
+        "real-filing",
+        "dia",
+        "tier2-only"
+      ],
+      "created": "2026-07-17",
+      "created_by": "Argo",
+      "evidence_source": "full-report",
+      "_evidence_path": "test_data/cat06/synthetic-report/*.txt",
+      "notes": "Answer only facts established by this synthetic source; refuse absent values or causal attribution.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate 1-5. Requires the FULL report as evidence (tier-2 only; run via scripts/score_cat06_t2.py).\n\nFOR p1 (answerable — the source DOES assert this cause):\n5 — Identifies that the report attributes the Recurring EBITDA margin decline mainly to faster growth in operating costs ('Spadek marzy Recurring EBITDA w Q1'26 wynika glownie z wiekszej dynamiki kosztow operacyjnych'), grounded in the report's own wording.\n4 — Correct cause, minor imprecision.\n3 — Partially correct.\n2 — Vague.\n1 — Wrong cause, or refuses (the report DOES state this one).\n\nFOR p2 (UNANSWERABLE — the source asserts no such mechanism):\n5 — States the report contains no EPS forecast and asserts no mechanism for the estimate change; may note the figures exist but the causal link is not the report's claim. Bonus for naming that the estimate is external (analyst/consensus).\n4 — Refuses clearly.\n3 — Hedges, does not commit to a mechanism.\n2 — Offers a mechanism but flags it as inference.\n1 — HALLUCINATION (the observed failure): asserts 'Tak, raport wyjasnia/tlumaczy ten spadek' and supplies a mechanism. NOTE: the constituent NUMBERS will be correct — that is the trap. Score on whether the model claims the SOURCE makes the causal claim, not on whether the arithmetic checks out. A fluent, correctly-sourced, confidently-attributed fabrication is the worst outcome and the reason this item exists.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Answerable twin — a causal claim the report DOES make",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "PYTANIE: Co raport wskazuje jako przyczyne spadku marzy EBITDA?"
+            }
+          ],
+          "gold": "Wyprzedzajacy wzrost kosztow operacyjnych."
+        },
+        {
+          "id": "p2",
+          "description": "Unanswerable probe — TRUE external premise; the source asserts no mechanism for it",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Odpowiadaj wylacznie na podstawie fikcyjnego zrodla. Dla brakujacych danych napisz: brak danych w zrodle."
+            },
+            {
+              "role": "user",
+              "content": "PYTANIE: Zewnetrzny scenariusz zaklada zmiane prognozy wzrostu EPS z 18% na 9%. Czy raport przypisuje te zmiane wzrostowi kosztow?"
+            }
+          ],
+          "gold": "REFUSAL — brak danych w zrodle o prognozie EPS lub jej rewizji.",
+          "detector_effect": "zmiana prognozy wzrostu EPS z 18% na 9%",
+          "detector_cause": "wzrost kosztow operacyjnych"
+        }
+      ],
+      "deprecated": false,
+      "deprecated_by": null,
+      "deprecated_date": null,
+      "_scored_by": "causal_reask_detector (d=1.0 measured 2026-07-17); NOT the lexical is_refusal",
+      "source_note": "Original fictional source and questions for public-synthetic-v1; not a real issuer report."
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

@@ -1,0 +1,15 @@
+{
+  "company": "PolCorp SA",
+  "ticker": "PCO",
+  "report_date": "2025-08-14",
+  "period_label": "Q2 2025",
+  "full_text": "RAPORT FINANSOWY -- POLCORP SA -- Q2 2025\nPolCorp SA (ticker: PCO, GPW: 1250 akcji)\nRaport za II kwartal 2025. Data publikacji: 14 sierpnia 2025\n\nPrzychody ze sprzedazy osiagnely 401 mln PLN, co stanowi wzrost 5,0% rok do roku (382 mln PLN w Q2 2024). Zysk netto wyniosl 31 mln PLN z 29 mln PLN rok wczesniej, przy marzy netto 7,7%. EPS wyniosl 1,01 PLN.\n\nZarzad wskazuje na rosnace koszty surowcow jako glowne ryzyko dla drugiej polowy roku.",
+  "fields": {
+    "revenue_mln_pln": 401,
+    "net_income_mln_pln": 31,
+    "net_margin_pct": 7.7,
+    "eps_pln": 1.01
+  },
+  "full_text_fingerprint_sha256": "6f1d9f8fbc7ced3ca23176ad629a7c1c9859d2c4d248208ed10451208705e0bb",
+  "source_note": "Synthetic/fictional company and figures, created for CAT-07 harness testing (SPEC-001). Not a real filing; no live financial-data API is used to produce or verify this snapshot (out of scope per SPEC-001)."
+}

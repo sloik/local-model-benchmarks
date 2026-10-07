@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "routes": {
+    "CAT-01": {"semantic": "scripts/evaluate.py"},
+    "CAT-02": {"semantic": "scripts/evaluate.py"},
+    "CAT-03": {"semantic": "scripts/evaluate.py"},
+    "CAT-04": {"semantic": "scripts/evaluate.py", "executable_support": "scripts/code_validator.py"},
+    "CAT-05": {"semantic": "scripts/evaluate.py", "authoritative": "scripts/score_cat05_deterministic.py"},
+    "CAT-06": {"authoritative": "scripts/score_cat06.py", "long_context": "scripts/score_cat06_t2.py"},
+    "CAT-07": {"authoritative": "scripts/score_cat07.py"}
+  }
+}

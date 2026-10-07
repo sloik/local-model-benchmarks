@@ -1,0 +1,13 @@
+{
+  "video_id": "8vUCjYsWeSU",
+  "url": "https://www.youtube.com/watch?v=8vUCjYsWeSU",
+  "title": "Prime-Agent: We've Been Building AI Agents Wrong?",
+  "uploader": "Prompt Engineering",
+  "duration_s": 1207,
+  "upload_date": "2026-08-07",
+  "captured": "Factual metadata retained; transcript stand-in authored for public-synthetic-v1.",
+  "transcript_excerpt": "Synthetic benchmark transcript. An agent solves a small calculation using a notebook, checks its intermediate result, and explains which tool output supports the answer. This text is an invented test input and is not a quotation from the linked video.",
+  "transcript_excerpt_fingerprint_sha256": "068f9cc59c78803a6ff2cb4791e201d6a188ae4ffab928fbd137845d1b65b427",
+  "metadata_fingerprint_sha256": "64c8243b05b6c2d38d2b0d3da0643d34311176fc86684ee9d0593334ca550516",
+  "source_note": "Video metadata consists of public factual identifiers. Transcript text is original synthetic MIT-licensed test material, not actual captions."
+}

@@ -1,0 +1,99 @@
+{
+  "case_id": "CAT-07-T-009",
+  "subject": "ornith-1.0-35b",
+  "no_call": false,
+  "tool_calls_made": [
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "Big Buck Bunny Blender Foundation official"
+      },
+      "raw_result": {
+        "results": [
+          {
+            "video_id": "aqz-KE-bpKQ",
+            "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film"
+          }
+        ],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": true,
+      "timestamp": 1787321019.636425,
+      "tool_call_id": "962094938"
+    },
+    {
+      "name": "yt_dlp",
+      "args": {
+        "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+        "mode": "metadata"
+      },
+      "raw_result": {
+        "id": "aqz-KE-bpKQ",
+        "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film",
+        "uploader": "Blender",
+        "duration": 635,
+        "upload_date": "2014-11-10"
+      },
+      "resolved_key": "aqz-KE-bpKQ",
+      "exact_match": true,
+      "timestamp": 1787321096.029717,
+      "tool_call_id": "993249394"
+    },
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "Big Buck Bunny Blender Foundation 2008 original upload"
+      },
+      "raw_result": {
+        "results": [
+          {
+            "video_id": "aqz-KE-bpKQ",
+            "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film"
+          }
+        ],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": true,
+      "timestamp": 1787321222.609514,
+      "tool_call_id": "492255790"
+    },
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "Big Buck Bunny 2008 Blender Foundation original"
+      },
+      "raw_result": {
+        "results": [
+          {
+            "video_id": "aqz-KE-bpKQ",
+            "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film"
+          }
+        ],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": true,
+      "timestamp": 1787321284.08689,
+      "tool_call_id": "725014003"
+    },
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "Big Buck Bunny site:youtube.com Blender Foundation 2008"
+      },
+      "raw_result": {
+        "results": [],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": false,
+      "timestamp": 1787321328.683363,
+      "tool_call_id": "938332149"
+    }
+  ],
+  "final_answer": null,
+  "error": "max_turns_exhausted_without_final_answer",
+  "public_release_note": "Minimal regression tool trace: factual video metadata or fictional financial tool output, no caption content."
+}

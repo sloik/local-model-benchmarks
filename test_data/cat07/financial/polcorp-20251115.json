@@ -1,0 +1,15 @@
+{
+  "company": "PolCorp SA",
+  "ticker": "PCO",
+  "report_date": "2025-11-15",
+  "period_label": "Q3 2025",
+  "full_text": "RAPORT FINANSOWY -- POLCORP SA -- Q3 2025\nPolCorp SA (ticker: PCO, GPW: 1250 akcji)\nRaport za III kwartal 2025. Data publikacji: 15 listopada 2025\n\nPrzychody ze sprzedazy osiagnely 450 mln PLN, co stanowi wzrost 8,2% rok do roku (425 mln PLN w Q3 2024). Zysk netto zwiekszyl sie do 38 mln PLN z 34 mln PLN rok wczesniej, przy marzy netto 8,4%. EPS wyniosl 1,24 PLN.\n\nZarzad potwierdza prognozy na pelny rok 2025: przychody w zakresie 1700-1750 mln PLN, marza netto 8.0-8.5%.",
+  "fields": {
+    "revenue_mln_pln": 450,
+    "net_income_mln_pln": 38,
+    "net_margin_pct": 8.4,
+    "eps_pln": 1.24
+  },
+  "full_text_fingerprint_sha256": "7fc801b9d7ab5f1be4de942eb7e81e85722a9766e4474cd7e702f78cd291a6a9",
+  "source_note": "Synthetic/fictional company and figures, created for CAT-07 harness testing (SPEC-001). Not a real filing; no live financial-data API is used to produce or verify this snapshot (out of scope per SPEC-001)."
+}

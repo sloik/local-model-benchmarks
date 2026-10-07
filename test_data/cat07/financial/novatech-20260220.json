@@ -1,0 +1,15 @@
+{
+  "company": "NovaTech SA",
+  "ticker": "NVT",
+  "report_date": "2026-02-20",
+  "period_label": "Q4 2025",
+  "full_text": "RAPORT FINANSOWY -- NOVATECH SA -- Q4 2025\nNovaTech SA (ticker: NVT, GPW: 820 akcji)\nRaport za IV kwartal 2025. Data publikacji: 20 lutego 2026\n\nPrzychody ze sprzedazy osiagnely 213 mln PLN, co stanowi wzrost 14,6% rok do roku (186 mln PLN w Q4 2024). Zysk netto wyniosl 19 mln PLN z 12 mln PLN rok wczesniej, przy marzy netto 8,9%. EPS wyniosl 0,87 PLN.\n\nZarzad ogłosil plan ekspansji na rynek niemiecki w 2026 roku.",
+  "fields": {
+    "revenue_mln_pln": 213,
+    "net_income_mln_pln": 19,
+    "net_margin_pct": 8.9,
+    "eps_pln": 0.87
+  },
+  "full_text_fingerprint_sha256": "c2f42f7f5297284fdf44183707fdfd5749d68caea3d86bceb600e7e67ff2a487",
+  "source_note": "Synthetic/fictional company and figures, created for CAT-07 harness testing (SPEC-001). Not a real filing; no live financial-data API is used to produce or verify this snapshot (out of scope per SPEC-001)."
+}

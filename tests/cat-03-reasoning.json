@@ -1,0 +1,747 @@
+{
+  "category": "CAT-03",
+  "version": "public-1.0",
+  "created": "2026-03-07",
+  "updated": "2026-10-07",
+  "created_by": "Argo",
+  "tests": [
+    {
+      "id": "CAT-03-001",
+      "name": "Financial reasoning — metric calculations and variance explanation",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "calculations",
+        "metrics",
+        "variance"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Fictional company Logipol S.A. (warehouse and logistics operator, GPW). Two prompts: p1 = calculation of simple metrics from data (not given directly), p2 = explanation of margin deviation with changing costs. Tests the ability to perform financial arithmetic and causal reasoning — not just data extraction.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: numerical result correct (tolerance ±0.5 pp for percentage metrics, ±1% for values), reasoning logic correct and visible, conclusions consistent with data.\n4 — Good: result correct or minor rounding difference (±1 pp), reasoning logical though incomplete.\n3 — Acceptable: result with error ±5% or one reasoning step wrong but overall direction correct.\n2 — Weak: result incorrect >5% or reasoning detached from data (e.g. confuses revenue with margin).\n1 — Fail: hallucination, refusal, answer without calculations when we ask for calculations, numerical result absurd.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Calculation of financial metrics from quarterly data (not given directly)",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. You perform calculations based on provided data. Show your reasoning and round to 1 decimal place."
+            },
+            {
+              "role": "user",
+              "content": "Based on the following Logipol S.A. data for Q3 2025, calculate:\n1. EBIT margin (%)\n2. Net debt / EBITDA ratio\n3. Year-over-year revenue change (%)\n\nData:\n- Revenue Q3 2025: 289 mln PLN\n- Revenue Q3 2024: 251 mln PLN\n- EBIT Q3 2025: 43 mln PLN\n- Depreciation Q3 2025: 18 mln PLN\n- Net debt (end Q3 2025): 312 mln PLN\n- EBITDA for last 12 months (LTM): 238 mln PLN\n\nShow calculations step by step."
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "EBIT margin: 14.9% (43/289 = 14.878...%)",
+              "Net debt/EBITDA: 1.3x (312/238 = 1.310...x)",
+              "Year-over-year revenue change: +15.1% ((289-251)/251 = 15.14...%)"
+            ],
+            "acceptable_range": {
+              "ebit_margin": "14.5–15.3%",
+              "debt_ebitda": "1.2–1.4x",
+              "yoy_change": "+14.5–+15.7%"
+            },
+            "forbidden": [
+              "Using EBIT instead of EBITDA to calculate debt ratio",
+              "Calculating margin on Q3 2024 revenues instead of Q3 2025",
+              "Omitting calculation steps"
+            ],
+            "sample_answer": "1. EBIT margin = EBIT / Revenue = 43 / 289 = 14.9%\n2. Net debt / EBITDA = 312 / 238 = 1.3x\n3. Year-over-year revenue change = (289 - 251) / 251 = 38 / 251 = +15.1%"
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Explanation of EBIT margin deviation with rising revenue and costs",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. You explain the causes of changes in financial results based on provided data."
+            },
+            {
+              "role": "user",
+              "content": "Logipol S.A. reported revenue growth of 15.1% year-over-year in Q3 2025, but EBIT margin fell from 17.2% to 14.9%. Explain why the margin fell despite revenue growth, based on the data below.\n\nCost structure Q3 2025 vs. Q3 2024:\n- Personnel costs: 89 mln PLN vs. 71 mln PLN (+25.4% y/y)\n- Fuel and transport costs: 52 mln PLN vs. 43 mln PLN (+20.9% y/y)\n- Depreciation: 18 mln PLN vs. 14 mln PLN (+28.6% y/y)\n- Other operating costs: 87 mln PLN vs. 80 mln PLN (+8.8% y/y)\n\nRevenue Q3 2025: 289 mln PLN, Q3 2024: 251 mln PLN (+15.1% y/y)"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Identification of costs growing faster than revenue (personnel +25.4%, fuel +20.9%, depreciation +28.6% vs. revenue +15.1%)",
+              "Conclusion: cost growth outpaced revenue growth",
+              "Identification of main drivers: personnel or depreciation"
+            ],
+            "forbidden": [
+              "Claiming that revenue fell",
+              "Reversed causality",
+              "Ignoring cost data and speculating beyond the text"
+            ],
+            "sample_answer": "EBIT margin fell from 17.2% to 14.9% (−2.3 pp) despite rising revenue (+15.1%), because key cost categories grew faster:\n\n1. Personnel costs: +25.4% y/y (89 vs 71 mln PLN) — largest absolute impact (+18 mln PLN)\n2. Depreciation: +28.6% y/y — reflects new infrastructure investments\n3. Fuel/transport: +20.9% y/y — above revenue growth rate\n\nOnly other costs (+8.8%) grew slower than revenue. In total, costs rose by ~48 mln PLN while revenue rose by 38 mln PLN — a negative operating leverage effect."
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-03-011"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-03-002",
+      "name": "Bank covenant verification — metric calculations + pass/fail conclusion",
+      "difficulty": "advanced",
+      "tags": [
+        "reasoning",
+        "covenants",
+        "bank",
+        "pass-fail",
+        "conditional-logic",
+        "debt"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Logipol S.A. — verification of three bank covenants (Net debt/EBITDA, ICR, Minimum equity). One covenant is breached (ICR below threshold). Failure mode: model calculates metrics correctly but doesn't issue binary pass/fail conclusion, or issues conclusion without calculations, or confuses ICR (EBIT/interest) with DSCR. Second prompt: what happens after breach (conditional logic).",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all three metrics calculated correctly (tolerance ±0.05x / ±0.5 mln PLN), binary pass/fail conclusions for each covenant, clear indication of which covenant is breached and by how much, calculation logic visible.\n4 — Good: calculations correct, pass/fail conclusions present, but minor error (e.g. incorrect ICR rounding or missing margin-of-breach indication).\n3 — Acceptable: calculations with error ±5% or missing one metric, conclusion partially correct (identifies breach but not all three).\n2 — Weak: ICR calculated as EBITDA/interest instead of EBIT/interest (definition error), or conclusions without calculations, or breach not identified.\n1 — Fail: hallucination, refusal, numerical results absurd (e.g. ICR > 10 with given data), no conclusion.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Verification of three covenants — calculations + pass/fail — one breached (ICR)",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a credit analyst. You verify a company's compliance with bank covenants. For each covenant: calculate the metric, compare with threshold, provide PASS or FAIL conclusion."
+            },
+            {
+              "role": "user",
+              "content": "Based on the following Logipol S.A. data, verify whether the company meets all three covenants from the credit agreement at the end of Q3 2025.\n\n## Financial data (end Q3 2025 / LTM)\n- Net debt: 312 mln PLN\n- EBITDA LTM: 238 mln PLN\n- EBIT LTM: 162 mln PLN\n- Net interest expense LTM: 31 mln PLN\n- Equity (end Q3 2025): 487 mln PLN\n\n## Covenants from credit agreement\n1. Net debt / EBITDA ≤ 2.5x\n2. ICR (Interest Coverage Ratio = EBIT / net interest expense) ≥ 6.0x\n3. Equity ≥ 450 mln PLN\n\nFor each covenant: calculate the current metric, state the threshold, mark PASS or FAIL. At the end: does the company meet all covenants?"
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "Covenant 1 — Net debt/EBITDA: 312/238 = 1.31x ≤ 2.5x → PASS",
+              "Covenant 2 — ICR: 162/31 = 5.23x < 6.0x → FAIL (breach!)",
+              "Covenant 3 — Equity: 487 mln PLN ≥ 450 mln PLN → PASS",
+              "Final conclusion: NO, the company does NOT meet all covenants (ICR breach)"
+            ],
+            "acceptable_range": {
+              "debt_ebitda": "1.28–1.34x",
+              "icr": "5.18–5.28x",
+              "equity_mln": 487
+            },
+            "forbidden": [
+              "ICR calculated as EBITDA/interest (= 7.68x) instead of EBIT/interest",
+              "Covenant 2 as PASS (wrong ICR definition or incorrect calculation)",
+              "Conclusion 'all covenants met' (ignores ICR breach)",
+              "No binary PASS/FAIL for each covenant"
+            ],
+            "sample_answer": "Covenant 1 — Net debt / EBITDA:\n312 / 238 = 1.31x | Threshold: ≤ 2.5x | ✅ PASS (margin: 1.19x)\n\nCovenant 2 — ICR (EBIT / net interest expense):\n162 / 31 = 5.23x | Threshold: ≥ 6.0x | ❌ FAIL (breach by 0.77x)\n\nCovenant 3 — Equity:\n487 mln PLN | Threshold: ≥ 450 mln PLN | ✅ PASS (margin: 37 mln PLN)\n\nConclusion: The company does NOT meet all covenants. Covenant 2 is breached (ICR = 5.23x < 6.0x required)."
+          }
+        },
+        {
+          "id": "p2",
+          "description": "Conditional logic: consequences of covenant breach and remediation options",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a credit analyst. You explain the consequences of bank covenant breaches and possible remedial actions."
+            },
+            {
+              "role": "user",
+              "content": "Logipol S.A. has breached Covenant 2 (ICR = 5.23x versus required minimum 6.0x). The credit agreement provides:\n- Upon breach of one covenant: the bank may request a waiver (consent to release from requirement) or declare an Event of Default\n- Event of Default gives the bank the right to acceleration (immediate requirement to repay entire loan)\n- If the company obtains a waiver: it must present a remedial plan within 30 days\n\nLogipol's credit debt: 380 mln PLN (of which net debt: 312 mln PLN after accounting for 68 mln PLN cash).\n\nQuestion: What are two main scenarios for Logipol after the covenant breach, and what actions could the company take to improve its ICR ratio within the next 12 months?"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Scenario 1: Waiver — bank accepts, company presents remedial plan in 30 days",
+              "Scenario 2: Event of Default — bank may demand immediate repayment of 380 mln PLN credit",
+              "Actions improving ICR: increase EBIT (improve operating margins) or reduce debt (lower interest expense)"
+            ],
+            "forbidden": [
+              "Claiming that ICR covenant breach has no consequences",
+              "Confusing net debt (312 mln) with total credit debt (380 mln)",
+              "Ignoring waiver option and presenting only Event of Default scenario"
+            ],
+            "sample_answer": "Two main scenarios:\n\n1. WAIVER: The bank consents to waive the ICR requirement for the period. Logipol must present a remedial plan within 30 days. The credit remains active.\n\n2. EVENT OF DEFAULT: The bank refuses the waiver and invokes Event of Default. This gives the right to acceleration — immediate requirement to repay 380 mln PLN of credit, which with available cash of 68 mln PLN and net debt of 312 mln PLN would pose a serious liquidity risk.\n\nPossible remedial actions (improving ICR = EBIT/interest):\n- Increase EBIT: cut fixed costs, improve margins, increase sales volumes\n- Reduce interest expense: early partial repayment from cash (e.g. 50 mln PLN), refinance at lower rate\n- Combination: e.g. repay 50 mln PLN → interest falls from 31 to ~24 mln PLN, ICR rises to ~6.75x"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-003",
+      "name": "Revenue decomposition — volume effect vs. price effect",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "decomposition",
+        "volume-price",
+        "segments",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "EnergiaPlus S.A. with two revenue segments (electricity, services). Model must decompose total revenue change into volume effect and price effect for each segment. Standard formula: volume effect = Δvol × P₀, price effect = ΔP × vol₁. Failure mode: model swaps formula (uses P₁ for volume effect or vol₀ for price effect), or adds instead of separates the effects, or works only in percentages without mln PLN numbers.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correct formula for both effects (Δvol × P₀ and ΔP × vol₁), correct numbers for each segment and total, sum of effects matches total revenue change, clear structure.\n4 — Good: correct formula and values with minor rounding (±0.1 mln PLN) or missing total aggregation.\n3 — Acceptable: correct logic for one segment, error in other, or uses average price formula (Δvol × avg_P) — partial credit.\n2 — Weak: confuses volume and price effects (e.g. uses Δvol × P₁), or omits one effect, or works only in percentages.\n1 — Fail: no decomposition, hallucination, result inconsistent with data by >10%.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Decompose revenue change into volume and price effects for two segments",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. Decompose revenue changes into volume and price effects. Use the standard formula: volume effect = change in volume × prior-year price; price effect = change in price × current-year volume. Show all calculations."
+            },
+            {
+              "role": "user",
+              "content": "EnergiaPlus S.A. has two revenue segments. Using the data below for Q3 2025 vs. Q3 2024, decompose the total revenue change into: (a) volume effect and (b) price effect for each segment, and then aggregate to the total company level.\n\n## Segment A — Electricity trading\n- Q3 2025: 120,000 MWh sold × 450 PLN/MWh = 54.0 mln PLN\n- Q3 2024: 100,000 MWh sold × 420 PLN/MWh = 42.0 mln PLN\n\n## Segment B — Technical services\n- Q3 2025: 85 contracts × 250 tys. PLN/contract = 21.25 mln PLN\n- Q3 2024: 80 contracts × 240 tys. PLN/contract = 19.20 mln PLN\n\nShow calculations for each segment separately and then total. Round to 2 decimal places (mln PLN)."
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "Segment A volume effect: (120,000 − 100,000) × 420 PLN = 20,000 × 420 = 8.40 mln PLN",
+              "Segment A price effect: (450 − 420) × 120,000 = 30 × 120,000 = 3.60 mln PLN",
+              "Segment A total: 8.40 + 3.60 = 12.00 mln PLN ✓ (matches 54.0 − 42.0)",
+              "Segment B volume effect: (85 − 80) × 240 = 5 × 240 tys. = 1.20 mln PLN",
+              "Segment B price effect: (250 − 240) × 85 = 10 tys. × 85 = 0.85 mln PLN",
+              "Segment B total: 1.20 + 0.85 = 2.05 mln PLN ✓ (matches 21.25 − 19.20)",
+              "Company total volume effect: 8.40 + 1.20 = 9.60 mln PLN",
+              "Company total price effect: 3.60 + 0.85 = 4.45 mln PLN",
+              "Company total change: 9.60 + 4.45 = 14.05 mln PLN ✓"
+            ],
+            "acceptable_range": {
+              "seg_a_volume_mln": "8.3–8.5",
+              "seg_a_price_mln": "3.5–3.7",
+              "seg_b_volume_mln": "1.1–1.3",
+              "seg_b_price_mln": "0.8–0.9",
+              "total_volume_mln": "9.5–9.7",
+              "total_price_mln": "4.4–4.5"
+            },
+            "forbidden": [
+              "Volume effect calculated as Δvol × P₁ (current price instead of prior-year price)",
+              "Price effect calculated as ΔP × vol₀ (prior-year volume instead of current-year volume)",
+              "Sum of effects not matching total revenue change",
+              "Working only in percentages without mln PLN absolute values"
+            ],
+            "sample_answer": "Segment A (Electricity):\n- Volume effect: (120,000 − 100,000) × 420 = +8.40 mln PLN\n- Price effect: (450 − 420) × 120,000 = +3.60 mln PLN\n- Total: +12.00 mln PLN ✓\n\nSegment B (Services):\n- Volume effect: (85 − 80) × 240 tys. = +1.20 mln PLN\n- Price effect: (250 − 240) tys. × 85 = +0.85 mln PLN\n- Total: +2.05 mln PLN ✓\n\nCompany total:\n- Volume effect: 8.40 + 1.20 = +9.60 mln PLN (68.3%)\n- Price effect: 3.60 + 0.85 = +4.45 mln PLN (31.7%)\n- Total change: +14.05 mln PLN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-004",
+      "name": "Working capital analysis — NWC, DSO, DIO, DPO and cash conversion cycle",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "working-capital",
+        "CCC",
+        "DSO",
+        "DIO",
+        "DPO",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Handlowiec S.A. (retail chain). Model must calculate four metrics: net working capital, DSO, DIO, DPO and derive the cash conversion cycle (CCC = DSO + DIO − DPO). Quarter = 91 days. Failure mode 1: using revenue instead of COGS in denominator for DIO/DPO (common error). Failure mode 2: CCC formula inverted (+DPO instead of −DPO). Clean numbers: each ratio gives a whole or clean decimal.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all four metrics correct (tolerance ±0.5 days / ±1 mln PLN for NWC), CCC formula correct (DSO + DIO − DPO), steps visible.\n4 — Good: 3 of 4 metrics correct, or all correct but CCC formula has sign error in DPO.\n3 — Acceptable: 2 of 4 correct, or correct formula but wrong base (e.g. revenue for DIO).\n2 — Weak: uses revenue as denominator for DIO and DPO (systematic formula error), or CCC = DSO + DIO + DPO.\n1 — Fail: hallucination, refuses to calculate, absurd results (e.g. DSO > 365 days).",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Calculate NWC, DSO, DIO, DPO and cash conversion cycle from balance sheet and income data",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. Calculate working capital metrics. Use: DSO = receivables/revenue × days; DIO = inventory/COGS × days; DPO = payables/COGS × days; CCC = DSO + DIO − DPO. Quarter = 91 days. Show all calculations."
+            },
+            {
+              "role": "user",
+              "content": "Calculate the following working capital metrics for Handlowiec S.A. based on Q3 2025 data:\n\n1. Net Working Capital (NWC) = trade receivables + inventory − trade payables\n2. DSO (Days Sales Outstanding)\n3. DIO (Days Inventory Outstanding)\n4. DPO (Days Payables Outstanding)\n5. Cash Conversion Cycle (CCC = DSO + DIO − DPO)\n\n## Q3 2025 data (quarter = 91 days)\n- Revenue Q3 2025: 840 mln PLN\n- COGS Q3 2025: 504 mln PLN\n- Trade receivables (end of Q3 2025): 92.4 mln PLN\n- Inventory (end of Q3 2025): 252.0 mln PLN\n- Trade payables (end of Q3 2025): 168.0 mln PLN\n\nRound all ratios to 1 decimal place."
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "NWC = 92.4 + 252.0 − 168.0 = 176.4 mln PLN",
+              "DSO = 92.4 / 840 × 91 = 10.0 days",
+              "DIO = 252.0 / 504 × 91 = 45.5 days",
+              "DPO = 168.0 / 504 × 91 = 30.3 days",
+              "CCC = 10.0 + 45.5 − 30.3 = 25.2 days"
+            ],
+            "acceptable_range": {
+              "NWC_mln": "175–178",
+              "DSO_days": "9.8–10.2",
+              "DIO_days": "45.0–46.0",
+              "DPO_days": "30.0–30.6",
+              "CCC_days": "24.8–25.6"
+            },
+            "forbidden": [
+              "Using revenue (840) instead of COGS (504) in DIO or DPO denominator",
+              "CCC formula as DSO + DIO + DPO (wrong sign on DPO)",
+              "Using 90 or 92 days instead of 91 for a quarterly period"
+            ],
+            "sample_answer": "1. NWC = 92.4 + 252.0 − 168.0 = 176.4 mln PLN\n\n2. DSO = 92.4 / 840 × 91 = 0.110 × 91 = 10.0 days\n\n3. DIO = 252.0 / 504 × 91 = 0.500 × 91 = 45.5 days\n\n4. DPO = 168.0 / 504 × 91 = 0.333 × 91 = 30.3 days\n\n5. CCC = DSO + DIO − DPO = 10.0 + 45.5 − 30.3 = 25.2 days\n\nInterpretation: Handlowiec S.A. converts inventory to cash in ~25 days net of supplier financing — healthy for a retail chain."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-005",
+      "name": "Reverse DCF — implied growth rate from current stock price",
+      "difficulty": "advanced",
+      "tags": [
+        "reasoning",
+        "dcf",
+        "reverse-dcf",
+        "valuation",
+        "gordon-growth",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Polkomfort S.A. (retail). Model is given current market price and must work backwards to infer what perpetual NOPAT growth rate the market is pricing in. Uses simplified Gordon Growth: EV = NOPAT × (1+g)/(WACC−g). Key steps: calculate EV from market cap + net debt, calculate NOPAT from EBIT × (1−tax), solve quadratic/linear equation for g. Failure mode 1: model calculates EV from market cap only (forgets to add net debt). Failure mode 2: solves for wrong variable (e.g. calculates DCF value instead of implied g). Failure mode 3: reverses sign of net debt. Clean algebra: equation is linear in g.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: EV = market cap + net debt correct, NOPAT = EBIT×(1−tax) correct, algebraic solution for g correct (tolerance ±0.3 pp), interpretation comparing to analyst estimate included.\n4 — Good: all steps correct, minor rounding error (±0.5 pp in g), or missing interpretation.\n3 — Acceptable: correct approach but one calculation error (e.g. forgot to add net debt, off by ±1 pp in g).\n2 — Weak: solves forward DCF (computes EV) instead of reverse (solves for g), or uses revenue instead of NOPAT.\n1 — Fail: hallucination, result absurd (g > 20% or negative), refuses to calculate.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Solve for implied perpetual NOPAT growth rate using Gordon Growth model and current EV",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst specialising in DCF valuation. Use the Gordon Growth model: EV = NOPAT × (1 + g) / (WACC − g). Solve for g given known EV, NOPAT, and WACC. Show all algebra steps."
+            },
+            {
+              "role": "user",
+              "content": "Polkomfort S.A. stock trades at 56 PLN per share. Using the data below, calculate what perpetual NOPAT growth rate (g) the current stock price implies — i.e., perform a reverse DCF. Assume: CAPEX ≈ D&A (FCF ≈ NOPAT), no working capital changes.\n\n## Input data\n- Shares outstanding: 90 mln\n- Current stock price: 56 PLN\n- Net debt (end Q3 2025): 235 mln PLN (positive = net borrower)\n- LTM EBIT: 380 mln PLN\n- Corporate income tax rate: 19%\n- WACC: 9.5%\n\nSteps to follow:\n1. Calculate enterprise value (EV) = market cap + net debt\n2. Calculate NOPAT = EBIT × (1 − tax rate)\n3. Using Gordon Growth formula EV = NOPAT × (1 + g) / (WACC − g), solve for g\n4. Compare implied g with analyst consensus growth estimate of 6.0%\n\nShow all calculation steps."
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "Market cap = 90 mln × 56 PLN = 5,040 mln PLN",
+              "EV = 5,040 + 235 = 5,275 mln PLN",
+              "NOPAT = 380 × (1 − 0.19) = 380 × 0.81 = 307.8 mln PLN",
+              "Solving for g: 5,275 × (0.095 − g) = 307.8 × (1 + g) → 501.125 − 5,275g = 307.8 + 307.8g → 193.325 = 5,582.8g → g = 3.46%",
+              "Comparison: market implies ~3.5% growth vs analyst estimate of 6.0% → potential upside if analyst is correct"
+            ],
+            "acceptable_range": {
+              "EV_mln": "5,250–5,300",
+              "NOPAT_mln": "305–311",
+              "implied_g_pct": "3.2–3.8"
+            },
+            "forbidden": [
+              "EV = market cap only (omits adding net debt)",
+              "EV = market cap − net debt (wrong sign — net debt should be added for a net borrower)",
+              "Computing forward DCF (what is EV given assumed g) instead of reverse (solving for g)",
+              "Using EBIT instead of NOPAT in the formula"
+            ],
+            "sample_answer": "1. EV = 90 mln shares × 56 PLN + 235 mln net debt = 5,040 + 235 = 5,275 mln PLN\n\n2. NOPAT = 380 × (1 − 0.19) = 380 × 0.81 = 307.8 mln PLN\n\n3. Gordon Growth: 5,275 = 307.8 × (1 + g) / (0.095 − g)\n   5,275 × (0.095 − g) = 307.8 × (1 + g)\n   501.1 − 5,275g = 307.8 + 307.8g\n   193.3 = 5,582.8g\n   g = 193.3 / 5,582.8 = 3.46% ≈ 3.5%\n\n4. Market implies ~3.5% perpetual NOPAT growth vs analyst estimate of 6.0%. If the analyst is correct, the stock is undervalued at current prices (market underprices future growth by ~2.5 pp)."
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-03-012"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-03-006",
+      "name": "ROIC calculation — NOPAT and invested capital from balance sheet",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "ROIC",
+        "NOPAT",
+        "invested-capital",
+        "valuation",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Medipol S.A. (medical devices and services). Model must calculate ROIC = NOPAT / Invested Capital, where Invested Capital = PP&E + intangibles + net working capital. Two common errors: (1) using net income instead of NOPAT, (2) including cash and short-term financial debt in invested capital (invested capital should reflect operating assets only). Second prompt asks whether ROIC > WACC and what that means for value creation.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: NOPAT = EBIT×(1−tax) correct, Invested Capital = PP&E + intangibles + NWC correct (no cash/debt included), ROIC = NOPAT/IC correct (tolerance ±1 pp), comparison to WACC and value creation conclusion.\n4 — Good: ROIC correct but IC definition slightly off (e.g. includes total assets instead of operating assets, off by ≤10%).\n3 — Acceptable: uses net income instead of NOPAT but otherwise correct structure, or IC includes cash (but result still plausible).\n2 — Weak: ROIC = net profit / equity (= ROE, wrong metric entirely) or IC = total assets without adjustment.\n1 — Fail: hallucination, result outside plausible range (ROIC > 50% or < 0% without justification), refuses.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Calculate ROIC and assess whether company creates value (ROIC vs WACC)",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. Calculate ROIC = NOPAT / Invested Capital, where NOPAT = EBIT × (1 − tax rate) and Invested Capital = PP&E + intangible assets + net working capital (trade receivables + inventory − trade payables). Show all steps."
+            },
+            {
+              "role": "user",
+              "content": "Calculate ROIC for Medipol S.A. using the data below and assess whether the company creates or destroys shareholder value relative to its WACC.\n\n## LTM (last 12 months) income data\n- EBIT: 156 mln PLN\n- Corporate income tax rate: 19%\n\n## Balance sheet (end of LTM period)\n- PP&E (net): 342 mln PLN\n- Intangible assets (incl. goodwill): 87 mln PLN\n- Trade receivables: 98 mln PLN\n- Inventory: 67 mln PLN\n- Trade payables: 42 mln PLN\n- Cash: 73 mln PLN (exclude from invested capital)\n- Financial debt: 280 mln PLN (exclude from invested capital)\n\n## Cost of capital\n- WACC: 12.0%\n\nCalculate: (1) NOPAT, (2) Net Working Capital, (3) Invested Capital, (4) ROIC, (5) ROIC vs WACC — value creation or destruction?"
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "NOPAT = 156 × (1 − 0.19) = 156 × 0.81 = 126.4 mln PLN",
+              "NWC = 98 + 67 − 42 = 123 mln PLN",
+              "Invested Capital = 342 + 87 + 123 = 552 mln PLN",
+              "ROIC = 126.4 / 552 = 22.9%",
+              "ROIC (22.9%) > WACC (12.0%) → company creates shareholder value (economic profit positive)"
+            ],
+            "acceptable_range": {
+              "NOPAT_mln": "125–128",
+              "NWC_mln": "122–124",
+              "IC_mln": "550–554",
+              "ROIC_pct": "22.5–23.5"
+            },
+            "forbidden": [
+              "Including cash (73 mln) or financial debt (280 mln) in invested capital",
+              "Using net income instead of NOPAT (net income not given — model should not invent it)",
+              "ROIC = net profit / equity (confusing with ROE)",
+              "Incorrect NWC formula (e.g. omitting trade payables)"
+            ],
+            "sample_answer": "1. NOPAT = 156 × (1 − 0.19) = 126.4 mln PLN\n\n2. Net Working Capital = 98 + 67 − 42 = 123 mln PLN\n\n3. Invested Capital = PP&E + Intangibles + NWC = 342 + 87 + 123 = 552 mln PLN\n   (Cash and financial debt excluded — they are financing items, not operating assets)\n\n4. ROIC = 126.4 / 552 = 22.9%\n\n5. ROIC (22.9%) > WACC (12.0%) by +10.9 pp → Medipol creates substantial shareholder value. The company earns 10.9 pp above its cost of capital on each złoty of invested capital."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-007",
+      "name": "Scenario analysis — probability-weighted EV and price per share",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "scenarios",
+        "probability",
+        "valuation",
+        "EV",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Logipol S.A. — three-scenario analysis (bull/base/bear) with given probabilities and EV/EBIT multiples. Model must: (1) calculate EV for each scenario, (2) calculate probability-weighted EV, (3) subtract net debt to get equity value, (4) divide by shares to get price per share. Failure mode 1: forgetting to subtract net debt from EV. Failure mode 2: wrong probability weighting (e.g. equal weights instead of given). Failure mode 3: arithmetic error in weighted average.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: all three EVs correct, probability-weighted EV correct (tolerance ±5 mln PLN), net debt subtracted correctly, price per share correct (tolerance ±0.50 PLN).\n4 — Good: EVs and weighted EV correct, minor error in final step (e.g. rounding).\n3 — Acceptable: correct structure but one arithmetic error propagating through, or net debt forgotten.\n2 — Weak: uses equal probabilities (33/33/33) instead of given (25/50/25), or omits one scenario.\n1 — Fail: no calculation, hallucination, result outside plausible range.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Calculate probability-weighted EV and intrinsic price per share across three scenarios",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. Calculate scenario-weighted enterprise value and derive intrinsic equity value per share. Show all steps clearly."
+            },
+            {
+              "role": "user",
+              "content": "Perform a three-scenario analysis for Logipol S.A. FY2025. Calculate: (1) EV for each scenario, (2) probability-weighted EV, (3) probability-weighted equity value, (4) intrinsic price per share.\n\n## Scenarios\n| Scenario | Probability | FY2025 EBIT (mln PLN) | EV/EBIT multiple |\n|----------|-------------|----------------------|------------------|\n| Bull     | 25%         | 210                  | 14×              |\n| Base     | 50%         | 180                  | 12×              |\n| Bear     | 25%         | 140                  | 10×              |\n\n## Capital structure\n- Net debt: 315 mln PLN\n- Shares outstanding: 55 mln\n\nCalculate each step and round to 2 decimal places."
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "EV Bull = 210 × 14 = 2,940 mln PLN",
+              "EV Base = 180 × 12 = 2,160 mln PLN",
+              "EV Bear = 140 × 10 = 1,400 mln PLN",
+              "Weighted EV = 0.25 × 2,940 + 0.50 × 2,160 + 0.25 × 1,400 = 735 + 1,080 + 350 = 2,165 mln PLN",
+              "Weighted equity value = 2,165 − 315 = 1,850 mln PLN",
+              "Price per share = 1,850 / 55 = 33.64 PLN"
+            ],
+            "acceptable_range": {
+              "EV_bull_mln": 2940,
+              "EV_base_mln": 2160,
+              "EV_bear_mln": 1400,
+              "weighted_EV_mln": "2,155–2,175",
+              "equity_value_mln": "1,840–1,860",
+              "price_per_share_PLN": "33.00–34.30"
+            },
+            "forbidden": [
+              "Using equal weights (1/3 each) instead of given probabilities",
+              "Forgetting to subtract net debt from weighted EV",
+              "Adding net debt instead of subtracting",
+              "Dividing equity value by wrong number of shares"
+            ],
+            "sample_answer": "1. EV per scenario:\n   - Bull: 210 × 14× = 2,940 mln PLN\n   - Base: 180 × 12× = 2,160 mln PLN\n   - Bear: 140 × 10× = 1,400 mln PLN\n\n2. Probability-weighted EV:\n   0.25 × 2,940 + 0.50 × 2,160 + 0.25 × 1,400\n   = 735 + 1,080 + 350 = 2,165 mln PLN\n\n3. Weighted equity value:\n   2,165 − 315 (net debt) = 1,850 mln PLN\n\n4. Intrinsic price per share:\n   1,850 / 55 = 33.64 PLN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-008",
+      "name": "Debt maturity and liquidity gap analysis",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "debt-maturity",
+        "liquidity",
+        "coverage",
+        "refinancing",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Telekomunix S.A. — analysis date end of 2025. Company has bonds and bank credits maturing across 2026–2029. Model must identify instruments maturing within 12 months, sum them, and compare against available liquidity sources. Key insight: the company has thin coverage (1.03×) — tightly adequate but not comfortable. Failure mode: model includes maturities beyond 12 months, or forgets one liquidity source, or mis-states the adequacy conclusion.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correct identification of instruments maturing within 12 months (Bond A + Credit B = 320 mln PLN), correct liquidity sources summed (330 mln PLN), coverage ratio calculated (1.03×), risk assessment correct (thin but adequate).\n4 — Good: all values correct, minor rounding or missing coverage ratio.\n3 — Acceptable: identifies correct instruments but omits one liquidity source, or includes instruments maturing after 12 months.\n2 — Weak: includes 2028 or 2029 maturities in the 12-month window, or omits revolver from liquidity.\n1 — Fail: hallucination, no structured analysis, confuses principal with interest.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Identify 12-month maturities, sum available liquidity and assess adequacy",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a credit analyst. Identify upcoming debt maturities within the next 12 months, calculate total liquidity available, and assess whether liquidity is adequate to cover maturities. Show all steps."
+            },
+            {
+              "role": "user",
+              "content": "As of 31 December 2025, analyse Telekomunix S.A.'s debt maturity profile and short-term liquidity position.\n\n## Debt maturity schedule\n| Instrument       | Maturity      | Principal (mln PLN) |\n|------------------|---------------|---------------------|\n| Bond A           | March 2026    | 200                 |\n| Bank credit B    | August 2026   | 120                 |\n| Bond C           | January 2028  | 350                 |\n| Bank credit D    | May 2029      | 180                 |\n\n## Available liquidity\n- Cash and cash equivalents: 85 mln PLN\n- Undrawn revolving credit facility (available for 12 months): 150 mln PLN\n- Projected free cash flow over next 12 months: 95 mln PLN\n\nQuestions:\n1. What is the total principal maturing within 12 months (i.e. by 31 December 2026)?\n2. What is total available liquidity over the next 12 months?\n3. Calculate the liquidity coverage ratio (total liquidity / maturities due).\n4. Is the company's near-term liquidity position adequate? What is the risk?"
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "12-month maturities: Bond A (March 2026) + Bank credit B (August 2026) = 200 + 120 = 320 mln PLN",
+              "Bond C (Jan 2028) and Bank credit D (May 2029) excluded — outside 12-month window",
+              "Total liquidity = 85 (cash) + 150 (revolver) + 95 (FCF) = 330 mln PLN",
+              "Coverage ratio = 330 / 320 = 1.03×",
+              "Assessment: barely adequate — 10 mln PLN cushion (3%). Any FCF shortfall or revolver unavailability creates a refinancing gap."
+            ],
+            "acceptable_range": {
+              "maturities_12m_mln": 320,
+              "total_liquidity_mln": 330,
+              "coverage_ratio": "1.02–1.04"
+            },
+            "forbidden": [
+              "Including Bond C (2028) or Bank credit D (2029) in 12-month maturities",
+              "Omitting projected FCF from liquidity sources",
+              "Omitting revolving credit from liquidity sources",
+              "Calling the position 'comfortable' (10 mln buffer is thin)"
+            ],
+            "sample_answer": "1. 12-month maturities (by 31 Dec 2026):\n   - Bond A: 200 mln PLN (March 2026) ✓\n   - Bank credit B: 120 mln PLN (August 2026) ✓\n   - Bond C: excluded (Jan 2028)\n   - Bank credit D: excluded (May 2029)\n   Total: 200 + 120 = 320 mln PLN\n\n2. Available liquidity:\n   Cash: 85 + Revolver: 150 + FCF: 95 = 330 mln PLN\n\n3. Coverage ratio: 330 / 320 = 1.03×\n\n4. Assessment: Tightly adequate — the 10 mln PLN cushion (3%) is thin. Any FCF disappointment or inability to draw the revolver would create a refinancing shortfall. The company should seek to refinance at least one instrument proactively or negotiate an extension before Q1 2026."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-009",
+      "name": "Earnings quality — EBIT to free cash flow bridge and cash conversion ratio",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "earnings-quality",
+        "cash-flow",
+        "FCF",
+        "working-capital",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Budnex S.A. (construction). Model must bridge from EBIT to operating cash flow (EBIT + D&A − ΔWC − cash tax) and then to FCF (OCF − CAPEX). Low cash conversion (58%) and low FCF/EBIT (29%) reflect construction sector WC build-up. Failure mode 1: treating ΔWC increase as positive (cash inflow) when it's actually a cash outflow. Failure mode 2: using P&L tax instead of cash tax paid. Failure mode 3: model just calculates ratios without bridge steps.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: OCF bridge correct (EBIT + D&A − ΔWC − tax paid = 84 mln PLN), FCF = 42 mln PLN, cash conversion ratio = 57.9%, FCF/EBIT = 29.0%, comment on WC as drag.\n4 — Good: OCF and FCF correct with minor rounding (±1 mln PLN), ratios approximately correct.\n3 — Acceptable: correct formula but ΔWC sign error (treats as positive, gets OCF = 218 mln PLN instead of 84) — identifies error type.\n2 — Weak: ΔWC sign error AND no recognition of it, or skips bridge and only gives ratio.\n1 — Fail: hallucination, OCF calculation shows no understanding of indirect method, refuses.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Build indirect OCF bridge from EBIT, calculate FCF and cash conversion ratio",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. Build an operating cash flow bridge using the indirect method: OCF = EBIT + D&A − increase in working capital − cash taxes paid. Note: an INCREASE in working capital is a CASH OUTFLOW (negative). Then: FCF = OCF − CAPEX. Show all steps."
+            },
+            {
+              "role": "user",
+              "content": "Calculate operating cash flow (OCF) and free cash flow (FCF) for Budnex S.A. using the indirect method, then assess earnings quality.\n\n## LTM financial data\n- EBIT: 145 mln PLN\n- Depreciation & amortisation (D&A): 28 mln PLN\n- Change in net working capital: +67 mln PLN increase (receivables and inventory build-up)\n- Cash income tax paid: 22 mln PLN\n- Net CAPEX (capex minus proceeds from asset disposals): 42 mln PLN\n\n## Questions\n1. Calculate OCF using indirect method\n2. Calculate FCF = OCF − CAPEX\n3. Calculate cash conversion ratio = OCF / EBIT (%)\n4. Calculate FCF / EBIT (%)\n5. Comment on earnings quality: is reported EBIT a good proxy for cash generation?"
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "OCF = 145 + 28 − 67 − 22 = 84 mln PLN",
+              "FCF = 84 − 42 = 42 mln PLN",
+              "Cash conversion ratio = 84 / 145 = 57.9%",
+              "FCF / EBIT = 42 / 145 = 29.0%",
+              "Earnings quality: poor — company converts less than 30% of EBIT to free cash flow; WC build-up of 67 mln PLN is the main drag (typical for construction: work-in-progress and late customer payments)"
+            ],
+            "acceptable_range": {
+              "OCF_mln": "82–86",
+              "FCF_mln": "40–44",
+              "cash_conversion_pct": "56–60",
+              "FCF_EBIT_pct": "28–31"
+            },
+            "forbidden": [
+              "Treating ΔWC increase as positive (adding +67 instead of subtracting) → would give OCF = 218 mln PLN (wrong)",
+              "Using P&L tax expense instead of cash tax paid (cash tax is given as 22 mln PLN)",
+              "Adding CAPEX instead of subtracting for FCF"
+            ],
+            "sample_answer": "1. OCF (indirect method):\n   EBIT:            145 mln PLN\n   + D&A:            +28 mln PLN\n   − ΔWC (increase): −67 mln PLN  ← cash outflow\n   − Cash tax paid:  −22 mln PLN\n   = OCF:             84 mln PLN\n\n2. FCF = OCF − CAPEX = 84 − 42 = 42 mln PLN\n\n3. Cash conversion ratio = 84 / 145 = 57.9%\n\n4. FCF / EBIT = 42 / 145 = 29.0%\n\n5. Earnings quality: Low. EBIT overstates cash generation significantly — only 29% converts to FCF. Main drag is working capital build-up (67 mln PLN), typical for construction companies where customers pay late and WIP accumulates. Investors should focus on OCF/FCF rather than EBIT when valuing Budnex."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-010",
+      "name": "EBIT margin bridge — step-by-step waterfall from prior-year to current-year margin",
+      "difficulty": "advanced",
+      "tags": [
+        "reasoning",
+        "margin-bridge",
+        "waterfall",
+        "variance",
+        "cost-drivers",
+        "calculations"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Logipol S.A. (same data as CAT-03-001). Model must build a waterfall: starting point = Q3 2024 EBIT, then add: (a) revenue growth at constant margin (volume/scale effect), then subtract individual cost overruns vs proportional costs. Each step shows how much it contributed to the margin change. This is the analyst-style 'bridge' used in earnings commentary. Failure mode: model just narrates costs grew faster (correct conclusion, but not a bridge). Full credit requires each step quantified in both mln PLN and pp impact on margin.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: starting EBIT correct (43.2 mln), scale effect quantified (+6.5 mln), each cost overrun quantified in mln PLN (personnel −7.3, fuel −2.5, depreciation −1.9, other +5.1), landing EBIT ~43 mln, margin change explained as −2.3 pp total.\n4 — Good: correct structure with minor rounding difference (±0.5 mln per step).\n3 — Acceptable: only 2-3 steps quantified, rest narrative; or margin change stated correctly but bridge incomplete.\n2 — Weak: correct narrative answer without any quantified bridge steps.\n1 — Fail: no bridge, hallucination, result contradicts data.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Build quantified waterfall bridge from Q3 2024 to Q3 2025 EBIT margin",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst writing earnings commentary. Build a step-by-step EBIT margin bridge showing each component's contribution in both mln PLN and pp (percentage points). Use format: starting EBIT → +/− each driver → landing EBIT. For each cost line: proportional cost = prior-year cost × (revenue_25/revenue_24); actual cost overrun = actual − proportional."
+            },
+            {
+              "role": "user",
+              "content": "Build a quantified EBIT bridge for Logipol S.A. from Q3 2024 (margin: 17.2%) to Q3 2025 (margin: 14.9%). Explain each step in mln PLN and as pp change on the margin.\n\n## Data\nRevenue: Q3 2025 = 289 mln PLN, Q3 2024 = 251 mln PLN\nEBIT: Q3 2025 = 43.1 mln PLN (= 289 × 14.9%)\nEBIT: Q3 2024 = 43.2 mln PLN (= 251 × 17.2%)\n\nCost structure:\n| Cost line             | Q3 2025 | Q3 2024 |\n|-----------------------|---------|---------|\n| Personnel             | 89      | 71      |\n| Fuel & transport      | 52      | 43      |\n| Depreciation          | 18      | 14      |\n| Other operating       | 87      | 80      |\n\n(All values in mln PLN)\n\nBridge steps:\n1. Starting point: Q3 2024 EBIT\n2. Scale effect: revenue growth at Q3 2024 margin\n3. Personnel cost overrun vs proportional\n4. Fuel cost overrun vs proportional\n5. Depreciation overrun vs proportional\n6. Other costs: below proportional → benefit\n7. Landing point: Q3 2025 EBIT\n\nFor each step show mln PLN impact and pp margin impact (divide by Q3 2025 revenue = 289 mln PLN)."
+            }
+          ],
+          "gold": {
+            "required_results": [
+              "Starting EBIT: 43.2 mln PLN (margin 17.2%)",
+              "Scale effect: 289 × 17.2% − 43.2 = 49.7 − 43.2 = +6.5 mln PLN (+2.2 pp)",
+              "Personnel overrun: proportional = 71 × (289/251) = 71 × 1.151 = 81.7 mln PLN; actual = 89; overrun = −7.3 mln PLN (−2.5 pp)",
+              "Fuel overrun: proportional = 43 × 1.151 = 49.5; actual = 52; overrun = −2.5 mln PLN (−0.9 pp)",
+              "Depreciation overrun: proportional = 14 × 1.151 = 16.1; actual = 18; overrun = −1.9 mln PLN (−0.7 pp)",
+              "Other costs benefit: proportional = 80 × 1.151 = 92.1; actual = 87; benefit = +5.1 mln PLN (+1.8 pp)",
+              "Landing EBIT: 43.2 + 6.5 − 7.3 − 2.5 − 1.9 + 5.1 = 43.1 mln PLN ✓ (margin 14.9%)"
+            ],
+            "acceptable_range": {
+              "scale_effect_mln": "6.3–6.7",
+              "personnel_overrun_mln": "7.0–7.6",
+              "fuel_overrun_mln": "2.3–2.7",
+              "depreciation_overrun_mln": "1.7–2.1",
+              "other_benefit_mln": "4.9–5.3"
+            },
+            "forbidden": [
+              "Providing only narrative (costs grew faster) without quantified bridge steps",
+              "Not showing proportional cost calculation (prior_cost × revenue_ratio)",
+              "Bridge that does not land at 43.1 mln PLN EBIT (i.e. steps don't reconcile)"
+            ],
+            "sample_answer": "EBIT Bridge — Q3 2024 → Q3 2025 (Logipol S.A.):\n\n1. Starting EBIT (Q3 2024): +43.2 mln PLN | 17.2% margin\n\n2. Scale effect (revenue +38 mln at 17.2% margin):\n   289 × 17.2% − 43.2 = 49.7 − 43.2 = +6.5 mln PLN | +2.2 pp\n\n3. Personnel overrun:\n   Proportional: 71 × (289/251) = 81.7 mln PLN; Actual: 89.0\n   Impact: −7.3 mln PLN | −2.5 pp\n\n4. Fuel & transport overrun:\n   Proportional: 43 × 1.151 = 49.5 mln PLN; Actual: 52.0\n   Impact: −2.5 mln PLN | −0.9 pp\n\n5. Depreciation overrun:\n   Proportional: 14 × 1.151 = 16.1 mln PLN; Actual: 18.0\n   Impact: −1.9 mln PLN | −0.7 pp\n\n6. Other costs benefit:\n   Proportional: 80 × 1.151 = 92.1 mln PLN; Actual: 87.0\n   Impact: +5.1 mln PLN | +1.8 pp\n\n7. Landing EBIT (Q3 2025): 43.2 + 6.5 − 7.3 − 2.5 − 1.9 + 5.1 = 43.1 mln PLN | 14.9% margin ✓\n\nMargin change: −2.3 pp, driven primarily by personnel cost inflation (+25.4% y/y) and new depreciation from CAPEX cycle (+28.6% y/y)."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-03-011",
+      "name": "Synthetic leverage denominator reasoning",
+      "difficulty": "intermediate",
+      "tags": [
+        "reasoning",
+        "leverage",
+        "ebitda",
+        "ambiguity",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-03-001",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Compute both definitions and use the explicit contractual denominator.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Compute both definitions and use the explicit contractual denominator.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA, end 2025 (PLN billions): total assets 8.0; purchased receivables portfolios (asset) 6.5; equity 3.0; gross borrowings 5.0; cash 0.2; net debt 4.8; annual cash EBITDA 1.2. A purchased receivables portfolio is a claim on customers, not a borrowing by the company.\nAccounting EBITDA is 0.8 billion PLN. Cash EBITDA is 1.2 billion. The fictional lender covenant explicitly uses cash EBITDA and caps net-debt/cash-EBITDA at 5.0x. Calculate both leverage measures, explain the denominator difference and assess covenant compliance."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Accounting leverage 4.8 / 0.8 = 6.0x",
+              "Cash leverage 4.8 / 1.2 = 4.0x",
+              "Difference arises from the two supplied EBITDA definitions",
+              "The cash-based covenant uses 4.0x, below the explicit 5.0x cap"
+            ],
+            "forbidden": [
+              "Choosing a denominator without citing the supplied covenant",
+              "Comparing 6.0x accounting leverage to the cash-EBITDA covenant"
+            ],
+            "sample_answer": "Accounting leverage 4.8 / 0.8 = 6.0x\nCash leverage 4.8 / 1.2 = 4.0x\nDifference arises from the two supplied EBITDA definitions\nThe cash-based covenant uses 4.0x, below the explicit 5.0x cap"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    },
+    {
+      "id": "CAT-03-012",
+      "name": "Synthetic profit-waterfall explanation",
+      "difficulty": "advanced",
+      "tags": [
+        "reasoning",
+        "profit-stagnation",
+        "waterfall",
+        "tax-swing",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-03-005",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Explain each waterfall step rather than treating all causes as equal.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Explain each waterfall step rather than treating all causes as equal.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA, PLN millions.\n2024: revenue 1000; operating costs 700; EBITDA 300; finance costs 100; profit before tax 200; tax benefit +20; net profit 220.\n2025: revenue 1200; operating costs 840; EBITDA 360; finance costs 120; profit before tax 240; tax expense -18; net profit 222.\nCollections 2025 are 320, compared with 260 in 2024. Investments fell from 300 to 250 because the company paused West-market purchases. Management plans to resume them in 2026. Cash EBITDA is 1200 million; net debt is 4800 million. These are invented figures, not an issuer filing.\nQuantify the revenue-to-net-profit bridge and identify the main reason net profit barely grew."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Revenue +200 minus operating costs +140 gives EBITDA +60",
+              "Finance costs +20 reduce pretax profit growth to +40",
+              "Tax moves from +20 benefit to -18 expense, a -38 swing",
+              "Pretax growth 40 minus tax swing 38 leaves net profit growth 2",
+              "Tax explains 95% of the pretax-to-net growth reduction"
+            ],
+            "forbidden": [
+              "Inventing values absent from the document"
+            ],
+            "sample_answer": "Revenue +200 minus operating costs +140 gives EBITDA +60\nFinance costs +20 reduce pretax profit growth to +40\nTax moves from +20 benefit to -18 expense, a -38 swing\nPretax growth 40 minus tax swing 38 leaves net profit growth 2\nTax explains 95% of the pretax-to-net growth reduction"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

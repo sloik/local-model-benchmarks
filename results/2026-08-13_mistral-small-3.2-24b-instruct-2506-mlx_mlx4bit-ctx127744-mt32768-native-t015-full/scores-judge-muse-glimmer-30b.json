@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-13_mistral-small-3.2-24b-instruct-2506-mlx_mlx4bit-ctx127744-mt32768-native-t015-full",
+  "model_id": "mistral-small-3.2-24b-instruct-2506-mlx",
+  "eval_date": "2026-08-14",
+  "evaluator": "lmstudio-community/muse-glimmer-30b",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 4.1,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.4,
+      "min": 3,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 4.1,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 3.7,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 2.9,
+      "min": 1,
+      "max": 4,
+      "n": 10
+    },
+    "overall": {
+      "mean": 3.84,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

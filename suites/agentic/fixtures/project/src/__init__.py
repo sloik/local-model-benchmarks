@@ -1,0 +1,1 @@
+"""Nightshift eval project scaffold."""

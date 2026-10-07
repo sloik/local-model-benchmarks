@@ -1,0 +1,5 @@
+{
+  "run_id": "2026-08-15_qwen3.8-27b_mlx4bit-ctx208384-mt32768-rhigh-native-coding",
+  "model_id": "qwen3.8-27b",
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

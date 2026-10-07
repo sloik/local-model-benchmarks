@@ -1,0 +1,5 @@
+{
+  "run_id": "2026-08-13_ornith-1.0-9b_mlx4bit-ctx262144-mt32768-native-t06-full",
+  "model_id": "ornith-1.0-9b",
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

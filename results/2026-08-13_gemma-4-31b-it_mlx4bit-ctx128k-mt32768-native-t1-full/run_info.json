@@ -1,0 +1,5 @@
+{
+  "run_id": "2026-08-13_gemma-4-31b-it_mlx4bit-ctx128k-mt32768-native-t1-full",
+  "model_id": "gemma-4-31b-it",
+  "public_release_note": "Metadata only; original raw evidence is not distributed."
+}

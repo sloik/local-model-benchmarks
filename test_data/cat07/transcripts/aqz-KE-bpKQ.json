@@ -1,0 +1,12 @@
+{
+  "video_id": "aqz-KE-bpKQ",
+  "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+  "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film",
+  "uploader": "Blender",
+  "duration_s": 635,
+  "upload_date": "2014-11-10",
+  "captured": "2026-08-21 via yt-dlp --dump-single-json --skip-download (mirrors mcp__shipyard__lmac-run__yt_dlp mode=metadata)",
+  "transcript_excerpt": null,
+  "metadata_fingerprint_sha256": "890e692246d7981ea0c4092fe9c2e85187eab8661bea01cb8c58431ef3b73a51",
+  "source_note": "Public YouTube video metadata (category a per NFR-001) -- freely accessible without payment/login; also independently category (c)-adjacent: yt-dlp reports this upload's license as 'Creative Commons Attribution license (reuse allowed)' (Big Buck Bunny is the Blender Foundation's own CC-BY-licensed open movie). SPEC-003-005: this is the OFFICIAL upload -- channel 'Blender' (handle @BlenderOfficial), the Blender Foundation's real YouTube channel. Forms a near-duplicate pair with f7NwyBnIRTE (a same-length, unrelated reupload by a different real channel, uploaded ~5.5 months later) -- see f7NwyBnIRTE.json's source_note and CAT-07-T-009's case notes for the pairing rationale."
+}

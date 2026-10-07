@@ -1,0 +1,12 @@
+{
+  "video_id": "f7NwyBnIRTE",
+  "url": "https://www.youtube.com/watch?v=f7NwyBnIRTE",
+  "title": "Animated Short Film \"Big Buck Bunny\", 4K, Full Length",
+  "uploader": "AnimalsReview",
+  "duration_s": 635,
+  "upload_date": "2015-04-28",
+  "captured": "2026-08-21 via yt-dlp --dump-single-json --skip-download (mirrors mcp__shipyard__lmac-run__yt_dlp mode=metadata)",
+  "transcript_excerpt": null,
+  "metadata_fingerprint_sha256": "fa77750fd8e1f321c17b47b14188e6877f28050b2a65d0350b05b32067f61f0c",
+  "source_note": "Public YouTube video metadata (category a per NFR-001) -- freely accessible without payment/login. SPEC-003-005: this is a real, unrelated channel's reupload of the same Big Buck Bunny film (identical 635s duration to aqz-KE-bpKQ -- same underlying encode, different channel, uploaded ~5.5 months after the official Blender Foundation upload). Title text deliberately omits any studio/official attribution (no 'Blender', no 'official'), unlike aqz-KE-bpKQ's title -- this textual asymmetry is the in-corpus signal a model can read directly off search_youtube's returned {video_id, title} pair without needing a second yt_dlp call on the wrong candidate (see aqz-KE-bpKQ.json's source_note and CAT-07-T-009's case notes)."
+}

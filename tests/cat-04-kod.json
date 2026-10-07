@@ -1,0 +1,541 @@
+{
+  "category": "CAT-04",
+  "version": "1.1",
+  "created": "2026-03-07",
+  "updated": "2026-03-08",
+  "created_by": "Argo",
+  "tests": [
+    {
+      "id": "CAT-04-001",
+      "name": "Python code generation — parser for financial table from CSV",
+      "difficulty": "basic",
+      "tags": [
+        "code",
+        "python",
+        "parser",
+        "csv",
+        "financial-table"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Test of Python code generation for parsing a simple results table in CSV format (export from quarterly report). One prompt. Evaluation: whether the code works correctly (can be run), whether it handles Polish commas as decimal separators, whether it returns a structure matching the specification.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: code works correctly (can be run without modifications), handles Polish decimal commas, returns dict or DataFrame with required fields, includes error handling or comment on edge-cases.\n4 — Good: code logically correct with max 1 minor error (e.g. no handling of decimal comma but rest OK, or typo in variable name). Requires minimal fix.\n3 — Acceptable: code has correct structure but ≥2 errors or missing key function (e.g. parsing works but returns strings instead of float).\n2 — Weak: code has logical errors preventing operation or ignores Polish commas.\n1 — Fail: no code, pseudocode without execution capability, code in another language, hallucinated library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "CSV parser with financial data — Polish decimal commas, selected columns",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer. Write clean, working code. Use only standard libraries or pandas/csv. Code must be ready to run."
+            },
+            {
+              "role": "user",
+              "content": "Write a Python function `parse_quarterly_results(csv_path: str) -> list[dict]` that will load the CSV file below with quarterly results and return a list of dictionaries with fields: `quarter` (str), `revenue_mln` (float), `ebit_mln` (float), `ebit_margin_pct` (float).\n\nImportant:\n- File uses semicolon (;) as column separator\n- Numbers use comma as decimal separator (e.g. '14.9' = 14.9)\n- Calculate EBIT margin yourself from the formula: ebit / revenue * 100\n- Skip rows where revenue = 0\n\nCSV file format (example):\n```\nkwartal;przychody_mln;ebit_mln\nQ1 2025;267,4;38,2\nQ2 2025;301,8;51,3\nQ3 2025;289,0;43,1\nQ4 2024;245,6;0\n```\n\nAlso write a short usage example (function call and printing the first element)."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Function with signature parse_quarterly_results(csv_path) or similar",
+              "Semicolon separator (sep=';' or delimiter=';')",
+              "Decimal comma conversion: replace(',', '.') or decimal=',' in pandas",
+              "EBIT margin calculation: ebit/revenue*100",
+              "Filtering rows where revenue == 0",
+              "Returning list of dicts or DataFrame with required fields"
+            ],
+            "forbidden": [
+              "Using unavailable library without mentioning it (e.g. non-existent 'financial_parser')",
+              "Code that doesn't handle Polish commas (treats '14.9' as string without conversion)",
+              "Missing filtering of rows with revenue=0",
+              "Code in language other than Python"
+            ],
+            "sample_answer": "import csv\n\ndef parse_quarterly_results(csv_path: str) -> list[dict]:\n    results = []\n    with open(csv_path, newline='', encoding='utf-8') as f:\n        reader = csv.DictReader(f, delimiter=';')\n        for row in reader:\n            revenue = float(row['przychody_mln'].replace(',', '.'))\n            ebit = float(row['ebit_mln'].replace(',', '.'))\n            if revenue == 0:\n                continue\n            results.append({\n                'quarter': row['kwartal'],\n                'revenue_mln': revenue,\n                'ebit_mln': ebit,\n                'ebit_margin_pct': round(ebit / revenue * 100, 1)\n            })\n    return results\n\n# Usage example:\ndata = parse_quarterly_results('wyniki.csv')\nprint(data[0])  # {'quarter': 'Q1 2025', 'revenue_mln': 267.4, 'ebit_mln': 38.2, 'ebit_margin_pct': 14.3}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-002",
+      "name": "Multi-file aggregator with validation — two CSVs with error rows + pytest",
+      "difficulty": "advanced",
+      "tags": [
+        "code",
+        "python",
+        "multi-file",
+        "validation",
+        "pytest",
+        "csv",
+        "aggregation"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Model must write a function aggregating data from two CSV files (two companies), handle a row with negative revenue (data error), row with missing quarter label, and write 3 pytest tests. Failure mode 1: no data validation (silently skips or raises exception). Failure mode 2: no pytest tests or tests without assertions. Failure mode 3: wrong aggregation logic (duplicates, summing instead of concatenation).",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: function aggregates both files, validates (negative revenue → is_valid=False, missing quarter → is_valid=False), returns is_valid field per row, min 3 pytest tests with assertions (including test for invalid row), code ready to run.\n4 — Good: aggregation + validation correct, pytest tests present but incomplete (e.g. 2 tests instead of 3, or missing invalid row test), max 1 minor error.\n3 — Acceptable: aggregation correct, validation partial (only one error type handled), pytest tests present but without assertions or as unittest instead of pytest.\n2 — Weak: no validation (error rows silently pass or crash), tests absent or as comment/pseudocode.\n1 — Fail: logic error preventing operation, code in another language, no tests and no validation, hallucinated library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Aggregator of two CSVs with error row flagging + pytest tests",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer. Write clean, working code with pytest tests. Use only standard libraries or pandas. Code must be ready to run."
+            },
+            {
+              "role": "user",
+              "content": "Write a function `aggregate_results(paths: list[str]) -> list[dict]` that:\n1. Loads data from a list of CSV files (each in the same format as below)\n2. Aggregates all rows into one list of dictionaries\n3. Adds field `source_file` (filename without path) to each row\n4. Adds field `is_valid: bool` — a row is INVALID if:\n   - `przychody_mln` ≤ 0\n   - `kwartal` is empty or missing\n5. Don't raise an exception on invalid rows — only mark is_valid=False and continue\n\nCSV format (separator `;`, decimal comma):\n```\nkwartal;przychody_mln;ebit_mln\nQ1 2025;267,4;38,2\nQ2 2025;301,8;51,3\n;289,0;43,1\nQ4 2024;-12,5;-8,1\n```\n\nAlso write 3 pytest tests that check:\n- test_valid_rows: that correct rows have is_valid=True\n- test_invalid_negative_revenue: that a row with negative revenue has is_valid=False\n- test_invalid_missing_quarter: that a row without a quarter label has is_valid=False\n\nFor tests create CSV files in tmp_path (use pytest fixture)."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Function aggregate_results(paths) accepting list of paths",
+              "Field source_file = os.path.basename(path) or Path(path).name",
+              "Field is_valid=False when przychody_mln <= 0",
+              "Field is_valid=False when kwartal is empty or missing",
+              "No raise/crash on invalid rows (loop continues)",
+              "At least 3 pytest tests with assert is_valid == True/False",
+              "Use tmp_path fixture or monkeypatch to create temporary CSVs"
+            ],
+            "forbidden": [
+              "raise ValueError or Exception on invalid rows (instead of is_valid=False)",
+              "Missing is_valid field in returned dicts",
+              "Tests without assertions (assert) or only print()",
+              "Tests as unittest.TestCase instead of pytest functions (unless explicitly marked as alternative)",
+              "Ignoring invalid rows instead of adding with is_valid=False"
+            ],
+            "sample_answer": "import csv\nimport os\nfrom pathlib import Path\n\ndef aggregate_results(paths: list[str]) -> list[dict]:\n    all_rows = []\n    for path in paths:\n        source = Path(path).name\n        with open(path, newline='', encoding='utf-8') as f:\n            reader = csv.DictReader(f, delimiter=';')\n            for row in reader:\n                quarter = row.get('kwartal', '').strip()\n                try:\n                    revenue = float(row['przychody_mln'].replace(',', '.'))\n                except (ValueError, KeyError):\n                    revenue = 0.0\n                try:\n                    ebit = float(row['ebit_mln'].replace(',', '.'))\n                except (ValueError, KeyError):\n                    ebit = 0.0\n                is_valid = bool(quarter) and revenue > 0\n                all_rows.append({\n                    'quarter': quarter,\n                    'revenue_mln': revenue,\n                    'ebit_mln': ebit,\n                    'source_file': source,\n                    'is_valid': is_valid\n                })\n    return all_rows\n\n# --- PYTEST TESTS ---\nimport pytest\n\ndef test_valid_rows(tmp_path):\n    f = tmp_path / 'test.csv'\n    f.write_text('kwartal;przychody_mln;ebit_mln\\nQ1 2025;100,0;10,0\\n', encoding='utf-8')\n    rows = aggregate_results([str(f)])\n    assert rows[0]['is_valid'] == True\n\ndef test_invalid_negative_revenue(tmp_path):\n    f = tmp_path / 'test.csv'\n    f.write_text('kwartal;przychody_mln;ebit_mln\\nQ1 2025;-12,5;-8,1\\n', encoding='utf-8')\n    rows = aggregate_results([str(f)])\n    assert rows[0]['is_valid'] == False\n\ndef test_invalid_missing_quarter(tmp_path):\n    f = tmp_path / 'test.csv'\n    f.write_text('kwartal;przychody_mln;ebit_mln\\n;289,0;43,1\\n', encoding='utf-8')\n    rows = aggregate_results([str(f)])\n    assert rows[0]['is_valid'] == False"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-003",
+      "name": "Financial ratio batch calculator — pandas function for multiple metrics",
+      "difficulty": "intermediate",
+      "tags": [
+        "code",
+        "python",
+        "pandas",
+        "financial-ratios",
+        "batch",
+        "vectorized"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Model must write a pandas function that takes a DataFrame of quarterly results and computes multiple financial ratios as new columns: EBIT margin, EBITDA margin, gross margin, net debt/EBITDA. Failure mode 1: using Python loops instead of vectorized pandas operations. Failure mode 2: division-by-zero errors (no handling when revenue=0 or EBITDA=0). Failure mode 3: hardcoding column names instead of using parameters.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: vectorized pandas operations (no loops), handles division by zero (fillna or replace), correct ratio formulas, returns DataFrame with required ratio columns, clean docstring or comments.\n4 — Good: correct formulas and vectorized, minor issue (e.g. no zero-division handling or missing one ratio).\n3 — Acceptable: correct formulas but uses Python loops over rows (works but not idiomatic pandas), or 1-2 ratio formulas wrong.\n2 — Weak: missing ≥2 ratio formulas, or code crashes on zero-revenue rows without handling.\n1 — Fail: no working code, wrong language, hallucinates pandas API.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Write vectorized pandas function computing 4 financial ratios from DataFrame columns",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python/pandas programmer. Write clean, vectorized pandas code. Avoid row-by-row loops. Handle division by zero gracefully (return NaN for ratios where denominator is zero)."
+            },
+            {
+              "role": "user",
+              "content": "Write a function `add_financial_ratios(df: pd.DataFrame) -> pd.DataFrame` that takes a DataFrame with quarterly financial data and adds the following ratio columns:\n\n| New column          | Formula                              |\n|---------------------|--------------------------------------|\n| `ebit_margin`       | ebit / revenue × 100                 |\n| `ebitda_margin`     | ebitda / revenue × 100               |\n| `gross_margin`      | gross_profit / revenue × 100         |\n| `net_debt_ebitda`   | net_debt / ebitda                    |\n\nInput DataFrame columns available: `revenue`, `ebit`, `ebitda`, `gross_profit`, `net_debt` (all float, values in mln PLN).\n\nRules:\n- Use vectorized pandas operations (no .iterrows() or .apply() loops)\n- If denominator is 0, result should be NaN (not raise ZeroDivisionError)\n- Round all ratio columns to 2 decimal places\n- Return the modified DataFrame (or a copy with new columns)\n- The function must not modify the original DataFrame\n\nAlso show a 3-row example usage with sample data."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Function add_financial_ratios(df) accepting DataFrame",
+              "Vectorized operations: df['ebit'] / df['revenue'] (no iterrows)",
+              "Division by zero handled: use .replace(0, np.nan) or where(df['revenue']!=0)",
+              "All 4 ratio columns computed with correct formulas",
+              "Round to 2 decimal places (.round(2))",
+              "Returns copy (df.copy() or assign) without modifying original"
+            ],
+            "forbidden": [
+              "Using .iterrows() or .apply() for the ratio calculations",
+              "Not handling division by zero (code that would raise ZeroDivisionError on revenue=0)",
+              "Modifying the input DataFrame in-place without making a copy first",
+              "Hardcoding the length of the DataFrame"
+            ],
+            "sample_answer": "import pandas as pd\nimport numpy as np\n\ndef add_financial_ratios(df: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Add financial ratio columns to quarterly results DataFrame.\"\"\"\n    result = df.copy()\n    \n    # Replace zero denominators with NaN to avoid division by zero\n    revenue = result['revenue'].replace(0, np.nan)\n    ebitda = result['ebitda'].replace(0, np.nan)\n    \n    result['ebit_margin']     = (result['ebit']         / revenue * 100).round(2)\n    result['ebitda_margin']   = (result['ebitda']        / revenue * 100).round(2)\n    result['gross_margin']    = (result['gross_profit']  / revenue * 100).round(2)\n    result['net_debt_ebitda'] = (result['net_debt']      / ebitda).round(2)\n    \n    return result\n\n# Example usage:\ndata = pd.DataFrame({\n    'quarter':     ['Q1 2025', 'Q2 2025', 'Q3 2025'],\n    'revenue':     [267.4,     301.8,     289.0],\n    'ebit':        [ 38.2,      51.3,      43.1],\n    'ebitda':      [ 52.4,      67.1,      61.1],\n    'gross_profit':[ 89.6,     103.2,      96.8],\n    'net_debt':    [312.0,     298.0,     283.0],\n})\nresult = add_financial_ratios(data)\nprint(result[['quarter', 'ebit_margin', 'ebitda_margin', 'gross_margin', 'net_debt_ebitda']])"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-004",
+      "name": "IR page change detector — hash-based new-document detection",
+      "difficulty": "intermediate",
+      "tags": [
+        "code",
+        "python",
+        "hashing",
+        "file-monitoring",
+        "IR",
+        "automation"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Practical Inwestomat tool: detect new documents on investor relations pages by comparing SHA-256 hashes of downloaded file lists. Model must write a function that loads a JSON cache of {url: hash} pairs, fetches a new list, compares, and returns a list of new/changed URLs. Failure mode 1: using mutable default argument for cache. Failure mode 2: comparing full file content instead of hash (slow). Failure mode 3: treating all items as new on first run (should return all when cache is empty, which is correct).",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: load/save JSON cache, SHA-256 hash comparison (not content), returns list of new/changed URLs, handles first-run (empty cache) gracefully, saves updated cache, clean error handling for missing cache file.\n4 — Good: logic correct, minor issue (e.g. uses MD5 instead of SHA-256, or doesn't save updated cache).\n3 — Acceptable: correct concept but compares full content instead of hashes, or doesn't handle missing cache file.\n2 — Weak: no persistence (cache not saved), or logic inverted (returns unchanged instead of new).\n1 — Fail: no working code, hallucinated library, pseudocode only.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Write a hash-based document change detector with JSON cache persistence",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer writing automation tools. Write clean, production-ready code with proper error handling. Use only standard library (hashlib, json, pathlib)."
+            },
+            {
+              "role": "user",
+              "content": "Write two functions for a document change detection system:\n\n1. `compute_content_hash(content: bytes) -> str`\n   - Computes SHA-256 hash of given bytes content\n   - Returns hex digest string\n\n2. `find_new_documents(current_docs: dict[str, bytes], cache_path: str) -> list[str]`\n   - `current_docs`: dict mapping URL → file content (bytes)\n   - `cache_path`: path to JSON file storing {url: hash} from last run\n   - Returns list of URLs that are NEW or CHANGED since last run\n   - Saves updated hash cache to `cache_path` after comparison\n   - If cache file doesn't exist (first run): treat all docs as new, save cache, return all URLs\n   - Must NOT read or compare full file content for comparison — only compare hashes\n\nAlso write 2 pytest tests:\n- `test_new_document_detected`: verifies a new URL is returned\n- `test_unchanged_document_not_returned`: verifies unchanged URL is not returned"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "hashlib.sha256(content).hexdigest() in compute_content_hash",
+              "Load JSON cache from file (json.loads or json.load), handle FileNotFoundError",
+              "Compare hash of current doc against cached hash (not content comparison)",
+              "Return list of URLs where hash changed or URL is new",
+              "Save updated cache as JSON after comparison",
+              "Test: new URL appears in result",
+              "Test: unchanged URL (same hash) does not appear in result"
+            ],
+            "forbidden": [
+              "Comparing full content bytes instead of hashes for the changed-detection logic",
+              "Not saving updated cache (no persistence)",
+              "Crashing on missing cache file instead of handling FileNotFoundError",
+              "Using md5 (acceptable alternative but SHA-256 specified)"
+            ],
+            "sample_answer": "import hashlib\nimport json\nfrom pathlib import Path\n\ndef compute_content_hash(content: bytes) -> str:\n    return hashlib.sha256(content).hexdigest()\n\ndef find_new_documents(current_docs: dict, cache_path: str) -> list[str]:\n    cache_file = Path(cache_path)\n    try:\n        cached = json.loads(cache_file.read_text(encoding='utf-8'))\n    except FileNotFoundError:\n        cached = {}\n    \n    new_or_changed = []\n    updated_cache = {}\n    \n    for url, content in current_docs.items():\n        h = compute_content_hash(content)\n        updated_cache[url] = h\n        if cached.get(url) != h:\n            new_or_changed.append(url)\n    \n    cache_file.write_text(json.dumps(updated_cache, indent=2), encoding='utf-8')\n    return new_or_changed\n\n# --- PYTEST TESTS ---\nimport pytest\n\ndef test_new_document_detected(tmp_path):\n    cache = tmp_path / 'cache.json'\n    docs = {'https://example.com/report.pdf': b'content_v1'}\n    result = find_new_documents(docs, str(cache))\n    assert 'https://example.com/report.pdf' in result\n\ndef test_unchanged_document_not_returned(tmp_path):\n    cache = tmp_path / 'cache.json'\n    docs = {'https://example.com/report.pdf': b'content_v1'}\n    find_new_documents(docs, str(cache))  # first run — builds cache\n    result = find_new_documents(docs, str(cache))  # second run — same content\n    assert 'https://example.com/report.pdf' not in result"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-005",
+      "name": "Report filename normalizer — regex-based standardisation",
+      "difficulty": "basic",
+      "tags": [
+        "code",
+        "python",
+        "regex",
+        "filename",
+        "normalisation",
+        "automation"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Practical tool: normalise messy PDF filenames from IR pages into standard format TICKER_YYYY_QQ.pdf. Input examples: 'POLKOMFORT_Raport_kwartalny_Q3_2025_v2_FINAL.pdf', 'q3-2025-wyniki-logipol.pdf', 'raport_Q3.2025.MEDIPOL.pdf'. Model must write a regex function that extracts ticker, year and quarter regardless of separator style. Failure mode: hardcoded regex that only matches one input format.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: regex correctly extracts ticker, year, quarter from all 3 sample inputs, produces standard TICKER_YYYY_QQ.pdf output, handles case-insensitivity, returns original filename unchanged if pattern not matched (with warning/None).\n4 — Good: handles 2 of 3 sample inputs correctly, or handles all but wrong case normalisation.\n3 — Acceptable: handles 1 of 3 samples, or correct regex but wrong output format.\n2 — Weak: hardcoded for one pattern only, or doesn't extract ticker from mixed-position inputs.\n1 — Fail: no regex, no working code, hallucinated library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Write a regex normaliser for messy IR report filenames into standard format",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer. Write a regex-based filename normaliser. Use the re module. Be robust to different separator styles and component ordering."
+            },
+            {
+              "role": "user",
+              "content": "Write a function `normalise_report_filename(filename: str) -> str | None` that:\n- Extracts: ticker symbol (2-10 uppercase letters), year (4 digits), quarter (Q1-Q4)\n- Returns standardised filename: `{TICKER}_{YEAR}_{QUARTER}.pdf`\n- Is case-insensitive (input may have mixed case)\n- Returns None if the required components cannot be extracted\n\nThe function must handle all of these input formats:\n```\n'POLKOMFORT_Raport_kwartalny_Q3_2025_v2_FINAL.pdf'  → 'POLKOMFORT_2025_Q3.pdf'\n'q3-2025-wyniki-logipol.pdf'                         → 'LOGIPOL_2025_Q3.pdf'\n'raport_Q3.2025.MEDIPOL.pdf'                         → 'MEDIPOL_2025_Q3.pdf'\n'some_unrelated_document.pdf'                        → None\n```\n\nNote: ticker is a word of 2-10 letters that is NOT 'raport', 'wyniki', 'kwartalny', 'roczny', 'Q1', 'Q2', 'Q3', 'Q4'.\n\nAlso add a simple test block (if __name__ == '__main__') that asserts all 4 examples above."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Case-insensitive matching (re.IGNORECASE flag)",
+              "Year extraction: r'\\b(20\\d{2})\\b' or similar 4-digit year",
+              "Quarter extraction: r'\\b(Q[1-4])\\b' (case-insensitive)",
+              "Ticker extraction: word of 2-10 letters, excluding reserved words",
+              "Returns None when pattern not found",
+              "Output format: f'{TICKER}_{YEAR}_{QUARTER}.pdf' with all uppercase"
+            ],
+            "forbidden": [
+              "Hardcoded approach for only one specific filename format",
+              "Not handling case-insensitivity",
+              "Returning empty string instead of None for unmatched filenames",
+              "Using split() alone without regex for extraction"
+            ],
+            "sample_answer": "import re\n\nRESERVED = {'raport', 'wyniki', 'kwartalny', 'roczny', 'srodroczny', 'q1', 'q2', 'q3', 'q4', 'final', 'v1', 'v2', 'v3'}\n\ndef normalise_report_filename(filename: str) -> str | None:\n    name = filename.lower().replace('.pdf', '')\n    \n    # Extract year\n    year_m = re.search(r'\\b(20\\d{2})\\b', name)\n    if not year_m:\n        return None\n    year = year_m.group(1)\n    \n    # Extract quarter\n    q_m = re.search(r'\\b(q[1-4])\\b', name, re.IGNORECASE)\n    if not q_m:\n        return None\n    quarter = q_m.group(1).upper()\n    \n    # Extract ticker: 2-10 letter word not in reserved set\n    words = re.findall(r'\\b([a-z]{2,10})\\b', name)\n    ticker = None\n    for w in words:\n        if w not in RESERVED and not re.fullmatch(r'20\\d{2}', w):\n            ticker = w.upper()\n            break\n    \n    if not ticker:\n        return None\n    \n    return f'{ticker}_{year}_{quarter}.pdf'\n\nif __name__ == '__main__':\n    assert normalise_report_filename('POLKOMFORT_Raport_kwartalny_Q3_2025_v2_FINAL.pdf') == 'POLKOMFORT_2025_Q3.pdf'\n    assert normalise_report_filename('q3-2025-wyniki-logipol.pdf') == 'LOGIPOL_2025_Q3.pdf'\n    assert normalise_report_filename('raport_Q3.2025.MEDIPOL.pdf') == 'MEDIPOL_2025_Q3.pdf'\n    assert normalise_report_filename('some_unrelated_document.pdf') is None\n    print('All assertions passed')"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-006",
+      "name": "Two-stage DCF model — Python implementation with sensitivity table",
+      "difficulty": "advanced",
+      "tags": [
+        "code",
+        "python",
+        "dcf",
+        "valuation",
+        "financial-model",
+        "sensitivity"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Model must implement a two-stage DCF: explicit forecast period (N years) with growth g1, then terminal value with perpetual growth g2. Output: intrinsic EV, equity value, price per share. Second part: build a sensitivity table varying WACC × g2 using nested loops or numpy. Failure mode 1: terminal value in wrong period (should be discounted to year N, not year 0). Failure mode 2: confusion between EV and equity value (forgetting to subtract net debt). Failure mode 3: sensitivity table not building due to dimension mismatch.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correct two-stage DCF (PV of cash flows + PV of terminal value), net debt subtracted for equity value, price per share calculated, sensitivity table with WACC × g2 axes, numerical output close to expected (±2%).\n4 — Good: DCF logic correct, sensitivity table present but minor formatting issue or one axis wrong.\n3 — Acceptable: single-stage DCF (only perpetuity, no explicit period) but correct algebra, or no sensitivity table.\n2 — Weak: EV without net debt subtraction, or terminal value not discounted, or sensitivity table crashes.\n1 — Fail: no working code, fundamental DCF logic error (e.g. adds instead of discounts), hallucinated finance library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Implement two-stage DCF with terminal value and WACC × g2 sensitivity table",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial Python programmer. Implement a clean DCF model. Use only standard Python + numpy (if needed). Show all mathematical steps in comments."
+            },
+            {
+              "role": "user",
+              "content": "Implement a two-stage DCF valuation function and a sensitivity analysis table.\n\n## Function signature\n```python\ndef dcf_valuation(\n    base_nopat: float,    # Current year NOPAT (mln PLN)\n    g1: float,            # Growth rate in explicit forecast period (as decimal, e.g. 0.08)\n    n: int,               # Number of years in explicit forecast period\n    g2: float,            # Perpetual terminal growth rate (as decimal)\n    wacc: float,          # WACC (as decimal)\n    net_debt: float,      # Net debt (mln PLN) — subtract from EV to get equity\n    shares: float,        # Number of shares (mln)\n) -> dict:\n```\nReturn dict with: `ev_mln`, `equity_value_mln`, `price_per_share`.\n\n## DCF formula\n- Year t cash flow: CF_t = base_nopat × (1 + g1)^t\n- Discount factor: 1 / (1 + wacc)^t\n- Terminal value at end of year N: TV = CF_N × (1 + g2) / (wacc − g2)\n- PV(TV) = TV / (1 + wacc)^N\n- EV = sum of PV(CF_1..N) + PV(TV)\n- Equity value = EV − net_debt\n- Price per share = equity_value / shares\n\n## Base case inputs\nbase_nopat=307.8, g1=0.06, n=5, g2=0.025, wacc=0.095, net_debt=235, shares=90\n\n## Sensitivity table\nAlso write a function `dcf_sensitivity(base_params: dict, wacc_range: list[float], g2_range: list[float]) -> pd.DataFrame` that returns a DataFrame where:\n- Rows = WACC values\n- Columns = g2 (terminal growth) values\n- Cell = price per share\n\nShow the sensitivity table for: wacc=[0.085, 0.090, 0.095, 0.100, 0.105], g2=[0.015, 0.020, 0.025, 0.030, 0.035]"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Explicit period loop: CF_t = base_nopat * (1+g1)**t, discounted by (1+wacc)**t",
+              "Terminal value: TV = CF_N * (1+g2) / (wacc - g2)",
+              "PV of TV: TV / (1+wacc)**n",
+              "EV = sum(PV_CFs) + PV_TV",
+              "Equity value = EV - net_debt",
+              "Price per share = equity_value / shares",
+              "Base case EV approximately 5,130-5,420 mln PLN",
+              "Sensitivity table with nested loops or itertools, rows=WACC, columns=g2"
+            ],
+            "acceptable_range": {
+              "base_case_price_PLN": "54–60",
+              "note": "Exact value depends on rounding; key is correct formula structure"
+            },
+            "forbidden": [
+              "Terminal value not discounted to present (forgetting to divide by (1+wacc)**n)",
+              "EV returned without subtracting net_debt for equity value",
+              "Single-stage model (only perpetuity, no explicit cash flows for years 1..N)",
+              "Sensitivity table with hardcoded values instead of loops over parameters"
+            ],
+            "sample_answer": "import pandas as pd\n\ndef dcf_valuation(base_nopat, g1, n, g2, wacc, net_debt, shares):\n    pv_cfs = 0.0\n    for t in range(1, n + 1):\n        cf = base_nopat * (1 + g1) ** t\n        pv_cfs += cf / (1 + wacc) ** t\n    \n    cf_n = base_nopat * (1 + g1) ** n\n    tv = cf_n * (1 + g2) / (wacc - g2)       # terminal value at end of year N\n    pv_tv = tv / (1 + wacc) ** n              # discount to present\n    \n    ev = pv_cfs + pv_tv\n    equity = ev - net_debt\n    price = equity / shares\n    \n    return {'ev_mln': round(ev, 1), 'equity_value_mln': round(equity, 1), 'price_per_share': round(price, 2)}\n\ndef dcf_sensitivity(base_params, wacc_range, g2_range):\n    rows = {}\n    for w in wacc_range:\n        row = {}\n        for g in g2_range:\n            params = {**base_params, 'wacc': w, 'g2': g}\n            row[f'g2={g:.1%}'] = dcf_valuation(**params)['price_per_share']\n        rows[f'WACC={w:.1%}'] = row\n    return pd.DataFrame(rows).T\n\n# Base case\nbase = dict(base_nopat=307.8, g1=0.06, n=5, g2=0.025, wacc=0.095, net_debt=235, shares=90)\nprint(dcf_valuation(**base))\nprint(dcf_sensitivity(base, [0.085,0.090,0.095,0.100,0.105], [0.015,0.020,0.025,0.030,0.035]))"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-007",
+      "name": "Financial data unit normaliser — tys./mln./mld. PLN and EUR→PLN conversion",
+      "difficulty": "intermediate",
+      "tags": [
+        "code",
+        "python",
+        "normalisation",
+        "units",
+        "currency",
+        "parsing"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Practical tool for Inwestomat: Polish financial reports use mixed units (tys. PLN, mln PLN, mld PLN) and sometimes EUR. Model must write a parser that normalises all values to mln PLN. Polish decimal separator is comma. EUR→PLN conversion rate provided as parameter. Failure mode 1: wrong scale factor (e.g. 1 mld = 100 mln instead of 1000). Failure mode 2: not handling 'tys.' variant. Failure mode 3: not handling EUR amounts.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correctly parses all unit variants (tys. PLN → ÷1000, mln PLN → ×1, mld PLN → ×1000, EUR → ×rate), handles Polish comma decimal, handles spaces in numbers, returns float in mln PLN, raises ValueError for unrecognised units.\n4 — Good: correct for all PLN variants and EUR, minor issue (e.g. no space-in-number handling, or uses if/elif instead of dict but works).\n3 — Acceptable: handles mln and tys. but misses mld, or handles all PLN but misses EUR.\n2 — Weak: mld scale factor wrong (e.g. ×100 instead of ×1000), or only handles one unit.\n1 — Fail: no working code, wrong language, fundamental parsing error.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Write a unit normaliser converting Polish financial amounts to mln PLN",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer building financial data pipelines. Write clean, well-tested code. Handle Polish number formatting (comma = decimal separator, space = thousands separator)."
+            },
+            {
+              "role": "user",
+              "content": "Write a function `normalise_to_mln_pln(value_str: str, eur_pln_rate: float = 4.25) -> float` that parses a Polish financial amount string and returns the equivalent value in mln PLN.\n\n## Input format examples and expected outputs\n| Input string           | Expected output (mln PLN) |\n|------------------------|---------------------------|\n| '267 450 tys. PLN'     | 267.45                    |\n| '1 234,5 mln PLN'      | 1234.5                    |\n| '2,3 mld PLN'          | 2300.0                    |\n| '45,8 mln EUR'         | 194.65 (at 4.25 EUR/PLN)  |\n| '890 tys. EUR'         | 3.7825 (at 4.25)          |\n\n## Conversion rules\n- tys. (thousands) → divide by 1,000 to get mln\n- mln (millions) → no change\n- mld (billions) → multiply by 1,000\n- EUR → multiply by eur_pln_rate\n- Polish decimal separator is comma, thousands separator is space\n\nRaise `ValueError` with descriptive message if the unit is unrecognised.\n\nAlso write 5 assertions in an `if __name__ == '__main__'` block testing all 5 examples above."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Remove spaces used as thousands separator before parsing number",
+              "Replace comma with dot for decimal conversion",
+              "Scale factors: tys → /1000, mln → ×1, mld → ×1000",
+              "EUR handling: multiply by eur_pln_rate",
+              "ValueError for unrecognised unit",
+              "All 5 example assertions passing"
+            ],
+            "forbidden": [
+              "mld scale factor as 100 or 10,000 (must be 1000)",
+              "Not removing spaces from number part before float() conversion",
+              "Not handling EUR currency",
+              "Returning string instead of float"
+            ],
+            "sample_answer": "import re\n\ndef normalise_to_mln_pln(value_str: str, eur_pln_rate: float = 4.25) -> float:\n    s = value_str.strip()\n    \n    # Extract number and unit\n    m = re.match(r'^([\\d\\s,]+)\\s*(tys\\.|mln|mld)\\s*(PLN|EUR)$', s)\n    if not m:\n        raise ValueError(f'Unrecognised format: {value_str!r}')\n    \n    num_str, unit, currency = m.group(1), m.group(2), m.group(3)\n    \n    # Parse number: remove space thousands-separator, replace comma decimal\n    number = float(num_str.replace(' ', '').replace(',', '.'))\n    \n    # Scale to mln\n    scale = {'tys.': 0.001, 'mln': 1.0, 'mld': 1000.0}[unit]\n    value_mln = number * scale\n    \n    # Currency conversion\n    if currency == 'EUR':\n        value_mln *= eur_pln_rate\n    \n    return value_mln\n\nif __name__ == '__main__':\n    assert normalise_to_mln_pln('267 450 tys. PLN') == 267.45\n    assert normalise_to_mln_pln('1 234,5 mln PLN') == 1234.5\n    assert normalise_to_mln_pln('2,3 mld PLN') == 2300.0\n    assert abs(normalise_to_mln_pln('45,8 mln EUR', 4.25) - 194.65) < 0.01\n    assert abs(normalise_to_mln_pln('890 tys. EUR', 4.25) - 3.7825) < 0.0001\n    print('All assertions passed')"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-008",
+      "name": "Markdown financial table parser — extract structured data from markdown table",
+      "difficulty": "intermediate",
+      "tags": [
+        "code",
+        "python",
+        "markdown",
+        "table-parser",
+        "text-processing"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Model must parse a multi-row markdown table (pipe-separated) containing Polish financial data with mixed number formats. Output: list of dicts. Key challenges: separator rows (|---|---|), handling empty cells, stripping whitespace, Polish comma decimal. Failure mode 1: splitting on | without accounting for leading/trailing pipes. Failure mode 2: treating separator rows as data rows. Failure mode 3: returning strings instead of floats for numeric columns.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correctly skips separator rows, strips whitespace, converts specified columns to float (Polish comma), handles empty cells as None/NaN, returns list of dicts with correct field names.\n4 — Good: correct parsing with minor issue (e.g. empty cell as empty string instead of None, or no type conversion for one column).\n3 — Acceptable: correct structure but includes separator row as data, or all values remain strings.\n2 — Weak: splits on | naively and gets wrong number of columns, or crashes on separator row.\n1 — Fail: no working code, uses pandas.read_csv (wrong approach for markdown), hallucinated library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Parse pipe-delimited markdown table into list of dicts with type conversion",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer. Parse markdown tables using only standard library (re, string methods). Do not use pandas.read_csv — the input is markdown, not CSV."
+            },
+            {
+              "role": "user",
+              "content": "Write a function `parse_markdown_table(table_text: str, float_columns: list[str]) -> list[dict]` that:\n1. Parses a GitHub-Flavored Markdown table (pipe-separated)\n2. Extracts header row and data rows\n3. Skips separator rows (rows containing only |, -, :, and spaces)\n4. Strips whitespace from all cell values\n5. Converts columns listed in `float_columns` to float (replace comma with dot)\n6. Treats empty cells as None\n7. Returns list of dicts (one dict per data row)\n\nTest with this markdown table:\n```\n| Spółka      | Przychody | EBIT   | Marża EBIT |\n|-------------|-----------|--------|------------|\n| Logipol     | 289,0     | 43,1   | 14,9       |\n| Handlowiec  | 840,0     | 95,2   | 11,3       |\n| Medipol     | 412,5     |        | 8,4        |\n```\n\nExpected call:\n```python\nparse_markdown_table(table_text, float_columns=['Przychody', 'EBIT', 'Marża EBIT'])\n```\n\nExpected output:\n```python\n[\n  {'Spółka': 'Logipol',    'Przychody': 289.0, 'EBIT': 43.1,  'Marża EBIT': 14.9},\n  {'Spółka': 'Handlowiec', 'Przychody': 840.0, 'EBIT': 95.2,  'Marża EBIT': 11.3},\n  {'Spółka': 'Medipol',    'Przychody': 412.5, 'EBIT': None,  'Marża EBIT': 8.4},\n]\n```"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Skip rows where all cells contain only -, :, | characters (separator detection)",
+              "Split row on | and strip whitespace from each cell",
+              "First non-separator row after header = header row for field names",
+              "Convert columns in float_columns: replace comma with dot, float()",
+              "Empty cells → None (not empty string)",
+              "Return list of dicts, one per data row"
+            ],
+            "forbidden": [
+              "Including separator row (---|---) as a data row",
+              "Treating empty cell as empty string '' instead of None",
+              "Not handling Polish comma decimal separator in float conversion",
+              "Using pandas.read_csv() or StringIO (wrong tool for markdown)"
+            ],
+            "sample_answer": "import re\n\ndef parse_markdown_table(table_text: str, float_columns: list) -> list:\n    lines = [l.strip() for l in table_text.strip().splitlines()]\n    lines = [l for l in lines if l.startswith('|')]\n    \n    def is_separator(line):\n        return bool(re.match(r'^[|\\s:\\-]+$', line))\n    \n    def split_row(line):\n        parts = line.strip('|').split('|')\n        return [p.strip() for p in parts]\n    \n    header = None\n    result = []\n    for line in lines:\n        if is_separator(line):\n            continue\n        cells = split_row(line)\n        if header is None:\n            header = cells\n            continue\n        row = {}\n        for key, val in zip(header, cells):\n            if val == '':\n                row[key] = None\n            elif key in float_columns:\n                row[key] = float(val.replace(',', '.'))\n            else:\n                row[key] = val\n        result.append(row)\n    return result"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-009",
+      "name": "Benchmark leaderboard updater — JSON upsert with model deduplication",
+      "difficulty": "intermediate",
+      "tags": [
+        "code",
+        "python",
+        "json",
+        "leaderboard",
+        "upsert",
+        "deduplication"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Practical Inwestomat tool: update the benchmark leaderboard JSON file with new run results. Key requirement: upsert semantics — if model+date already exists, update scores; if new, append. Leaderboard may have duplicate entries from prior bugs (as noted in REFINEMENT.md). Model must also deduplicate. Failure mode 1: always appending (no upsert). Failure mode 2: deduplication by model name only (ignores date — different runs of same model are distinct). Failure mode 3: sorting not applied.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: correct upsert (model+date as composite key), deduplication removes exact duplicates, sorts by overall_score descending, saves back to JSON file, handles missing file (creates new leaderboard).\n4 — Good: upsert and dedup correct, minor issue (e.g. no file-missing handling, or sorts ascending).\n3 — Acceptable: append-only (no upsert) but dedup works, or upsert works but no dedup.\n2 — Weak: always appends (no upsert and no dedup), or key is only model_id (ignores date).\n1 — Fail: no working code, overwrites leaderboard with single entry, hallucinated library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Write upsert + dedup leaderboard update function with JSON persistence",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer. Write clean code for JSON file manipulation. Use standard library only (json, pathlib)."
+            },
+            {
+              "role": "user",
+              "content": "Write a function `update_leaderboard(leaderboard_path: str, new_entry: dict) -> None` that:\n\n1. Loads the leaderboard from a JSON file (list of dicts)\n2. Deduplicates existing entries: if two entries have same `model_id` AND same `run_date`, keep only the last one\n3. UPSERTS the new entry: if an entry with same `model_id` + `run_date` exists → replace it; otherwise → append\n4. Sorts all entries by `overall_score` descending\n5. Saves back to the same JSON file\n6. If file doesn't exist: creates a new leaderboard with just the new entry\n\nEntry structure:\n```python\n{\n  'model_id': 'qwen2.5-vl-72b-instruct',\n  'run_date': '2026-03-08',\n  'overall_score': 4.4,\n  'cat_scores': {'CAT-01': 4.8, 'CAT-02': 4.2, 'CAT-03': 4.6, 'CAT-04': 3.8, 'CAT-05': 4.6}\n}\n```\n\nAlso write 3 pytest tests:\n- `test_new_entry_appended`: new model_id is added\n- `test_existing_entry_updated`: same model_id+date is replaced (not duplicated)\n- `test_sorted_by_score`: result is sorted descending by overall_score"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Load JSON list (json.loads or json.load), handle FileNotFoundError → start with []",
+              "Dedup: use dict keyed by (model_id, run_date) to remove exact duplicates",
+              "Upsert: replace existing entry with same (model_id, run_date), or append if new",
+              "Sort by overall_score descending (key=lambda x: x['overall_score'], reverse=True)",
+              "Save back to file (json.dump with indent)",
+              "Test: new entry present after update",
+              "Test: duplicate not created for same model_id+run_date",
+              "Test: list sorted descending by overall_score"
+            ],
+            "forbidden": [
+              "Always appending without checking for existing model_id+run_date",
+              "Deduplication by model_id only (ignores run_date — loses historical comparison)",
+              "Sorting ascending or not sorting at all",
+              "Overwriting file with only the new entry"
+            ],
+            "sample_answer": "import json\nfrom pathlib import Path\n\ndef update_leaderboard(leaderboard_path: str, new_entry: dict) -> None:\n    path = Path(leaderboard_path)\n    try:\n        entries = json.loads(path.read_text(encoding='utf-8'))\n    except FileNotFoundError:\n        entries = []\n    \n    # Dedup: keep last occurrence for each (model_id, run_date)\n    seen = {}\n    for e in entries:\n        key = (e['model_id'], e['run_date'])\n        seen[key] = e\n    \n    # Upsert: replace or append\n    key = (new_entry['model_id'], new_entry['run_date'])\n    seen[key] = new_entry\n    \n    # Sort descending by overall_score\n    result = sorted(seen.values(), key=lambda x: x['overall_score'], reverse=True)\n    \n    path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding='utf-8')\n\n# --- PYTEST TESTS ---\nimport pytest\n\ndef test_new_entry_appended(tmp_path):\n    lb = tmp_path / 'leaderboard.json'\n    entry = {'model_id': 'model-a', 'run_date': '2026-03-08', 'overall_score': 4.2, 'cat_scores': {}}\n    update_leaderboard(str(lb), entry)\n    data = json.loads(lb.read_text())\n    assert any(e['model_id'] == 'model-a' for e in data)\n\ndef test_existing_entry_updated(tmp_path):\n    lb = tmp_path / 'leaderboard.json'\n    entry = {'model_id': 'model-a', 'run_date': '2026-03-08', 'overall_score': 3.0, 'cat_scores': {}}\n    update_leaderboard(str(lb), entry)\n    updated = {'model_id': 'model-a', 'run_date': '2026-03-08', 'overall_score': 4.5, 'cat_scores': {}}\n    update_leaderboard(str(lb), updated)\n    data = json.loads(lb.read_text())\n    matches = [e for e in data if e['model_id'] == 'model-a' and e['run_date'] == '2026-03-08']\n    assert len(matches) == 1\n    assert matches[0]['overall_score'] == 4.5\n\ndef test_sorted_by_score(tmp_path):\n    lb = tmp_path / 'leaderboard.json'\n    for model, score in [('a', 3.0), ('b', 4.5), ('c', 2.0)]:\n        update_leaderboard(str(lb), {'model_id': model, 'run_date': '2026-03-08', 'overall_score': score, 'cat_scores': {}})\n    data = json.loads(lb.read_text())\n    scores = [e['overall_score'] for e in data]\n    assert scores == sorted(scores, reverse=True)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-04-010",
+      "name": "Simple token bucket rate limiter — decorator for LLM API calls",
+      "difficulty": "advanced",
+      "tags": [
+        "code",
+        "python",
+        "rate-limiter",
+        "decorator",
+        "asyncio",
+        "API"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Practical Inwestomat tool for benchmark script: rate limiter to avoid hitting LM Studio or OpenAI rate limits during batch inference. Model must implement a synchronous token-bucket rate limiter as a class or decorator. Key correctness: token refill should be time-based (not tick-based). Failure mode 1: sleep for fixed amount regardless of available tokens. Failure mode 2: no thread safety (no lock). Failure mode 3: token bucket overflows (should cap at max_tokens). Advanced variant: test with mock time.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Excellent: time-based token refill (tokens += elapsed × rate), sleep only for remaining wait (not always fixed), caps tokens at max, thread-safe (threading.Lock or similar), works as decorator or context manager, test passes.\n4 — Good: token bucket logic correct, minor issue (e.g. no thread lock, or slightly imprecise sleep calculation).\n3 — Acceptable: fixed-sleep rate limiter (time.sleep(1/rate)) — simpler but functionally correct for single-threaded use; no token bucket logic.\n2 — Weak: just wraps function with time.sleep(1) regardless of rate, no logic.\n1 — Fail: no working code, async only (spec says synchronous), hallucinated library.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Implement a synchronous token-bucket rate limiter class usable as a decorator",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a Python programmer. Implement a clean, thread-safe token bucket rate limiter. Use only standard library (time, threading, functools)."
+            },
+            {
+              "role": "user",
+              "content": "Implement a `RateLimiter` class that limits API call frequency using the token bucket algorithm:\n\n```python\nclass RateLimiter:\n    def __init__(self, calls_per_second: float, max_burst: int = 1):\n        ...\n    \n    def acquire(self) -> None:\n        \"\"\"Block until a token is available. Thread-safe.\"\"\"\n        ...\n    \n    def __call__(self, func):\n        \"\"\"Use as a decorator.\"\"\"\n        ...\n```\n\nToken bucket rules:\n- `calls_per_second` = refill rate (e.g. 2.0 means 2 tokens refilled per second)\n- `max_burst` = bucket capacity (max tokens at any time)\n- Tokens refill continuously based on time elapsed since last call\n- If no tokens available: sleep until one becomes available\n- Thread-safe: use threading.Lock\n\nUsage example:\n```python\nlimiter = RateLimiter(calls_per_second=2.0, max_burst=3)\n\n@limiter\ndef call_llm(prompt: str) -> str:\n    return f'response to: {prompt}'\n\n# These calls will be rate-limited to max 2/second:\nfor i in range(5):\n    result = call_llm(f'prompt {i}')\n    print(result)\n```\n\nAlso write one pytest test that verifies: calling the decorated function 4 times with calls_per_second=4.0 and max_burst=1 takes at least 0.7 seconds total (i.e. rate limiting is actually applied)."
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "threading.Lock() for thread safety",
+              "Time-based refill: tokens += (now - last_time) * calls_per_second",
+              "Cap tokens at max_burst (min(tokens, max_burst))",
+              "If tokens < 1: sleep for (1 - tokens) / calls_per_second",
+              "Decorator pattern via __call__ using functools.wraps",
+              "Test: 4 calls at 4/s rate takes >= 0.7s total"
+            ],
+            "forbidden": [
+              "Fixed sleep(1/rate) without token bucket logic (simpler but acceptable for score 3)",
+              "No thread lock (threading.Lock missing)",
+              "Tokens allowed to exceed max_burst",
+              "async implementation (spec explicitly says synchronous)"
+            ],
+            "sample_answer": "import time\nimport threading\nimport functools\n\nclass RateLimiter:\n    def __init__(self, calls_per_second: float, max_burst: int = 1):\n        self.rate = calls_per_second\n        self.max_burst = max_burst\n        self.tokens = float(max_burst)\n        self.last_time = time.monotonic()\n        self.lock = threading.Lock()\n    \n    def acquire(self) -> None:\n        with self.lock:\n            now = time.monotonic()\n            elapsed = now - self.last_time\n            self.tokens = min(self.max_burst, self.tokens + elapsed * self.rate)\n            self.last_time = now\n            \n            if self.tokens < 1.0:\n                wait = (1.0 - self.tokens) / self.rate\n                time.sleep(wait)\n                self.tokens = 0.0\n                self.last_time = time.monotonic()\n            else:\n                self.tokens -= 1.0\n    \n    def __call__(self, func):\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            self.acquire()\n            return func(*args, **kwargs)\n        return wrapper\n\n# --- PYTEST TEST ---\nimport pytest\n\ndef test_rate_limiting_applied():\n    limiter = RateLimiter(calls_per_second=4.0, max_burst=1)\n    \n    @limiter\n    def fast_fn():\n        return True\n    \n    start = time.monotonic()\n    for _ in range(4):\n        fast_fn()\n    elapsed = time.monotonic() - start\n    assert elapsed >= 0.7, f'Expected >= 0.7s, got {elapsed:.2f}s'"
+          }
+        }
+      ]
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

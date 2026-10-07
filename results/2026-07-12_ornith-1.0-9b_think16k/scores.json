@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-07-12_ornith-1.0-9b_think16k",
+  "model_id": "ornith-1.0-9b",
+  "eval_date": "2026-07-12",
+  "evaluator": "mistralai/mistral-small-3.2",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-01": {
+      "mean": 4.2,
+      "min": 1,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-02": {
+      "mean": 4.2,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-03": {
+      "mean": 4.7,
+      "min": 4,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-04": {
+      "mean": 3.9,
+      "min": 2,
+      "max": 5,
+      "n": 10
+    },
+    "CAT-05": {
+      "mean": 3.5,
+      "min": 2,
+      "max": 4,
+      "n": 10
+    },
+    "overall": {
+      "mean": 4.1,
+      "n": 50
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

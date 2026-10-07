@@ -1,0 +1,15 @@
+{
+  "company": "PolCorp SA",
+  "ticker": "PCO",
+  "report_date": "2026-02-13",
+  "period_label": "Q4 2025",
+  "full_text": "RAPORT FINANSOWY -- POLCORP SA -- Q4 2025\nPolCorp SA (ticker: PCO, GPW: 1250 akcji)\nRaport za IV kwartal 2025. Data publikacji: 13 lutego 2026\n\nPrzychody ze sprzedazy osiagnely 512 mln PLN, co stanowi wzrost 9,1% rok do roku (469 mln PLN w Q4 2024). Zysk netto zwiekszyl sie do 45 mln PLN z 40 mln PLN rok wczesniej, przy marzy netto 8,8%. EPS wyniosl 1,46 PLN.\n\nZarzad potwierdza realizacje calorocznej prognozy przychodow (1700-1750 mln PLN) i zapowiada publikacje raportu rocznego w marcu 2026.",
+  "fields": {
+    "revenue_mln_pln": 512,
+    "net_income_mln_pln": 45,
+    "net_margin_pct": 8.8,
+    "eps_pln": 1.46
+  },
+  "full_text_fingerprint_sha256": "1a46296ae5c41f3fa88585777e5d82755cc2cdbc9b16c797b6c659bd30db6e28",
+  "source_note": "Synthetic/fictional company and figures, created for CAT-07 harness testing (SPEC-001 pattern, extended by SPEC-003 R2). Not a real filing; no live financial-data API is used to produce or verify this snapshot. This is PolCorp SA's THIRD frozen quarter (Q2 2025-08-14, Q3 2025-11-15, Q4 2026-02-13 -- this file), added per SPEC-003 R2's instruction to default to extending the existing synthetic company rather than introducing a real one."
+}

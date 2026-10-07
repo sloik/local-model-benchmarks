@@ -1,0 +1,618 @@
+{
+  "category": "CAT-02",
+  "version": "public-1.0",
+  "created": "2026-03-07",
+  "updated": "2026-10-07",
+  "created_by": "Argo",
+  "tests": [
+    {
+      "id": "CAT-02-001",
+      "name": "Distillation of quarterly report to executive summary format",
+      "difficulty": "basic",
+      "tags": [
+        "distillation",
+        "quarterly-report",
+        "executive-summary"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Fictional company Agrotex S.A. (manufacturer of fertilizers and plant protection products, GPW). Q3 2025 report. Test checks whether the model will extract key business signals (results, guidance, risks) without hallucinations and in concise form. One prompt = one document to distill.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 - Excellent: distillate contains all 4 required sections (Results, Signals, Risks, Guidance), all key numbers correct, no hallucinations, concise (max ~200 words).\n4 - Good: 3 of 4 sections present, max 1 minor numerical error (±5%) or 1 missing non-essential element.\n3 - Acceptable: 2 sections present or significant formatting errors; useful answer but incomplete.\n2 - Weak: distillate very incomplete or contains numerical errors >5%.\n1 - Fail: hallucination (numbers outside document), refusal, distillate longer than original fragment, no meaningful content.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Distillation of quarterly report fragment (Q3 2025) to 4-section format",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. You create concise distillates of documents in a set format. Always stick to facts from the document - do not add your own conclusions or data outside the text."
+            },
+            {
+              "role": "user",
+              "content": "Create a distillate of the quarterly report fragment below for Agrotex S.A. for Q3 2025.\n\nDistillate format:\n## Results Q3 2025\n[key numbers: revenue, EBIT, margin, y/y change]\n\n## Signals\n[1-3 most important business information]\n\n## Risks\n[1-2 risks mentioned or visible in the report]\n\n## Guidance / Outlook\n[forecasts or lack thereof]\n\n---\n\nREPORT FRAGMENT:\n\nAgrotex S.A. - Raport za III kwartal 2025 roku (niezaudytowany)\n\nSkonsolidowane przychody ze sprzedazy w Q3 2025 wyniosly 412 mln PLN wobec 378 mln PLN w Q3 2024, co oznacza wzrost o 9,0% rok do roku. Wzrost przychodow byl napedzany glownie przez segment nawozow azotowych (+18% r/r), ktory czescioowo skompensowal spadek w segmencie srodkow ochrony roslin (-4% r/r) spowodowany wyjatkowo suchym latem w Polsce i nizszym popytem ze strony rolnikow.\n\nEBITDA za Q3 2025 wyniosla 67 mln PLN (marza EBITDA: 16,3%) wobec 71 mln PLN rok wczesniej (marza: 18,8%). Spadek marzy odzwierciedla wyzsze koszty energii elektrycznej (+23% r/r) i gazu ziemnego (+11% r/r), ktore stanowia lacznie ok. 35% kosztow zmiennych spolki.\n\nEBIT wyniosl 48 mln PLN (marza EBIT: 11,7%) vs. 53 mln PLN w Q3 2024. Zysk netto: 34 mln PLN vs. 41 mln PLN rok wczesniej.\n\nDlug netto na koniec Q3 2025: 198 mln PLN (vs. 167 mln PLN na koniec Q2 2025) - wzrost wynika z sezonowego wzrostu zapasow surowcow przed sezonem jesiennym.\n\nZarzad podtrzymuje prognose roczna przychodow na poziomie 1 550-1 600 mln PLN oraz EBITDA 245-265 mln PLN. Jednoczesnie zarzad ostrzega, ze utrzymanie sie wysokich cen energii w Q4 2025 moze zagrozic realizacji dolnej granicy prognozowanej EBITDA.\n\nW pazdzierniku 2025 spolka podpisala list intencyjny ws. przejecia czeskiego dystrybutora nawozow Agro-CZ s.r.o. za kwote ok. 45 mln EUR. Finalizacja transakcji planowana na Q1 2026."
+            }
+          ],
+          "gold": {
+            "required_sections": [
+              "Results",
+              "Signals",
+              "Risks",
+              "Guidance"
+            ],
+            "required_numbers": [
+              "412 mln PLN (revenue Q3 2025)",
+              "9% or 9.0% y/y revenue growth",
+              "16.3% EBITDA margin or 67 mln PLN EBITDA",
+              "48 mln PLN EBIT",
+              "Guidance: 1 550-1 600 mln PLN revenue and/or 245-265 mln PLN EBITDA"
+            ],
+            "forbidden": [
+              "Numbers outside the document (hallucinations)",
+              "Distillate longer than the original report fragment",
+              "Omission of Agro-CZ acquisition information as a signal",
+              "No mention of energy cost risk"
+            ],
+            "sample_answer": "## Results Q3 2025\nRevenue: 412 mln PLN (+9.0% y/y). EBIT: 48 mln PLN, margin 11.7% (vs. 14.0% y/y). EBITDA: 67 mln PLN, margin 16.3% (vs. 18.8%). Net income: 34 mln PLN. Net debt: 198 mln PLN.\n\n## Signals\n- Nitrogen fertilizers +18% y/y, plant protection segment -4% y/y (drought in Poland)\n- Acquisition of Agro-CZ s.r.o. for ~45 mln EUR (closing Q1 2026)\n- Net debt increase from 167 mln to 198 mln PLN - seasonal inventory build-up\n\n## Risks\n- Electricity costs +23% y/y and gas +11% y/y (35% of variable costs)\n- Risk to lower bound of EBITDA guidance if energy prices persist in Q4\n\n## Guidance / Outlook\nMaintained: revenue 1 550-1 600 mln PLN, EBITDA 245-265 mln PLN."
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-02-011"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-02-002",
+      "name": "Distillation with non-comparable y/y - segment reorganization mid-year",
+      "difficulty": "advanced",
+      "tags": [
+        "distillation",
+        "segment",
+        "reorganization",
+        "non-comparable",
+        "flags"
+      ],
+      "created": "2026-03-07",
+      "created_by": "Argo",
+      "notes": "Company Polymar S.A. (plastic products manufacturer, GPW) conducted segment reorganization in Q2 2025 - old segment 'Finished products' divided into 'Packaging' and 'Industrial profiles'. Data for Q3 2024 not available in new breakdown. Failure mode: model distills y/y numbers without non-comparability flag, or completely omits segment data because 'cannot be compared'.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 - Excellent: distillate contains Q3 2025 segment data (new breakdown), clear flag [ALERT] that y/y is non-comparable due to reorganization, aggregated data (old base) provided if available or clearly marked as estimated. Distillate concise, without unnecessary text.\n4 - Good: segment data present, non-comparability flag present, but lacking precision (e.g., does not explain WHY non-comparable) or format somewhat verbose.\n3 - Acceptable: distillate contains segment data and some mention of structure change, but flag is hidden in narrative text instead of highlighted, or missing aggregated data.\n2 - Weak: distillate reports y/y changes without any mention of reorganization (misleading data), or completely omits segment to 'avoid' problem.\n1 - Fail: hallucination of Q3 2024 data in new format (data not in document), refusal to distill, no significant numerical data.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Q3 2025 report with new segment breakdown - y/y non-comparable, base data only in historical format",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. Your task is to create a concise distillate (max 300 words) containing: key numbers, investment signals, and risks. If you encounter non-comparable or missing data, mark it with a clear flag with explanation."
+            },
+            {
+              "role": "user",
+              "content": "Prepare a distillate of the quarterly report fragment below for Polymar S.A. for Q3 2025.\n\n---\nPolymar S.A. - Raport kwartalny Q3 2025\n\n## Wyniki skonsolidowane Q3 2025\n\nPrzychody ze sprzedazy: 534 mln PLN\nEBITDA: 72 mln PLN (marza 13,5%)\nEBIT: 51 mln PLN (marza 9,6%)\nZysk netto: 38 mln PLN\n\n## Dane segmentowe Q3 2025 (nowa struktura obowiazujaca od Q2 2025)\n\n| Segment              | Przychody (mln PLN) | EBIT (mln PLN) | Marza EBIT |\n|----------------------|:-------------------:|:--------------:|:----------:|\n| Opakowania           | 287                 | 31             | 10,8%      |\n| Profile przemyslowe  | 184                 | 17             | 9,2%       |\n| Surowce i chemikalia | 63                  | 3              | 4,8%       |\n\nUwaga: Od Q2 2025 Spolka zmieniła strukture raportowania segmentowego. Dawny segment \"Wyroby gotowe\" zostal podzielony na dwa nowe segmenty: \"Opakowania\" oraz \"Profile przemyslowe\". Dane za okresy poprzednie nie zostały przeksztalcone, co oznacza ze bezposrednie porownanie r/r na poziomie segmentow nie jest mozliwe.\n\n## Dane porownawcze Q3 2024 (stary uklad, przed reorganizacja)\n\n| Segment (stary uklad)   | Przychody (mln PLN) | EBIT (mln PLN) |\n|-------------------------|:-------------------:|:--------------:|\n| Wyroby gotowe (lacznie) | 448                 | 41             |\n| Surowce i chemikalia    | 59                  | 2              |\n\nPrzychody Grupy Q3 2024: 507 mln PLN (+5,3% r/r w ukladzie zagregowanym).\nEBITDA Q3 2024: 64 mln PLN (marza 12,6%).\n\n## Guidance\nSpółka podtrzymuje prognose roczna: przychody 2 050-2 150 mln PLN, EBITDA 265-290 mln PLN.\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Consolidated data Q3 2025: revenue 534 mln PLN, EBITDA 72 mln PLN (13.5%), EBIT 51 mln, net income 38 mln",
+              "Segment data Q3 2025 in new format (Packaging, Profiles, Raw materials)",
+              "Flag that y/y at segment level is NOT comparable (reorganization since Q2 2025)",
+              "Aggregated y/y data available: revenue +5.3% y/y, EBITDA 72 vs 64 mln (+12.5%)",
+              "Guidance: 2 050-2 150 mln PLN revenue, 265-290 mln EBITDA"
+            ],
+            "forbidden": [
+              "Reporting y/y change for Packaging or Industrial profiles segments without non-comparability flag",
+              "Hallucination of Q3 2024 data for Packaging and Profiles segments (this data does not exist in document)",
+              "Complete omission of segment data",
+              "Omission of mention about reorganization"
+            ],
+            "sample_answer": "## Results Q3 2025 - Polymar S.A.\nRevenue: 534 mln PLN (+5.3% y/y*). EBITDA: 72 mln PLN, margin 13.5% (vs. 12.6% y/y*). EBIT: 51 mln PLN (9.6%). Net income: 38 mln PLN.\n\n## Segments Q3 2025 (new format since Q2 2025)\n- Packaging: 287 mln PLN, EBIT 31 mln (10.8%)\n- Industrial profiles: 184 mln PLN, EBIT 17 mln (9.2%)\n- Raw materials and chemicals: 63 mln PLN, EBIT 3 mln (4.8%)\n\n[ALERT] Segment data for Q3 2024 available ONLY in old format (Finished products total: 448 mln). Direct y/y for Packaging and Profiles segments is impossible - Q3 2024 data has not been converted.\n*y/y provided in aggregated format (old vs new Finished products = Packaging + Profiles)\n\n## Guidance\nMaintained: revenue 2 050-2 150 mln PLN, EBITDA 265-290 mln PLN."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-003",
+      "name": "CEO letter distillation — strategic narrative to key messages",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "ceo-letter",
+        "annual-report",
+        "strategy",
+        "qualitative"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Agrotex S.A. annual report CEO letter — 400+ word qualitative narrative without tables. Model must extract strategy signals and forward-looking statements without adding its own interpretation. Failure mode: model paraphrases vaguely ('company plans to grow') instead of extracting specific stated initiatives, or adds conclusions not in the text.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Bullet-point key messages (3-5), all grounded in document, specific initiatives named, forward-looking statements marked as such, no hallucination.\n4 — 3+ correct key messages, minor over-interpretation of 1 element.\n3 — 2 correct messages, or correct content but excessive paraphrasing.\n2 — Generic summary ('company wants to grow profitably') without specific content.\n1 — Hallucination of initiatives not in text, refusal, copy-paste of entire letter.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract 3-5 key strategic messages from CEO letter",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. From CEO/management letters, extract only concrete, specific statements — initiatives, targets, risks. Avoid generic paraphrasing. Mark forward-looking statements as [FORECAST]."
+            },
+            {
+              "role": "user",
+              "content": "Extract 3-5 key messages from the CEO letter below. Focus on: strategic decisions, specific targets, named risks, and any guidance-level statements.\n\n---\nList do Akcjonariuszy — Agrotex S.A., Raport Roczny 2025\nDrodzy Akcjonariusze,\n\nRok 2025 był dla Agrotexu rokiem intensywnych zmian. Przychody wzrosły o 11,4% do 1 587 mln PLN, przekraczając górny przedział naszej prognozy. Poprawa ta wynikała przede wszystkim z rekordowego sezonu w nawozach azotowych — segment ten rósł w tempie 18% rok do roku dzięki wysokim cenom zbóż stymulującym popyt wśród rolników.\n\nJednocześnie musieliśmy zmierzyć się z poważnym wyzwaniem kosztowym. Energia elektryczna i gaz stanowiły w minionym roku 35% naszych kosztów zmiennych, a ich łączny wzrost o ponad 17% rok do roku istotnie obciążył nasze marże. Marża EBITDA wyniosła 16,1% — zgodnie z oczekiwaniami, choć w dolnej części naszego historycznego zakresu.\n\nKluczową decyzją strategiczną 2025 roku było podpisanie umowy przejęcia Agro-CZ s.r.o. — czeskiego dystrybutora nawozów z przychodami ok. 180 mln CZK rocznie. Transakcja, sfinalizowana w lutym 2026 r. za 45 mln EUR, otwiera nam dostęp do czeskiego i słowackiego rynku rolniczego i jest pierwszym krokiem naszej ekspansji w Europie Środkowo-Wschodniej.\n\nNa rok 2026 zakładamy przychody w przedziale 1 700-1 800 mln PLN (łącznie z konsolidacją Agro-CZ) i marżę EBITDA 16,5-18,0%. Kluczowym ryzykiem pozostają ceny energii — w przypadku ich dalszego wzrostu o ponad 10%, dolna granica marży może być trudna do osiągnięcia. Naszą odpowiedzią jest program zabezpieczeń energetycznych (kontrakty forward na gaz) oraz inwestycja 23 mln PLN w instalację fotowoltaiczną planowana na Q3 2026.\n\nZ wyrazami szacunku,\nJan Nowak, Prezes Zarządu Agrotex S.A.\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Revenue 2025: 1 587 mln PLN (+11.4% y/y), above guidance upper bound",
+              "Energy costs: 35% of variable costs, +17% y/y — margin pressure",
+              "Agro-CZ acquisition closed Feb 2026 for 45 mln EUR — CEE expansion",
+              "[FORECAST] 2026 guidance: revenue 1 700-1 800 mln PLN, EBITDA margin 16.5-18.0%",
+              "[FORECAST] Energy hedging: gas forward contracts + 23 mln PLN PV investment (Q3 2026)"
+            ],
+            "forbidden": [
+              "Generic statement like 'company plans to grow' without specific numbers",
+              "Inventing initiatives not mentioned in the letter",
+              "Omitting the Agro-CZ acquisition as a key message",
+              "Not marking 2026 guidance as forward-looking"
+            ],
+            "sample_answer": "Key messages from CEO letter — Agrotex S.A. 2025:\n\n1. 2025 results: Revenue 1 587 mln PLN (+11.4%), above guidance upper bound. EBITDA margin 16.1% (lower end of historical range).\n2. Energy cost pressure: electricity + gas = 35% of variable costs, +17% y/y — main margin drag.\n3. Strategic acquisition: Agro-CZ s.r.o. (Czech fertilizer distributor) closed Feb 2026 for 45 mln EUR — first step in CEE expansion.\n4. [FORECAST] 2026 guidance: revenue 1 700-1 800 mln PLN (incl. Agro-CZ), EBITDA margin 16.5-18.0%.\n5. [FORECAST] Energy risk mitigation: gas forward contracts + 23 mln PLN PV installation planned Q3 2026."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-004",
+      "name": "Profit warning distillation — guidance cut with causal explanation",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "profit-warning",
+        "guidance-cut",
+        "current-report",
+        "espi"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Metaltech S.A. ESPI current report with a profit warning — guidance cut with specific causes. Model must distill: old guidance, new guidance, reasons (quantified), and timeline. Failure mode: model reports only the new guidance without noting the cut, or omits the quantified causes.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Old guidance, new guidance, delta, 2+ quantified causes, timeline all present. Concise.\n4 — Old + new guidance and at least 1 quantified cause. Minor omission.\n3 — New guidance only OR causes without guidance change context.\n2 — Only vague mention of guidance cut without specifics.\n1 — Hallucination, refusal, no meaningful content.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "ESPI current report — profit warning with guidance revision and explanations",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. From profit warning reports, extract: old guidance, new guidance, quantified reasons for the cut, and relevant timeline."
+            },
+            {
+              "role": "user",
+              "content": "Distill the profit warning below into a concise summary (max 150 words). Include: previous guidance, revised guidance, key reasons, and timing.\n\n---\nMetaltech S.A. — Raport bieżący nr 18/2025\nTemat: Aktualizacja prognozy wyników na rok 2025\nData: 14 października 2025\n\nZarząd Metaltech S.A. informuje o aktualizacji prognozy wyników finansowych na rok 2025.\n\nPoprzednia prognoza (podana 15.03.2025): przychody 5 100-5 300 mln PLN, EBITDA 780-820 mln PLN.\n\nZrewidowana prognoza: przychody 4 700-4 900 mln PLN, EBITDA 640-680 mln PLN.\n\nPrzyczyny rewizji:\n1. Znaczący spadek cen stali na rynkach europejskich od lipca 2025 r. — ceny rur stalowych obniżyły się o ok. 18% względem założeń przyjętych w pierwotnej prognozie, co przekłada się na szacowaną utratę przychodów ok. 320-350 mln PLN w H2 2025.\n2. Wyższe niż zakładano koszty transportu morskiego (wzrost stawek frachtowych o 34% q/q w Q3 2025) — wpływ na EBITDA szacowany na ok. 45 mln PLN.\n3. Opóźnienie uruchomienia nowej linii produkcyjnej w zakładzie Metaltech Wschód (Q4 2025 zamiast Q2 2025) — utrata 2 300 ton zdolności produkcyjnych w II połowie roku.\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Previous guidance: revenue 5 100-5 300 mln PLN, EBITDA 780-820 mln PLN",
+              "Revised guidance: revenue 4 700-4 900 mln PLN, EBITDA 640-680 mln PLN",
+              "Steel price decline -18% → estimated revenue impact 320-350 mln PLN in H2",
+              "Freight rate increase +34% q/q in Q3 → EBITDA impact ~45 mln PLN",
+              "Production line delay: Q4 instead of Q2 2025"
+            ],
+            "forbidden": [
+              "Reporting only new guidance without old guidance",
+              "Omitting quantified impacts (320-350 mln PLN steel, 45 mln PLN freight)",
+              "Inventing other reasons not in the document"
+            ],
+            "sample_answer": "Metaltech S.A. — Profit Warning (14.10.2025)\n\nPrevious guidance: revenue 5 100-5 300 mln PLN, EBITDA 780-820 mln PLN\nRevised guidance: revenue 4 700-4 900 mln PLN, EBITDA 640-680 mln PLN\n\nReasons:\n1. Steel prices -18% vs. assumptions → revenue impact ~320-350 mln PLN in H2 2025\n2. Freight rates +34% q/q in Q3 2025 → EBITDA impact ~45 mln PLN\n3. Production line delay (Metaltech Wschód): Q4 2025 vs. Q2 planned → 2 300 t capacity lost in H2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-005",
+      "name": "Multi-period trend distillation — 8 quarters, identify inflection point",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "trend",
+        "multi-period",
+        "inflection",
+        "margin"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "EnergiaPlus S.A. Eight-quarter time series of revenue and EBIT margin. Model must distill trend narrative: identify when margin peaked, where it troughed, current direction. Failure mode: model lists all 8 quarters without identifying the trend, or claims trend direction opposite to data.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Identifies peak margin (Q2 2024), trough (Q1 2025), current recovery trend, revenue CAGR estimate, concise narrative.\n4 — Identifies peak and trough correctly, describes recovery, minor omission.\n3 — Describes general 'decline then recovery' without identifying specific peak/trough periods.\n2 — Lists quarters without synthesis, or gets trend direction wrong.\n1 — Hallucination of values, refusal, no analysis.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "8-quarter data table — distill trend narrative with inflection point identification",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial analyst. Distill multi-period data into a concise trend narrative. Identify key inflection points (peaks, troughs) and current direction. Max 150 words."
+            },
+            {
+              "role": "user",
+              "content": "Distill the following 8-quarter data for EnergiaPlus S.A. Identify: (1) revenue trend, (2) margin peak and trough, (3) current trajectory.\n\n| Kwartał | Przychody (mln PLN) | Marża EBIT (%) |\n|---------|--------------------:|:--------------:|\n| Q1 2024 | 423                 | 12,1           |\n| Q2 2024 | 467                 | 14,8           |\n| Q3 2024 | 489                 | 13,9           |\n| Q4 2024 | 412                 | 11,2           |\n| Q1 2025 | 398                 | 9,4            |\n| Q2 2025 | 441                 | 10,7           |\n| Q3 2025 | 478                 | 12,3           |\n| Q4 2025 | 512                 | 13,1           |"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Margin peak: Q2 2024 at 14.8%",
+              "Margin trough: Q1 2025 at 9.4%",
+              "Recovery trend since Q1 2025 (Q2→Q3→Q4 2025: 10.7%→12.3%→13.1%)",
+              "Revenue trend: broadly growing (423→512 mln PLN over 8 quarters, ~+21%)"
+            ],
+            "forbidden": [
+              "Claiming margin is still declining (it recovered since Q1 2025)",
+              "Identifying Q4 2024 as trough instead of Q1 2025",
+              "Listing all 8 rows without synthesis"
+            ],
+            "sample_answer": "EnergiaPlus S.A. — Trend 8 quarters (Q1 2024–Q4 2025):\n\nRevenue: growing trend from 423 mln PLN (Q1 2024) to 512 mln PLN (Q4 2025), +21% over 8 quarters. Minor dip in Q1 2025 (398 mln).\n\nEBIT margin: peaked at 14.8% (Q2 2024), then declined sharply to trough of 9.4% (Q1 2025) — 5.4 pp fall over 3 quarters. Recovery since: Q2→Q3→Q4 2025 at 10.7%→12.3%→13.1%. Q4 2025 still below Q2 2024 peak by 1.7 pp.\n\nCurrent trajectory: margin recovering steadily, revenue growing. Watch whether Q1 2026 continues recovery or seasonal dip repeats."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-006",
+      "name": "Contradictory signals distillation — revenue up, margin down, guidance cut",
+      "difficulty": "advanced",
+      "tags": [
+        "distillation",
+        "contradictory-signals",
+        "margin-compression",
+        "guidance-cut",
+        "analysis"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Handlowiec S.A. Results show good revenue growth but margin compression and guidance cut — model must present ALL three signals faithfully including the negative ones, without over-optimizing the narrative. Failure mode: model presents only the positive signal (revenue growth) or only the negative (guidance cut) without giving balanced distillate.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — All three signals (revenue +, margin -, guidance cut) clearly stated with numbers. No spin in either direction.\n4 — All three present but one understated or without full context.\n3 — Two of three signals present, balanced.\n2 — Only positive or only negative signals — biased distillate.\n1 — Hallucination, refusal, or complete misrepresentation.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Q3 2025 report with mixed signals — extract all key signals faithfully",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. Present ALL significant signals from the document — positive and negative alike. Do not optimize the narrative. Numbers must match the document."
+            },
+            {
+              "role": "user",
+              "content": "Create an objective distillate of the Q3 2025 report below for Handlowiec S.A. Include all material signals.\n\n---\nHandlowiec S.A. — Wyniki Q3 2025 (wybrane dane)\n\nPrzychody ze sprzedaży: 1 456 mln PLN (+12,3% r/r) — powyżej konsensusu (1 410 mln PLN).\nMarża EBIT: 6,8% vs. 8,1% w Q3 2024 (spadek o 1,3 pp rok do roku).\nZysk netto: 67 mln PLN vs. 78 mln PLN r/r (spadek 14,1%).\nDług netto / EBITDA: 2,8x vs. 2,1x rok temu (wzrost zadłużenia po przejęciu sieci Domino).\n\nAktualizacja prognozy rocznej:\n- Przychody: 5 600-5 700 mln PLN (poprzednio: 5 800-5 950 mln PLN) — obniżenie ze względu na słabszy Q4 w e-commerce.\n- Marża EBITDA: 9,0-9,5% (poprzednio: 10,0-10,5%) — presja kosztów pracowniczych i energii.\n\nDywidenda: Zarząd potwierdza zamiar rekomendowania dywidendy za 2025 rok na poziomie 1,20 PLN/akcję (bez zmian).\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Revenue +12.3% y/y to 1 456 mln PLN, above consensus",
+              "EBIT margin: 6.8% vs 8.1% y/y (-1.3 pp) — margin compression",
+              "Net income: 67 vs 78 mln PLN y/y (-14.1%)",
+              "Leverage: 2.8x vs 2.1x (post-Domino acquisition)",
+              "Guidance cut: revenue to 5 600-5 700 (from 5 800-5 950), EBITDA margin to 9.0-9.5% (from 10.0-10.5%)",
+              "Dividend unchanged: 1.20 PLN/share"
+            ],
+            "forbidden": [
+              "Presenting only the revenue beat without margin decline",
+              "Omitting the guidance cut",
+              "Over-emphasizing the dividend as a main positive without noting earnings decline"
+            ],
+            "sample_answer": "## Handlowiec S.A. — Q3 2025 Mixed Signals\n\n✅ Revenue: 1 456 mln PLN (+12.3% y/y), above consensus of 1 410 mln PLN\n⚠️ EBIT margin: 6.8% vs 8.1% y/y (−1.3 pp compression)\n❌ Net income: 67 vs 78 mln PLN (−14.1% y/y)\n❌ Leverage: net debt/EBITDA 2.8x vs 2.1x (post-Domino)\n❌ Guidance cut: revenue 5 600-5 700 mln (from 5 800-5 950); EBITDA margin 9.0-9.5% (from 10.0-10.5%)\n✅ Dividend: 1.20 PLN/share maintained"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-007",
+      "name": "M&A announcement distillation — key deal terms and strategic rationale",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "merger-acquisition",
+        "deal-terms",
+        "current-report",
+        "espi"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Medipol S.A. current report announcing acquisition of a smaller pharmaceutical company. Key terms: price, payment structure, target revenue, expected synergies, closing timeline. Failure mode: model summarizes vaguely without extracting specific financial terms of the deal.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Deal price + structure, target company revenue, expected synergies (with value), closing timeline all stated.\n4 — 3 of 4 elements correct, minor omission.\n3 — 2 of 4 elements, general summary only.\n2 — Vague summary without specific deal numbers.\n1 — Hallucination of deal terms, refusal.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract key deal terms from M&A announcement current report",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. From M&A announcements, extract: (1) acquisition price and structure, (2) target company profile, (3) expected synergies, (4) closing timeline."
+            },
+            {
+              "role": "user",
+              "content": "Distill the M&A announcement below. Focus on specific deal terms.\n\n---\nMedipol S.A. — Raport bieżący nr 23/2025\nTemat: Zawarcie umowy nabycia 100% udziałów w spółce Farmaceum sp. z o.o.\nData: 3 listopada 2025\n\nZarząd Medipol S.A. informuje, że w dniu 3 listopada 2025 r. Spółka zawarła umowę nabycia 100% udziałów w Farmaceum sp. z o.o. — polskim producencie leków generycznych, za łączną cenę nabycia 187 mln PLN.\n\nStruktura płatności: 120 mln PLN przy zamknięciu transakcji + 67 mln PLN w formie earn-out uzależnionego od osiągnięcia przez Farmaceum EBITDA ≥ 28 mln PLN w roku 2026.\n\nProfil spółki przejmowanej: Farmaceum sp. z o.o. osiągnęła w roku 2024 przychody 145 mln PLN i EBITDA 22 mln PLN. Spółka posiada 4 produkty w portfolio leków generycznych zarejestrowanych w UE.\n\nOczekiwane synergie: Zarząd szacuje synergie przychodowe i kosztowe w wysokości 18-25 mln PLN rocznie, możliwe do realizacji w ciągu 24 miesięcy od zamknięcia transakcji (2027-2028).\n\nZamknięcie transakcji (closing): oczekiwane w Q1 2026, po uzyskaniu zgody UOKiK.\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Deal price: 187 mln PLN total (120 mln at closing + 67 mln earn-out if EBITDA ≥ 28 mln in 2026)",
+              "Target: Farmaceum sp. z o.o. — generic drugs producer, revenue 145 mln PLN, EBITDA 22 mln PLN (2024), 4 EU-registered generics",
+              "Expected synergies: 18-25 mln PLN p.a. by 2027-2028 (within 24 months of closing)",
+              "Closing: Q1 2026, subject to UOKiK approval"
+            ],
+            "forbidden": [
+              "Reporting total price as 120 mln PLN (only the upfront payment, not including earn-out)",
+              "Omitting the earn-out condition (EBITDA ≥ 28 mln PLN)",
+              "Vague synergy statement without the 18-25 mln PLN figure"
+            ],
+            "sample_answer": "Medipol S.A. — Acquisition of Farmaceum sp. z o.o.\n\nDeal: 100% of shares. Total price: 187 mln PLN\n- Upfront: 120 mln PLN at closing\n- Earn-out: 67 mln PLN conditional on Farmaceum EBITDA ≥ 28 mln PLN in 2026\n\nTarget profile (2024): Revenue 145 mln PLN, EBITDA 22 mln PLN. 4 EU-registered generic products.\n\nSynergies: 18-25 mln PLN p.a. expected by 2027-2028.\n\nClosing: Q1 2026 (subject to UOKiK antitrust approval)."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-008",
+      "name": "Risk factors distillation — annual report risks section",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "risk-factors",
+        "annual-report",
+        "regulatory",
+        "market-risk"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Telekomunix S.A. annual report risk section (400+ words). Model must distill into structured risk register: category, description, likelihood/impact where stated. Failure mode: model produces generic risk list ('market risk, credit risk') without specific content, or over-copies the original text.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — 4-5 distinct risks with category labels, specific description, quantified impacts where stated. Concise (not copy-paste).\n4 — 3+ risks correctly characterized, minor missing detail.\n3 — 2-3 risks but overly vague or partially copied from source.\n2 — Generic categories without specific content from this document.\n1 — Hallucination, refusal, full copy-paste of source.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract and structure key risk factors from annual report risks section",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. From risk factor sections, create a structured risk register: for each risk state (1) category, (2) specific description, (3) quantified impact if given. Max 200 words total."
+            },
+            {
+              "role": "user",
+              "content": "Create a risk register from the risk section below for Telekomunix S.A. (Annual Report 2025).\n\n---\nCzynniki ryzyka — Telekomunix S.A.\n\n1. Ryzyko regulacyjne: W grudniu 2024 r. wszczęte zostało postępowanie UKE dotyczące potencjalnego naruszenia warunków licencji. Ewentualna kara może wynieść 15-45 mln PLN. Termin rozstrzygnięcia: szacujemy Q2-Q3 2026.\n\n2. Ryzyko rynkowe — presja cenowa: Intensywna konkurencja na rynku usług mobilnych skutkuje coroczną erozją ARPU o ok. 3-5% rok do roku. W 2025 r. ARPU wyniosło 42,3 PLN/miesiąc (wobec 44,1 PLN w 2024 r.).\n\n3. Ryzyko stopy procentowej: Spółka posiada 480 mln PLN zobowiązań o zmiennym oprocentowaniu (WIBOR 3M + marża). Każde zwiększenie WIBOR o 100 pb zwiększa roczne koszty odsetkowe o ok. 4,8 mln PLN.\n\n4. Ryzyko operacyjne — cyberbezpieczeństwo: W 2025 r. odnotowano 3 incydenty bezpieczeństwa. Spółka przeznacza 23 mln PLN rocznie na ochronę infrastruktury IT. Brak ubezpieczenia od skutków cyberataków.\n\n5. Ryzyko koncentracji przychodów: 38% przychodów pochodzi od 10 największych klientów korporacyjnych. Utrata 2 największych klientów mogłaby skutkować spadkiem przychodów o ok. 8-12%.\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Regulatory risk: UKE proceeding, potential fine 15-45 mln PLN, expected resolution Q2-Q3 2026",
+              "Market risk (pricing): ARPU erosion 3-5% p.a., 42.3 PLN (2025) vs 44.1 PLN (2024)",
+              "Interest rate risk: 480 mln PLN floating rate debt, +100bp WIBOR = +4.8 mln PLN annual interest",
+              "Cyber/operational risk: 3 incidents in 2025, 23 mln PLN IT security budget, no cyber insurance",
+              "Concentration risk: top 10 clients = 38% revenue; losing top 2 = ~8-12% revenue decline"
+            ],
+            "forbidden": [
+              "Generic labels without specific content (e.g., 'regulatory risk — company faces regulatory uncertainty')",
+              "Omitting the quantified impacts (fine range, WIBOR sensitivity, ARPU values)",
+              "Copy-pasting full paragraphs from source"
+            ],
+            "sample_answer": "Risk Register — Telekomunix S.A. 2025:\n\n1. [REGULATORY] UKE license proceeding — potential fine 15-45 mln PLN. Expected outcome: Q2-Q3 2026.\n2. [MARKET] ARPU erosion 3-5% p.a. (42.3 PLN/month in 2025 vs 44.1 PLN in 2024). Competitive pressure on mobile pricing.\n3. [INTEREST RATE] 480 mln PLN floating rate debt (WIBOR 3M). Sensitivity: +100bp = +4.8 mln PLN/year interest cost.\n4. [OPERATIONAL/CYBER] 3 security incidents in 2025. IT security budget: 23 mln PLN p.a. No cyber insurance.\n5. [CONCENTRATION] Top 10 clients = 38% revenue. Loss of top 2 clients → ~8-12% revenue decline."
+          }
+        }
+      ],
+      "deprecated": true,
+      "deprecated_by": [
+        "CAT-02-012"
+      ],
+      "deprecated_date": "2026-03-09"
+    },
+    {
+      "id": "CAT-02-009",
+      "name": "ESG/sustainability section distillation — targets and metrics",
+      "difficulty": "basic",
+      "tags": [
+        "distillation",
+        "esg",
+        "sustainability",
+        "co2",
+        "targets",
+        "annual-report"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Agrotex S.A. ESG section from annual report — CO2 emissions, water usage, social metrics, targets. Model must extract factual ESG metrics (not interpret). Failure mode: model produces generic 'company cares about sustainability' narrative instead of extracting specific metrics and targets.",
+      "expected_min_score": 4,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Key ESG metrics with units, year, baseline, and 2030 targets all correctly extracted. Structured output.\n4 — 3-4 metrics correct, minor missing element.\n3 — 2 metrics correct or correct metrics without targets.\n2 — Generic ESG narrative without specific numbers.\n1 — Hallucination, refusal.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Extract structured ESG metrics and targets from sustainability section",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. Extract ESG metrics precisely: metric name, current value (with year), baseline, and target. Do not add interpretation."
+            },
+            {
+              "role": "user",
+              "content": "Extract ESG metrics from the section below for Agrotex S.A. Structure as: metric | 2025 value | 2020 baseline | 2030 target.\n\n---\nRaportowanie ESG — Agrotex S.A., dane za rok 2025\n\nŚrodowisko:\n- Emisje CO2 (Zakres 1+2): 124 000 ton CO2eq w 2025 r. (wobec 156 000 ton w roku bazowym 2020). Cel na 2030: redukcja do 80 000 ton CO2eq.\n- Zużycie wody: 2,3 mln m³ w 2025 r. (wobec 2,8 mln m³ w 2020 r.). Cel na 2030: 1,8 mln m³.\n- Udział energii odnawialnej: 18% w 2025 r. (0% w 2020 r.). Cel na 2030: 60%.\n\nSpołeczeństwo:\n- Wypadkowość (LTIFR): 1,2 w 2025 r. (wobec 2,1 w 2020 r.). Cel na 2030: poniżej 0,8.\n- Udział kobiet w zarządzie: 33% w 2025 r. (12% w 2020 r.). Cel na 2030: 40%.\n---"
+            }
+          ],
+          "gold": {
+            "required": [
+              "CO2 Scope 1+2: 124 000 t CO2eq (2025), baseline 156 000 (2020), target 80 000 (2030)",
+              "Water: 2.3 mln m³ (2025), baseline 2.8 mln (2020), target 1.8 mln (2030)",
+              "Renewable energy: 18% (2025), baseline 0% (2020), target 60% (2030)",
+              "LTIFR: 1.2 (2025), baseline 2.1 (2020), target <0.8 (2030)",
+              "Women on board: 33% (2025), baseline 12% (2020), target 40% (2030)"
+            ],
+            "forbidden": [
+              "Generic statements like 'company reduced emissions' without specific values",
+              "Confusing baseline year (2020) with current year (2025)",
+              "Adding subjective assessment of ESG performance"
+            ],
+            "sample_answer": "Agrotex S.A. ESG Metrics:\n\n| Metric | 2025 | 2020 baseline | 2030 target |\n|--------|------|---------------|-------------|\n| CO2 Scope 1+2 | 124 000 t CO2eq | 156 000 t | 80 000 t |\n| Water use | 2.3 mln m³ | 2.8 mln m³ | 1.8 mln m³ |\n| Renewable energy | 18% | 0% | 60% |\n| LTIFR | 1.2 | 2.1 | <0.8 |\n| Women on board | 33% | 12% | 40% |"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-010",
+      "name": "Half-year results distillation — guidance raise with strong beat",
+      "difficulty": "advanced",
+      "tags": [
+        "distillation",
+        "h1-report",
+        "guidance-raise",
+        "beat",
+        "dividend"
+      ],
+      "created": "2026-03-08",
+      "created_by": "Argo",
+      "notes": "Logipol S.A. (logistics) H1 2025 results with strong beat vs consensus and guidance raise. Also includes a special dividend announcement. Advanced: model must correctly frame the guidance raise in context of the beat, and distinguish regular from special dividend. Failure mode: model conflates the special dividend with regular dividend or omits guidance context.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate the model's response on a scale of 1-5:\n\n5 — Beat vs consensus quantified, guidance raise (old + new) stated, regular vs special dividend distinguished, key segment driving the beat named.\n4 — Beat, guidance raise, and dividend present, but regular/special distinction missing or segment omitted.\n3 — Guidance raise and dividend present, beat context incomplete.\n2 — Only partial elements, guidance raise without context of beat.\n1 — Hallucination, refusal.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "H1 2025 results with beat, guidance raise, and special dividend — full distillate",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial document distillation agent. From H1 results presentations, extract: (1) beat vs consensus, (2) guidance revision, (3) dividend announcement, (4) key segment driver. Be precise about regular vs special dividends."
+            },
+            {
+              "role": "user",
+              "content": "Distill the H1 2025 results announcement below for Logipol S.A. (max 200 words).\n\n---\nLogipol S.A. — Wyniki H1 2025 (komentarz zarządu)\n\nPrzychody H1 2025: 567 mln PLN vs. konsensus 531 mln PLN (+6,8% powyżej oczekiwań). Wzrost r/r: +18,5% (vs. 479 mln PLN w H1 2024).\nEBITDA: 98 mln PLN (marża 17,3%) vs. konsensus 87 mln PLN (+12,6% beat). Marża powyżej historycznej średniej 16,0%.\nZysk netto: 63 mln PLN vs. konsensus 54 mln PLN (+16,7% beat).\n\nGłównym motorem wzrostu był segment magazynowy (+31% r/r przychody), gdzie zakończono kontrakt z nowym klientem e-commerce — Fastway Logistics GmbH. Segment transportowy rósł o 8% r/r.\n\nAktualizacja prognozy rocznej 2025:\n- Poprzednio: przychody 1 050-1 100 mln PLN, EBITDA 170-180 mln PLN.\n- Po aktualizacji: przychody 1 140-1 180 mln PLN, EBITDA 190-205 mln PLN.\n\nDywidenda:\n- Dywidenda regularna za 2025 rok: Zarząd planuje rekomendację dywidendy na poziomie 1,80 PLN/akcję (wypłata po zatwierdzeniu WZA, czerwiec 2026).\n- Dywidenda specjalna: Zarząd rekomenduje wypłatę dywidendy specjalnej w kwocie 2,50 PLN/akcję z zatrzymanych zysków z lat 2022-2024 (wypłata wrzesień 2025).\n---"
+            }
+          ],
+          "gold": {
+            "required_elements": [
+              "Revenue H1 2025: 567 mln PLN, +6.8% above consensus (531 mln), +18.5% y/y",
+              "EBITDA: 98 mln PLN (17.3% margin), +12.6% above consensus",
+              "Guidance raise: revenue 1 140-1 180 (from 1 050-1 100), EBITDA 190-205 (from 170-180)",
+              "Key driver: warehouse segment +31% y/y (Fastway Logistics GmbH contract)",
+              "Regular dividend: 1.80 PLN/share (June 2026 payment)",
+              "Special dividend: 2.50 PLN/share from retained earnings 2022-2024 (September 2025)"
+            ],
+            "forbidden": [
+              "Confusing regular (1.80 PLN) with special dividend (2.50 PLN) or reporting total as one dividend",
+              "Reporting only new guidance without old guidance",
+              "Omitting the specific client driving warehouse growth (Fastway)"
+            ],
+            "sample_answer": "Logipol S.A. — H1 2025 Results (Strong Beat + Guidance Raise)\n\nRevenue: 567 mln PLN (+18.5% y/y), beat consensus by +6.8% (vs 531 mln expected)\nEBITDA: 98 mln PLN (17.3% margin), beat consensus by +12.6%\nNet income: 63 mln PLN (+16.7% above consensus)\n\nDriver: Warehouse segment +31% y/y — new Fastway Logistics GmbH contract\n\nGuidance raised:\n- Revenue: 1 140-1 180 mln PLN (from 1 050-1 100)\n- EBITDA: 190-205 mln PLN (from 170-180)\n\nDividends:\n- Regular: 1.80 PLN/share (planned for June 2026 after AGM approval)\n- Special: 2.50 PLN/share from retained earnings 2022-2024 (September 2025)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CAT-02-011",
+      "name": "Synthetic annual-results distillation",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "quarterly-results",
+        "contradictory-signals",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-02-001",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Explain conflicting signals from the supplied waterfall, preserving source attribution.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Explain conflicting signals from the supplied waterfall, preserving source attribution.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Receivables SA, PLN millions.\n2024: revenue 1000; operating costs 700; EBITDA 300; finance costs 100; profit before tax 200; tax benefit +20; net profit 220.\n2025: revenue 1200; operating costs 840; EBITDA 360; finance costs 120; profit before tax 240; tax expense -18; net profit 222.\nCollections 2025 are 320, compared with 260 in 2024. Investments fell from 300 to 250 because the company paused West-market purchases. Management plans to resume them in 2026. Cash EBITDA is 1200 million; net debt is 4800 million. These are invented figures, not an issuer filing.\nProduce Results, Signals, Risks and Outlook sections. Explain why net profit barely grew despite revenue growth."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Results: revenue 1200 (+20%), EBITDA 360 (+20%), net profit 222 (approximately +0.9%)",
+              "Signals: pretax profit increased 40; tax moved from +20 to -18, a -38 swing",
+              "Risks: finance costs increased 20; net-debt/cash-EBITDA is 4.0x",
+              "Outlook: management plans West-market purchases to resume in 2026"
+            ],
+            "forbidden": [
+              "Inventing values absent from the document"
+            ],
+            "sample_answer": "Results: revenue 1200 (+20%), EBITDA 360 (+20%), net profit 222 (approximately +0.9%)\nSignals: pretax profit increased 40; tax moved from +20 to -18, a -38 swing\nRisks: finance costs increased 20; net-debt/cash-EBITDA is 4.0x\nOutlook: management plans West-market purchases to resume in 2026"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    },
+    {
+      "id": "CAT-02-012",
+      "name": "Synthetic credit-action distillation",
+      "difficulty": "intermediate",
+      "tags": [
+        "distillation",
+        "credit-rating",
+        "rating-action",
+        "synthetic",
+        "public-synthetic-v1"
+      ],
+      "created": "2026-03-09",
+      "created_by": "Argo",
+      "replaces": "CAT-02-008",
+      "source": "Original synthetic case authored for public-synthetic-v1",
+      "notes": "Do not confuse entity rating, instrument rating and sector score.",
+      "expected_min_score": 3,
+      "scoring": "min",
+      "criteria": "Rate 1–5: 5 satisfies all listed gold requirements and preserves units, periods and attribution; 4 has one minor imprecision; 3 omits a material requirement; 2 makes a material error; 1 invents a fact, uses the wrong period, or fails to answer a source-supported question. Do not confuse entity rating, instrument rating and sector score.",
+      "prompts": [
+        {
+          "id": "p1",
+          "description": "Original synthetic public-release scenario",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Use only the supplied fictional document. State when information is absent."
+            },
+            {
+              "role": "user",
+              "content": "FICTIONAL Example Credit Agency notice for Example Receivables SA. The corporate rating is affirmed at BB with a stable outlook. Senior unsecured debt remains BB-, one notch lower because senior claims rank ahead of it. The agency lowered its entire receivables-sector operating-environment score from BB to B; it did not downgrade this issuer's corporate rating. Strengths are positive cash collections and liquidity reserves. Risks are collection cyclicality and aggressive bidding for portfolios.\nSummarize the ratings, outlook, sector action, strengths and risks."
+            }
+          ],
+          "gold": {
+            "required": [
+              "Corporate rating BB affirmed, stable outlook",
+              "Senior unsecured BB-, one notch lower due to priority of senior claims",
+              "Sector operating-environment score BB to B; not an issuer downgrade",
+              "Strengths: cash collections and liquidity reserves",
+              "Risks: collection cyclicality and aggressive portfolio bidding"
+            ],
+            "forbidden": [
+              "Inventing values absent from the document"
+            ],
+            "sample_answer": "Corporate rating BB affirmed, stable outlook\nSenior unsecured BB-, one notch lower due to priority of senior claims\nSector operating-environment score BB to B; not an issuer downgrade\nStrengths: cash collections and liquidity reserves\nRisks: collection cyclicality and aggressive portfolio bidding"
+          }
+        }
+      ],
+      "source_note": "Fictional company, document and figures; original benchmark material licensed under MIT."
+    }
+  ],
+  "corpus_id": "public-synthetic-v1",
+  "public_source_note": "Original synthetic benchmark cases; public video identifiers in CAT-07 are factual metadata. No issuer filings or actual captions are distributed."
+}

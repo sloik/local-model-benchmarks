@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "run-info-provenance.schema.json",
+  "title": "Benchmark run provenance block (SPEC-003-020)",
+  "description": "The `provenance` object embedded in a new run's run_info.json (and mirrored into scores*.json by the scoring paths). Every field is required and must be present even when its value cannot be determined — an undeterminable field is the literal string 'unknown' (live runs) or 'unavailable' (the historical run-index), never omitted and never inferred from a directory name.",
+  "type": "object",
+  "required": [
+    "runtime_name",
+    "runtime_version",
+    "model_artifact",
+    "quantization",
+    "speculative_decoding",
+    "actual_context_length"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "runtime_name": {"type": "string", "minLength": 1},
+    "runtime_version": {"type": "string", "minLength": 1},
+    "model_artifact": {"type": "string", "minLength": 1},
+    "quantization": {"type": "string", "minLength": 1},
+    "speculative_decoding": {"type": "string", "minLength": 1},
+    "actual_context_length": {
+      "oneOf": [
+        {"type": "integer", "minimum": 1},
+        {"type": "string", "enum": ["unknown", "unavailable"]}
+      ]
+    }
+  }
+}

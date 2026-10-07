@@ -1,0 +1,12 @@
+{
+  "video_id": "9bZkp7q19f0",
+  "url": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+  "title": "PSY - GANGNAM STYLE(강남스타일) M/V",
+  "uploader": "officialpsy",
+  "duration_s": 252,
+  "upload_date": "2012-07-15",
+  "captured": "2026-08-20 via yt-dlp --dump-single-json --skip-download (mirrors mcp__shipyard__lmac-run__yt_dlp mode=metadata)",
+  "transcript_excerpt": null,
+  "metadata_fingerprint_sha256": "12f0b06a97d89447ccfa723fdc0133a49dc863e40b0b0c1a9043aeba0f28d135",
+  "source_note": "Public YouTube video metadata only (no transcript excerpt), captured from the public URL recorded in this fixture without payment/login (NFR-001 category a). Existing capture metadata and fingerprints are preserved. Third-party material retains its original rights; public availability is not a redistribution license."
+}

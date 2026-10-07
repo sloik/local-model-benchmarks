@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "suite_id": "general-capability",
+  "source_policy": "NFR-001-category-b-synthetic",
+  "case_registry": "suites/capability/corpus.json",
+  "case_schema": "suites/schemas/capability-case.schema.json",
+  "generator": "suites/capability/generate_corpus.py",
+  "contract": "suites/capability/contract.py",
+  "scorer": "suites/capability/scorer.py",
+  "null_policies": "suites/capability/null_policies.py",
+  "runner": null,
+  "validation": {
+    "test_files": [
+      "tests/test_capability_contract.py"
+    ],
+    "spec": "SPEC.md",
+    "test_command": "python3 -m pytest tests/test_capability_contract.py"
+  },
+  "status": "contract-and-corpus-complete-no-runner-yet",
+  "notes": "R1-R9 (taxonomy, case contract, knowledge-independent construction, balanced synthetic v1 corpus, transferable scenario skins, frozen splits/provenance, anti-shortcut null policies, capability-local reporting contract, oracle mutation-sensitivity) are implemented and offline-tested. No live model has ever been run against this suite (Out of Scope per SPEC-003-015) -- SPEC-003-016 owns the runner/live-execution path."
+}

@@ -1,0 +1,88 @@
+{
+  "case_id": "CAT-07-T-008",
+  "subject": "muse-glimmer-30b",
+  "no_call": false,
+  "tool_calls_made": [
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "Never Gonna Give You Up Rickroll original"
+      },
+      "raw_result": {
+        "results": [],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": false,
+      "timestamp": 1787301800.0793889,
+      "tool_call_id": "ggmF8Z7MecDhedvmYDxaFpkDcbhqRwqj"
+    },
+    {
+      "name": "yt_dlp",
+      "args": {
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "mode": "metadata"
+      },
+      "raw_result": {
+        "id": "dQw4w9WgXcQ",
+        "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+        "uploader": "Rick Astley",
+        "duration": 213,
+        "upload_date": "2009-10-25"
+      },
+      "resolved_key": "dQw4w9WgXcQ",
+      "exact_match": true,
+      "timestamp": 1787301824.754008,
+      "tool_call_id": "j6v8RTa90JEsSAouzAWUZ6cMslfDDLm6"
+    },
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "Rick Astley Never Gonna Give You Up Official Video"
+      },
+      "raw_result": {
+        "results": [],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": false,
+      "timestamp": 1787301862.614547,
+      "tool_call_id": "024VJkjYVCkY4bjIEu84g5MlmjIQhDij"
+    },
+    {
+      "name": "yt_dlp",
+      "args": {
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "mode": "metadata"
+      },
+      "raw_result": {
+        "id": "dQw4w9WgXcQ",
+        "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+        "uploader": "Rick Astley",
+        "duration": 213,
+        "upload_date": "2009-10-25"
+      },
+      "resolved_key": "dQw4w9WgXcQ",
+      "exact_match": true,
+      "timestamp": 1787301869.9706628,
+      "tool_call_id": "AYa9zAdf1jwyKpUbR8oLCWQafuaZvRo8"
+    },
+    {
+      "name": "search_youtube",
+      "args": {
+        "query": "dQw4w9WgXcQ"
+      },
+      "raw_result": {
+        "results": [],
+        "note": "approximate index -- use yt_dlp for exact metadata/transcript"
+      },
+      "resolved_key": null,
+      "exact_match": false,
+      "timestamp": 1787301939.4043891,
+      "tool_call_id": "IguSYLGYZSzFtsljgI17KSRVTuiVhXAT"
+    }
+  ],
+  "final_answer": null,
+  "error": "max_turns_exhausted_without_final_answer",
+  "public_release_note": "Minimal regression tool trace: factual video metadata or fictional financial tool output, no caption content."
+}

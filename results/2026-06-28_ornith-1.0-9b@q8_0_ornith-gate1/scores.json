@@ -1,0 +1,20 @@
+{
+  "run_id": "2026-06-28_ornith-1.0-9b@q8_0_ornith-gate1",
+  "model_id": "ornith-1.0-9b@q8_0",
+  "eval_date": "2026-06-28",
+  "evaluator": "mistralai/mistral-small-3.2",
+  "evaluator_type": "local",
+  "summary": {
+    "CAT-04": {
+      "mean": 4.2,
+      "min": 0,
+      "max": 5,
+      "n": 10
+    },
+    "overall": {
+      "mean": 4.2,
+      "n": 10
+    }
+  },
+  "public_release_note": "Historical aggregate for the legacy corpus; not a public-synthetic-v1 evaluation."
+}

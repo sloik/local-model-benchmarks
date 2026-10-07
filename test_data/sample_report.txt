@@ -1,0 +1,103 @@
+Synthetic fictional report for benchmark testing; no real issuer filing.
+
+RAPORT FINANSOWY — POLCORP SA — Q3 2025
+═══════════════════════════════════════════════════════════════════════════════
+
+PolCorp SA (ticker: PCO, GPW: 1250 akcji)
+Raport za III kwartał 2025
+Data publikacji: 15 listopada 2025
+
+─────────────────────────────────────────────────────────────────────────────
+STRESZCZENIE WYKONANIA
+─────────────────────────────────────────────────────────────────────────────
+
+PolCorp SA opublikowała wyniki finansowe za trzeci kwartał roku obrachunkowego
+2025, wykazując solidne tempo wzrostu w środowisku rosnących kosztów produkcji.
+Przychody ze sprzedaży osiągnęły 450 mln PLN, co stanowi wzrost 8,2% w stosunku
+rocznym (425 mln PLN w Q3 2024). Zysk netto zwiększył się do 38 mln PLN
+z 34 mln PLN rok wcześniej, przy marży netto 8,4%.
+
+─────────────────────────────────────────────────────────────────────────────
+WYNIKI FINANSOWE
+─────────────────────────────────────────────────────────────────────────────
+
+| Metrika                  | Q3 2025    | Q3 2024    | Zmiana YoY |
+|--------------------------|------------|------------|-----------|
+| Przychody (mln PLN)      | 450        | 425        | +8.2%     |
+| Zysk netto (mln PLN)     | 38         | 34         | +11.8%    |
+| Marża netto (%)          | 8.4        | 8.0        | +0.4 pp   |
+| EPS (PLN)                | 1.24       | 1.10       | +12.7%    |
+| Przepływy z operacji     | 42         | 39         | +7.7%     |
+
+─────────────────────────────────────────────────────────────────────────────
+KOMENTARZ ZARZĄDU
+─────────────────────────────────────────────────────────────────────────────
+
+Wynik Q3 odzwierciedla zarówno rosnący popyt na produkty PolCorp, jak i wpływ
+wzrostu kosztów surowców na poziomie światowym. Nakłady na rekrutację i szkolenia
+personelu wyniosły 12 mln PLN w ramach przygotowania do ekspansji na rynki Unii
+Europejskiej, planowanej na Q1 2026.
+
+Zarząd potwierdza prognozy na pełny rok 2025: przychody w zakresie 1700-1750
+mln PLN, marża netto 8.0-8.5%.
+
+─────────────────────────────────────────────────────────────────────────────
+GŁÓWNE ZAGROŻENIA
+─────────────────────────────────────────────────────────────────────────────
+
+1. Wzrost cen surowców energetycznych i żelazostapu
+   Koszty energii elektrycznej wzrosły o 18% od lipca 2025 roku. Umowy
+   długoterminowe obejmują 60% zużycia energii; pozostałe 40% jest narażone
+   na dalsze wzrosty. Zarząd pracuje nad umowami z dostawcami surowców.
+
+2. Ekspozycja walutowa EUR/PLN
+   Około 35% przychodów pochodzi z eksportu do krajów strefy euro. Osłabienie
+   złotego (EUR/PLN przy 4,35 w październiku 2025) poprawia konkurencyjność
+   eksportową, jednak wzmacnianie złotego mogłoby zmniejszyć przychody
+   na poziomie około 2 mln PLN za każde 0,10 złotego wzmocnienia.
+
+3. Konkurencja z producentami azjatyckimi
+   Nowe kargi na towary importowane z Wietnamu i Indii (wdrażane od grudnia 2025)
+   mogą zmniejszyć presję konkurencyjną w segmencie produktów standardowych,
+   ale mogą również zwiększyć koszty surowców dla producentów pośrednich.
+
+─────────────────────────────────────────────────────────────────────────────
+OPORTUNISTYCZNIE
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ekspansja geograficzna na rynki UE
+   PolCorp przygotowuje entrada do Niemiec i Polski (sic! sprzedaż lokalnych
+   marek przez dystrybutorów). Inwestycja kapitałowa wyniesie około 25 mln PLN
+   w latach 2026-2027. Szacunki zarządu wskazują potencjał wzrostu przychodów
+   o 200-300 mln PLN w ciągu trzech lat po pełnym wdrożeniu.
+
+2. Nowa linia produktowa — produkty eco-friendly
+   Badania i rozwój nowej linii produktów biodegradowalnych są na etapie
+   testów. Prognozowana marża brutto dla tej linii: 45% (wobec 32% dla
+   produktów standardowych). Uruchomienie produkcji: Q2 2026.
+   Szacunki: 80-100 mln PLN przychodów rocznie po trzech latach.
+
+3. Partnerstwa strategiczne z dystrybutorami europejskimi
+   Zarząd negocjuje z trzema głównymi dystrybutorami europejskimi długoletnie
+   umowy dostaw (3-5 lat). Umowy mogą stabilizować przychody i zmniejszyć
+   ryzyko walutowe poprzez ceny w EUR.
+
+─────────────────────────────────────────────────────────────────────────────
+OCENA INWESTYCYJNA
+─────────────────────────────────────────────────────────────────────────────
+
+Fundamenty spółki pozostają solidne: wzrost przychodów, poprawa rentowności,
+zdywersyfikowana ekspozycja geograficzna (40% eksport). Główne ryzyko: ekspozycja
+walutowa i wzrost kosztów surowców.
+
+Perspektywy długoterminowe atrakcyjne ze względu na plany ekspansji i nowe
+produkty eco-friendly (wyższe marże). Inwestorzy powinni obserwować postępy
+w nego jacjach z dystrybutorami europejskimi i wdrożeniu nowej linii produktowej.
+
+Rekomendacja: Spółka jest warta kupna dla inwestorów szukających wzrostu
+w średniej perspektywie, z akceptacją ryzyka walutowego. Dla inwestorów
+konserwatywnych — TRZYMAĆ do czasu pełnego uruchomienia ekspansji europejskiej.
+
+─────────────────────────────────────────────────────────────────────────────
+KONIEC RAPORTU
+═══════════════════════════════════════════════════════════════════════════════

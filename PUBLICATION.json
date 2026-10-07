@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "corpus_id": "public-synthetic-v1",
+  "created": "2026-10-07",
+  "license": "MIT",
+  "history_policy": "Fresh initial commit; no private source repository Git objects, branches or tags.",
+  "canonical_case_changes": [
+    {
+      "path": "tests/cat-01-ekstrakcja.json",
+      "case_id": "CAT-01-011",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 2
+    },
+    {
+      "path": "tests/cat-01-ekstrakcja.json",
+      "case_id": "CAT-01-012",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 1
+    },
+    {
+      "path": "tests/cat-01-ekstrakcja.json",
+      "case_id": "CAT-01-013",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 1
+    },
+    {
+      "path": "tests/cat-02-destylacja.json",
+      "case_id": "CAT-02-011",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 1
+    },
+    {
+      "path": "tests/cat-02-destylacja.json",
+      "case_id": "CAT-02-012",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 1
+    },
+    {
+      "path": "tests/cat-03-reasoning.json",
+      "case_id": "CAT-03-011",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 1
+    },
+    {
+      "path": "tests/cat-03-reasoning.json",
+      "case_id": "CAT-03-012",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 1
+    },
+    {
+      "path": "tests/cat-05-klasyfikacja.json",
+      "case_id": "CAT-05-011",
+      "action": "replaced third-party-derived case with an original synthetic scenario",
+      "prompt_count": 3
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-001",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-002",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-003",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-004",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-005",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-006",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "tests/cat-06-source-fidelity.json",
+      "case_id": "CAT-06-007",
+      "action": "replaced quoted filing evidence and questions with original fictional paired evidence"
+    },
+    {
+      "path": "test_data/cat07/transcripts/8vUCjYsWeSU.json",
+      "action": "retained factual video metadata; replaced third-party caption with explicitly synthetic original text",
+      "new_transcript_sha256": "068f9cc59c78803a6ff2cb4791e201d6a188ae4ffab928fbd137845d1b65b427"
+    },
+    {
+      "path": "test_data/cat07/transcripts/R1TNGOZAOZs.json",
+      "action": "retained factual video metadata; replaced third-party caption with explicitly synthetic original text",
+      "new_transcript_sha256": "81839cbd1a3528e8d0881fa2d3b2691581a71a0c2e77dbc3b2af21601dd9484b"
+    }
+  ],
+  "historical_results": {
+    "policy": "Closed-field metadata, numeric aggregate summaries and four reviewed tool-only regression traces; raw documents, captions, model outputs, rationale and logs omitted.",
+    "run_index_entries": 97,
+    "score_summary_files": 45,
+    "regression_traces": [
+      "2026-08-21_muse-glimmer-30b_cat07-t008-implicit/raw07/CAT-07-T-008.json",
+      "2026-08-21_muse-glimmer-30b_cat07-t009-obscure-pair/raw07/CAT-07-T-009.json",
+      "2026-08-21_ornith-1.0-35b_cat07-t009-obscure-pair/raw07/CAT-07-T-009.json",
+      "2026-08-21_qwen3.8-27b_cat07-f006-distractor/raw07/CAT-07-F-006.json"
+    ],
+    "comparison_warning": "Legacy aggregates measure the earlier corpus, not public-synthetic-v1.",
+    "excluded_test_row": "The deterministic stub-model evaluator-test row is omitted from the public CSV; it is not a model benchmark."
+  },
+  "excluded_artifacts": [
+    "private Git history",
+    "private workflow/context/specs/reports",
+    "untracked drafts and document caches",
+    "private logs and third-party source copies"
+  ],
+  "fixture_hashes": {
+    "test_data/sample_report.txt": "7329b94e40277e16256939277922f9c3546d5ba5a6cbfe05cf25c1ca06af981d",
+    "test_data/cat07/transcripts/dQw4w9WgXcQ.json": "5355b3c9121d717aeb4cece82eed01f1202d89eb98f43e56da5896cbb165c1d0",
+    "test_data/cat07/transcripts/7FwDP17XPlk.json": "3d36731237ab8f6fe85f9557b1ced557432fbcc22464084f95c068d897fe20cc",
+    "test_data/cat07/transcripts/jNQXAC9IVRw.json": "fdfcd3774a3deff605f8ca068aa438d5edaaf64a6b131db8c5fc4f94b7131714",
+    "test_data/cat07/transcripts/aqz-KE-bpKQ.json": "2334bb99a5da104d4c2391f63a7c64b9d3856d80369edf999ba8c9c8953eb18a",
+    "test_data/cat07/transcripts/f7NwyBnIRTE.json": "17bd40bac73bb7049ca17918a48aa2fc7d0ccf71aa8f9fd8906c6981a801942e",
+    "test_data/cat07/transcripts/9bZkp7q19f0.json": "7e4816af0d0de64eed06a8f5547cf228b1991640a282909b121d6c65357c1dc1",
+    "test_data/cat07/transcripts/R1TNGOZAOZs.json": "31d5bc70deb76c34ea0d7d2806894c60b7f9b748c48236455c690405ba559ef5",
+    "test_data/cat07/transcripts/8vUCjYsWeSU.json": "a146bcd997ccc92c2a778b5a5a4a1bfc2820ec16791df014cc388b8647be8625",
+    "test_data/cat07/financial/polcorp-20250814.json": "f60235572d8bd0551514dccff431ef98857efd63bbde18b528835d4ae26269e9",
+    "test_data/cat07/financial/novatech-20260220.json": "e2b722f0f61322b6f704a9d194a274df1dfce755c3dff3b9bd35cda810d20354",
+    "test_data/cat07/financial/polcorp-20260213.json": "9922ba0770aa6a1d65e85fc0b9d82f0e9dd85cd1cdadd16252ce8805a9dd4da3",
+    "test_data/cat07/financial/polcorp-20251115.json": "091a95077728a22c89c5fbc3b8ccc2fd4fac448491e44c91c645d23280092008",
+    "test_data/cat06/synthetic-report/report.txt": "ac5c9c8f86b52dd609f797a3e0c4484092b527902576ddff2faf2a360bef47af",
+    "tests/cat-02-destylacja.json": "8dc64e9830391a5a53643ee5a92443898449a35ec18cfb7496b27a13eb621f35",
+    "tests/cat-04-kod.json": "0279cc8e28b820c38162c4ed6992daa63943edb6ddfeebe674c1fa24916901d5",
+    "tests/cat-06-source-fidelity.json": "aca78e66a56bd77f3a165cf814dcb827a5d1ab4c5c0664d629022aee91e65db3",
+    "tests/cat-07-tool-use.json": "db169c045f4aeacd4754be0b18d1c5308ee435b5dfaed6d9a1d041ddfcfdc0d5",
+    "tests/cat-05-klasyfikacja.json": "afd516d272f3ceb2d31054c393d5b10bd310a451f4a789dc728f692882cc339f",
+    "tests/cat-01-ekstrakcja.json": "737f67c1d271c6389cac9506178854c71eb78985f4bb3611064de7f4272d2432",
+    "tests/cat-03-reasoning.json": "1aad56c6404eb962a4331d39fdf0d345d42fc1ef9b5230c6e47753162b9318bd",
+    "tests/fixtures/route_preflight_example.json": "64227f6fc8df684c43b2aea76ebcbdefcfd33c82a7a33733eb504f3519450947",
+    "suites/registry.json": "b1a78a4438fdccc62cb90606573c492721978b5c3f48a01e410201e5638b62ed",
+    "suites/canonical/scoring.json": "0960ad99a060c46c11fc498fea261ebed6e5327d8eb373d33370a0185c5a9fb9",
+    "suites/capability/corpus.json": "f861a495141886402e89f977a250903cb8e210faca70bf023509990d73028091",
+    "suites/capability/suite.json": "43b406ad93b9cd90aeebd96e243dbbeabe76c92998391a4a1539fa2d098617e6",
+    "suites/agentic/PROVENANCE.json": "817543d4f3bbc33699684730ab1c20caf71edbffeb4de1ba8bef71911e0f14a2",
+    "suites/agentic/suite.json": "ee6244a6c68d39d3061c1557571f2be66bcbcc3a5967c398cd55100b6536e7c8",
+    "suites/agentic/SCORING.md": "73ffa33966405cc5dbb906643388023a7a889b765c045795f3fcf9db3d3b630e",
+    "suites/schemas/agentic-run-manifest.schema.json": "1b7d60d9eab054797a85600543e3fc21a6100559b0c3311e220274b95fdbef5d",
+    "suites/schemas/capability-case.schema.json": "a2e291f967b2c1736a3f99c9fce24697869512044d285cbea43de8d7d66e1ce7",
+    "suites/schemas/run-info.schema.json": "ef05ef6f03de76bfdc51f5df1c2c8ce68e0cc6bb54e9928ebc95efad126eb357",
+    "suites/agentic/reference-tests/conftest.py": "9866b1b17cf707929bfd48c8fa38335c88dd59b1431921103e9156e4cac74be2",
+    "suites/agentic/reference-tests/test_eval002_csv_parser.py": "a08040c8566744f7da6659f9141d8d08ca4e0ce23aaa1d27b2c02e52a4713b2b",
+    "suites/agentic/reference-tests/test_eval003_retry.py": "9336dd2c40365fd7964443c03c6c5961b2d8cfe47b4ce977146dcee4ea49f168",
+    "suites/agentic/reference-tests/score_retained.py": "4e4af234169238d8c9f968fbebfd31e16b43b42004893e2d214629dbaa66fb5f",
+    "suites/agentic/reference-tests/test_eval001_fizzbuzz.py": "83d41fa0c30919cdaa69853e1b05483af7642d275b80b463dd7a3d06b9ccb1d0",
+    "suites/agentic/reference-tests/test_eval005_calculator.py": "6ac512b273d05be59b04c8f346a5af619b26fcb902584e1ae42d6b8805e91cef",
+    "suites/agentic/cases/EVAL-002-csv-parser.md": "d0c027a3d2d33980f6849ee1a99b1d5d428ff0e4c91cdc88a4c051b7bf704257",
+    "suites/agentic/cases/EVAL-003-retry-backoff.md": "804eb89075ba04c7515c0bafbbbceae1847f0c9ecaee83dd3d6d22f23d7e4820",
+    "suites/agentic/cases/EVAL-001-fizzbuzz-custom.md": "7e54ec8c5128eb379ca929c4f5c191638219cd2eaccf9ff755ab8269f4b97151",
+    "suites/agentic/cases/EVAL-005-refactor-extract-class.md": "4ef89b1dfb6f8a721deae404ef61c462c21a564047d91b160446ad82d96a6934",
+    "suites/agentic/cases/EVAL-004-ambiguous-requirements.md": "658cef57e32b78670c8e3ccfbecbcbe68c1823d1677edc1b5fdbf7cf52cbe4fd",
+    "suites/agentic/scoring/eval_scoring.py": "b403403d3ea96ff34089f9b4916442326bbc5e0d6d9b8a0c6a45127afa4c9681",
+    "suites/agentic/scoring/score_reference.py": "acdbd6b97e1de07890b2a197377313b52804f51fc006705b3602d5ef86cc4c68",
+    "suites/agentic/fixtures/project/pyproject.toml": "74c749699af980369e881df98255fa2c58d833f9abe6d5af3c0bdaeedd74572b",
+    "suites/agentic/fixtures/project/README.md": "e933cc5a3421ecd23b7740036e2644f94d2af9da3e82e9ad026a41d8eb3a04cc",
+    "suites/agentic/fixtures/project/tests/test_retry.py": "ec53bf10e8ba41b1624f36ba057f6c73916deb3fc61205102315c3e2f9f914a6",
+    "suites/agentic/fixtures/project/tests/test_fizzbuzz.py": "d5e605708695d9d27949d14c72d50e3a79cd5028f4c14e469875422569c5288c",
+    "suites/agentic/fixtures/project/tests/conftest.py": "e9cc2d515e49488e18627d278955902230f38db1e672eaa73a660b0e0f186f0d",
+    "suites/agentic/fixtures/project/tests/__init__.py": "6b3f663d78ef4b0c3c778cd7d1b6c3f66cdde617e8ec37506d2a71f320f302c4",
+    "suites/agentic/fixtures/project/tests/test_calculator.py": "a2391840e55c7858b2e247f7e8ce46610fc89792790dcbe6bd706e17e7f67f0e",
+    "suites/agentic/fixtures/project/tests/test_csv_parser.py": "5a1b9412ad22150c36c66e01660011ea9132682656b56b28b3e1dc1c936d2776",
+    "suites/agentic/fixtures/project/tests/test_validator.py": "d46dc4454bdd96899050d6a1665d545058f6c176d9a8e664d349a6e22c36c3e3",
+    "suites/agentic/fixtures/project/src/validator.py": "d88349bb8143f19a79fd9a798e06cf94aa3bf95622939282523ce15321c38297",
+    "suites/agentic/fixtures/project/src/csv_parser.py": "da1443f59b979390c8dee2c88bea3b80b4f08e8e660d9153a67cd62c513dd7c0",
+    "suites/agentic/fixtures/project/src/fizzbuzz.py": "6630b2817ab2b9dbe59ce2b28b9f92a920f706479e44e09587d80856abc71e55",
+    "suites/agentic/fixtures/project/src/__init__.py": "cbbfd8cc780dfe20b2bc4f976c14b9e61f5ffa38f7af9b0bb99722490ee26b16",
+    "suites/agentic/fixtures/project/src/retry.py": "a065b40bc885feeadfa7e5ef22c3ae6de481baa4e13e5a63f3937ecb75898b58",
+    "suites/agentic/fixtures/project/src/calculator.py": "c7c862eff871c6a9891fba0baf0f0ea25e0999e911284dd89ba214726258664a",
+    "suites/agentic/reference-tests/eval005_grader/test_calculator.py": "a2391840e55c7858b2e247f7e8ce46610fc89792790dcbe6bd706e17e7f67f0e"
+  },
+  "validation_contract": "The original 496 test cases remain active; environment inputs and writes are isolated. Public-source privacy and hash checks supplement them."
+}
