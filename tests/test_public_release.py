@@ -63,3 +63,11 @@ def test_historical_payloads_are_closed_field_summaries():
         if "summary" in data:
             assert all(isinstance(value, (int, float, bool)) or value is None
                        for metrics in data["summary"].values() for value in metrics.values())
+
+
+def test_release_gate_accepts_github_web_commit_identity():
+    assert not audit.content_findings(b"noreply@github.com")
+
+
+def test_release_gate_still_rejects_other_github_addresses():
+    assert "non-public-contact-address" in audit.content_findings(b"person@" + b"github.com")

@@ -26,6 +26,8 @@ EMAIL = re.compile(rb"[A-Za-z0-9_.+%-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})")
 def content_findings(data: bytes) -> list[str]:
     findings = [name for name, pattern in FORBIDDEN.items() if pattern.search(data)]
     for match in EMAIL.finditer(data):
+        if match.group(0).lower() == b"noreply@github.com":
+            continue
         if match.group(1).lower() not in {b"users.noreply.github.com", b"example.com", b"example.org", b"example.net", b"example.invalid"}:
             findings.append("non-public-contact-address")
             break
