@@ -47,7 +47,7 @@ packaging==26.3
     # via pytest
 pluggy==1.6.0
     # via pytest
-pydantic==2.13.5
+pydantic==2.14.0
     # via
     #   anthropic
     #   openai
