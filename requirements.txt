@@ -2,7 +2,7 @@
 #    uv pip compile --python-version 3.11 requirements.in -o requirements.txt
 annotated-types==0.8.0
     # via pydantic
-anthropic==0.125.0
+anthropic==1.13.0
     # via -r requirements.in
 anyio==4.15.1
     # via
