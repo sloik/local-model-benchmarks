@@ -41,7 +41,7 @@ jiter==0.17.0
     # via
     #   anthropic
     #   openai
-openai==2.54.0
+openai==3.33.0
     # via -r requirements.in
 packaging==26.3
     # via pytest
