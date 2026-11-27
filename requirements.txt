@@ -14,7 +14,7 @@ certifi==2026.7.22
     #   httpcore
     #   httpx
     #   requests
-charset-normalizer==3.5.2
+charset-normalizer==3.5.3
     # via requests
 distro==1.9.0
     # via
